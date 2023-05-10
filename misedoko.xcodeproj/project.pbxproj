@@ -170,6 +170,8 @@
 			dependencies = (
 			);
 			name = misedoko;
+			packageProductDependencies = (
+			);
 			productName = misedoko;
 			productReference = 72282E9429F511E300EB8A90 /* misedoko.app */;
 			productType = "com.apple.product-type.application";
@@ -242,6 +244,8 @@
 				Base,
 			);
 			mainGroup = 72282E8B29F511E300EB8A90;
+			packageReferences = (
+			);
 			productRefGroup = 72282E9529F511E300EB8A90 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

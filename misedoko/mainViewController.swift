@@ -58,6 +58,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
+        //collectionview長押しのやつ
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
+        layout.sectionInset = UIEdgeInsets.zero
+        layout.minimumInteritemSpacing = 0.0
+        layout.minimumLineSpacing = 0.0
+        layout.headerReferenceSize = CGSize(width:0,height:0)
+        
+        
         
         
     }
@@ -82,13 +91,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let annotation = view.annotation else {
-            return
-        }
+        //      guard let annotation = view.annotation else {
+        //          return
+        //      }
         
-     //   hozonArray.append(annotation)
+        //   hozonArray.append(annotation)
         
-       
+        
     }
     
     
@@ -119,9 +128,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     //吹き出しのボタン
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-            guard let annotation = view.annotation else {
-                return
-            }
+        guard let annotation = view.annotation else {
+            return
+        }
         //ボタン押したらarrayに追加するよ
         hozonArray.append(annotation)
         
@@ -147,8 +156,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             self.collectionView.reloadData()
             
         }
-           
-        }
+        
+    }
     
     
     
@@ -192,7 +201,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     //こっちは普通のピンの設定
                     let annotation = coloranotation()
-                   
+                    
                     annotation.coordinate = mapItem.placemark.coordinate
                     annotation.title = mapItem.name
                     annotation.subtitle = mapItem.placemark.title
@@ -285,9 +294,28 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         return 15.0 // 行間
     }
     
-    
-    
-    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
+            let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
+                
+                guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
+                    return
+                }
+                if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
+                    self.mapView.removeAnnotation(itemToDelete)
+                    self.hozonArray.remove(at: indexToDelete)
+                    self.collectionView.reloadData()
+                    
+                }
+            }
+                
+                return UIMenu(title: "Menu", children: [delete])
+                
+            
+        }
+        )
+        
+    }
 }
 
 
