@@ -1,8 +1,10 @@
+// swift-tools-version:5.7.1
 import UIKit
 import MapKit
 import CoreLocation
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     
     
@@ -57,6 +59,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
+        
     }
     
     
@@ -83,28 +86,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             return
         }
         
-        hozonArray.append(annotation)
+     //   hozonArray.append(annotation)
         
-        let sourcePlacemark = MKPlacemark(coordinate: mapView.userLocation.coordinate)
-        let destinationPlacemark = MKPlacemark(coordinate: annotation.coordinate)
-        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
-        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
-        
-        let directionRequest = MKDirections.Request()
-        directionRequest.source = sourceMapItem
-        directionRequest.destination = destinationMapItem
-        directionRequest.transportType = .walking
-        
-        let directions = MKDirections(request: directionRequest)
-        directions.calculate { response, error in
-            guard let response = response, let route = response.routes.first else {
-                return
-            }
-            
-            self.routes.append(route)
-            self.collectionView.reloadData()
-            
-        }
+       
     }
     
     
@@ -127,8 +111,44 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         picPinView.image = UIImage(named:(pin?.pinImage)!)
         picPinView.canShowCallout = true
+        let addButton = UIButton(type: .contactAdd)
+        picPinView.rightCalloutAccessoryView = addButton
+        
+        
         return picPinView
     }
+    //吹き出しのボタン
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+            guard let annotation = view.annotation else {
+                return
+            }
+        //ボタン押したらarrayに追加するよ
+        hozonArray.append(annotation)
+        
+        //所要時間を計算するよ
+        let sourcePlacemark = MKPlacemark(coordinate: mapView.userLocation.coordinate)
+        let destinationPlacemark = MKPlacemark(coordinate: annotation.coordinate)
+        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+        
+        let directionRequest = MKDirections.Request()
+        directionRequest.source = sourceMapItem
+        directionRequest.destination = destinationMapItem
+        directionRequest.transportType = .walking
+        
+        let directions = MKDirections(request: directionRequest)
+        directions.calculate { response, error in
+            guard let response = response, let route = response.routes.first else {
+                return
+            }
+            
+            self.routes.append(route)
+            
+            self.collectionView.reloadData()
+            
+        }
+           
+        }
     
     
     
@@ -172,7 +192,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     //こっちは普通のピンの設定
                     let annotation = coloranotation()
-                    // annotation.pinColor = UIColor.blue
+                   
                     annotation.coordinate = mapItem.placemark.coordinate
                     annotation.title = mapItem.name
                     annotation.subtitle = mapItem.placemark.title
@@ -191,7 +211,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     for hozon in self.hozonArray {
                         let  annotation1 = coloranotation()
                         annotation1.coordinate = hozon.coordinate
-                        // annotation1.pinColor = UIColor.orange
                         annotation1.pinImage = "blue.png"
                         self.mapView.addAnnotation(annotation1)
                         
@@ -201,7 +220,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     }
                     //検索結果のピンを指してるよ！
                     self.mapView.addAnnotations(self.kensakukekkaArray)
-                    self.mapView.setNeedsDisplay()
+                    
                     
                     
                     
@@ -270,6 +289,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
 }
+
 
 
 
