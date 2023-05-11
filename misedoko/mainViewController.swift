@@ -23,6 +23,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var hozonArray = [MKAnnotation]()
     
     
+    
     var hozonString = String()
     var addresses = [String]()
     var hozonaddress = [String]()
@@ -32,6 +33,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var searchResults: [MKMapItem] = []
     var selectedPin: MKAnnotation?
     var routes: [MKRoute] = []
+    let saveData: UserDefaults = UserDefaults.standard
     
     
     
@@ -58,6 +60,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
+        
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
@@ -70,6 +73,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
+    
     
     
     // MARK: - CLLocationManagerDelegate
@@ -131,8 +135,18 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         guard let annotation = view.annotation else {
             return
         }
-        //ボタン押したらarrayに追加するよ
-        hozonArray.append(annotation)
+        
+        if hozonArray.contains(where: { $0.isEqual(annotation) }) {
+            // hozonArrayにannotationが含まれる場合の処理
+        } else {
+            // hozonArrayにannotationが含まれない場合の処理
+            //ボタン押したらarrayに追加するよ
+            hozonArray.append(annotation)
+            
+        }
+        
+        
+        
         
         //所要時間を計算するよ
         let sourcePlacemark = MKPlacemark(coordinate: mapView.userLocation.coordinate)
@@ -146,12 +160,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         directionRequest.transportType = .walking
         
         let directions = MKDirections(request: directionRequest)
-        directions.calculate { response, error in
+        directions.calculate { [self] response, error in
             guard let response = response, let route = response.routes.first else {
                 return
             }
             
-            self.routes.append(route)
+            routes.append(route)
+            
             
             self.collectionView.reloadData()
             
@@ -270,7 +285,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
         let pin = hozonArray[indexPath.row]
+        print(hozonArray,"2")
+        print(routes,"2")
         let route = routes[indexPath.row]
+        
         cell.shopnamelabel?.text = pin.title ?? ""
         cell.adresslabel?.text = pin.subtitle ?? ""
         cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
@@ -294,8 +312,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         return 15.0 // 行間
     }
     
+    
+    //長押しのやつ
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
+            //ボタン
             let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
                 
                 guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
@@ -308,14 +329,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                 }
             }
-                
-                return UIMenu(title: "Menu", children: [delete])
-                
+            
+            return UIMenu(title: "Menu", children: [delete])
+            
             
         }
         )
         
     }
+    
 }
 
 
