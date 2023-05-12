@@ -2,6 +2,8 @@
 import UIKit
 import MapKit
 import CoreLocation
+import FirebaseAuth
+
 
 
 class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -15,6 +17,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBOutlet weak var hozonmapView: MKMapView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var loginMailLabel: UILabel!
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation?
@@ -35,6 +38,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var routes: [MKRoute] = []
     let saveData: UserDefaults = UserDefaults.standard
     
+    
+    var loginMailText = ""
     
     
     
@@ -69,6 +74,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
+        //ログアウト
+        loginMailText = Auth.auth().currentUser?.email ?? "エラー"
+        loginMailText += "さんでログイン中"
+        loginMailLabel.text = loginMailText
         
         
         
@@ -336,6 +345,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
         )
         
+    }
+    
+    @IBAction func logout(){
+        do{
+            try Auth.auth().signOut()
+            self .dismiss(animated: true, completion: nil)
+        }catch let error as NSError {
+            print(error)
+        }
     }
     
 }
