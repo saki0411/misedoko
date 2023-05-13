@@ -3,6 +3,7 @@ import UIKit
 import MapKit
 import CoreLocation
 import FirebaseAuth
+import FirebaseFirestore
 
 
 
@@ -40,7 +41,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     var loginMailText = ""
-    
+    //firestoreのやつ
+    let db = Firestore.firestore()
+    var geoPoints =  [GeoPoint]()
     
     
     override func viewDidLoad() {
@@ -79,7 +82,44 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         loginMailText += "さんでログイン中"
         loginMailLabel.text = loginMailText
         
+        //データベースに保存
         
+        // そのCLLocationCoordinate2Dの配列からFirebaseに保存する
+     /*
+        var annotations: [MKAnnotation] = []
+
+       
+
+      
+        // ドキュメントを上書きする
+        let docRef = db.collection("hozoncollection").document("hozondocument")
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                if let data = data, let hozonArray = data["hozon"] as? [GeoPoint] {
+                    self.geoPoints = hozonArray
+                } else {
+                    print("hozonArray is nil or invalid type")
+                }
+            } else {
+                print("Document does not exist")
+            }
+        }
+        for geoPoint in geoPoints {
+            let latitude = geoPoint.latitude
+            let longitude = geoPoint.longitude
+            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotations.append(annotation)
+        }
+        hozonArray = annotations
+
+        print(hozonArray,"aaaaaa")
+
+       
+*/
+      
         
     }
     
@@ -151,7 +191,28 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             // hozonArrayにannotationが含まれない場合の処理
             //ボタン押したらarrayに追加するよ
             hozonArray.append(annotation)
-            
+           
+/*            for annotation in hozonArray {
+                let coordinate = annotation.coordinate
+                let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                geoPoints.append(geoPoint)
+            }
+            db.collection("hozoncollection").document("hozondocument").updateData([
+              "hozon": geoPoints
+            ]) { err in
+              if let err = err {
+                print("Error updating document: \(err)")
+              } else {
+                print("Document successfully written!")
+              }
+            }
+*/
+           
+
+           
+
+        
+
         }
         
         
@@ -293,6 +354,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
+        
+        
         let pin = hozonArray[indexPath.row]
         print(hozonArray,"2")
         print(routes,"2")
@@ -355,6 +418,25 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             print(error)
         }
     }
+    @IBAction func tebleview(){
+        self.performSegue(withIdentifier: "totableview", sender: nil)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "tostart" {
+            let nextView = segue.destination as! tableviewViewController
+            
+            nextView.hozonArray = hozonArray
+            
+            
+            
+        }
+        
+        
+        
+    }
+    
     
 }
 

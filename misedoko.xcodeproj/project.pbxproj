@@ -31,6 +31,7 @@
 		72E1E3522A0DE27E00C27772 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3512A0DE27E00C27772 /* FirebaseStorage */; };
 		72E1E3542A0DE27E00C27772 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3532A0DE27E00C27772 /* FirebaseStorageCombine-Community */; };
 		72E1E3562A0DE50700C27772 /* loginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E1E3552A0DE50700C27772 /* loginViewController.swift */; };
+		72E1E3582A0E17E900C27772 /* tableviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E1E3572A0E17E900C27772 /* tableviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		725DC5162A0B739000AE4BA9 /* PlaceCalloutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceCalloutView.xib; sourceTree = "<group>"; };
 		72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		72E1E3552A0DE50700C27772 /* loginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginViewController.swift; sourceTree = "<group>"; };
+		72E1E3572A0E17E900C27772 /* tableviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tableviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */,
 				725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */,
 				72E1E3552A0DE50700C27772 /* loginViewController.swift */,
+				72E1E3572A0E17E900C27772 /* tableviewViewController.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 			files = (
 				72E1E3562A0DE50700C27772 /* loginViewController.swift in Sources */,
 				725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */,
+				72E1E3582A0E17E900C27772 /* tableviewViewController.swift in Sources */,
 				72282E9829F511E300EB8A90 /* AppDelegate.swift in Sources */,
 				72282E9A29F511E300EB8A90 /* SceneDelegate.swift in Sources */,
 				725DC5152A0B738400AE4BA9 /* PlaceCalloutView.swift in Sources */,
