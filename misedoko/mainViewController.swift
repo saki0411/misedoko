@@ -114,6 +114,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                    
                     
                     self.documentid.append(document.documentID)
+                    print(self.documentid,"CCCCCCC")
                     
                     self.hozonArray = annotations
                     
@@ -157,9 +158,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
       
     
      
-
- 
-
+//ここにhozonarrayのピンを足したいよ！！
        
 
       
@@ -253,6 +252,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         if let err = err {
                             print("Error writing document: \(err)")
                         } else {
+                            self.documentid.append(ref!.documentID)
                             print("Document added with ID: \(ref!.documentID)")
                         }
                     }
