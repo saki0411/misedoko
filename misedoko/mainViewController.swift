@@ -138,8 +138,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             }
                             
                             self.routes.append(route)
+                           
                             if hozonroute.isEqual(self.hozonArray.last){
                                 DispatchQueue.main.async {
+                                    print("全部終わったよ")
                                     self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                                     self.collectionView.reloadData()
                                 }
@@ -157,8 +159,21 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
       
     
-     
-//ここにhozonarrayのピンを足したいよ！！
+     //最初からピンを立てたいよ
+        for (index, hozon) in hozonArray.enumerated() {
+            let  annotation1 = coloranotation()
+            annotation1.coordinate = hozon.coordinate
+            annotation1.title = misetitle[index]
+            annotation1.subtitle = misesubtitle[index]
+            annotation1.pinImage = "blue.png"
+            self.mapView.addAnnotation(annotation1)
+            
+            
+            
+            
+        }
+ 
+
        
 
       
@@ -291,7 +306,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             routes.append(route)
             
             
-            self.collectionView.reloadData()
+          self.collectionView.reloadData()
             
         }
         
