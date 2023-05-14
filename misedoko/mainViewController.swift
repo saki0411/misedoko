@@ -1,4 +1,4 @@
-// swift-tools-version:5.7.1
+
 import UIKit
 import MapKit
 import CoreLocation
@@ -39,6 +39,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var routes: [MKRoute] = []
     let saveData: UserDefaults = UserDefaults.standard
     
+    var misetitle = [String]()
+    var misesubtitle = [String]()
+    var documentid = [String]()
     
     var loginMailText = ""
     //firestoreのやつ
@@ -63,8 +66,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         locationManager.startUpdatingLocation()
         
         
-        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-        collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+        
         
         
         
@@ -84,41 +86,82 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         //データベースに保存
         
-        // そのCLLocationCoordinate2Dの配列からFirebaseに保存する
-     /*
+        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+        
         var annotations: [MKAnnotation] = []
-
-       
-
-      
-        // ドキュメントを上書きする
-        let docRef = db.collection("hozoncollection").document("hozondocument")
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                if let data = data, let hozonArray = data["hozon"] as? [GeoPoint] {
-                    self.geoPoints = hozonArray
-                } else {
-                    print("hozonArray is nil or invalid type")
-                }
+        
+        // 全てのドキュメントを取得する
+        db.collection("hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
             } else {
-                print("Document does not exist")
+                for document in querySnapshot!.documents {
+                    // 取得したドキュメントごとに実行する
+                    let data = document.data()
+                    let idokeido = data["idokeido"] as? GeoPoint
+                    let title = data["title"] as? String ?? "title:Error"
+                    let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                    let timestamp = data["timestamp"] as? Timestamp
+                    self.misetitle.append(title)
+                    self.misesubtitle.append(subtitle)
+                    
+                    let latitude = idokeido?.latitude
+                    let longitude = idokeido?.longitude
+                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    annotations.append(annotation)
+                   
+                    
+                    self.documentid.append(document.documentID)
+                    
+                    self.hozonArray = annotations
+                    
+                    
+                    for hozonroute in self.hozonArray {
+                        
+                        let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
+                        let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
+                        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+                        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+                        
+                        let directionRequest = MKDirections.Request()
+                        directionRequest.source = sourceMapItem
+                        directionRequest.destination = destinationMapItem
+                        directionRequest.transportType = .walking
+                        
+                        let directions = MKDirections(request: directionRequest)
+                        directions.calculate { response, error in
+                            guard let response = response, let route = response.routes.first else {
+                                return
+                            }
+                            
+                            self.routes.append(route)
+                            if hozonroute.isEqual(self.hozonArray.last){
+                                DispatchQueue.main.async {
+                                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                                    self.collectionView.reloadData()
+                                }
+                                
+                            }
+                        }
+                    }
+                    
+                }
+                
             }
+            
         }
-        for geoPoint in geoPoints {
-            let latitude = geoPoint.latitude
-            let longitude = geoPoint.longitude
-            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotations.append(annotation)
-        }
-        hozonArray = annotations
+        
+        
+      
+    
+     
 
-        print(hozonArray,"aaaaaa")
+ 
 
        
-*/
+
       
         
     }
@@ -173,10 +216,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         picPinView.image = UIImage(named:(pin?.pinImage)!)
         picPinView.canShowCallout = true
-        let addButton = UIButton(type: .contactAdd)
-        picPinView.rightCalloutAccessoryView = addButton
-        
-        
+        if pin?.pinImage != "blue.png"{
+            let addButton = UIButton(type: .contactAdd)
+            picPinView.rightCalloutAccessoryView = addButton
+            
+            
+        }
+      
         return picPinView
     }
     //吹き出しのボタン
@@ -191,26 +237,33 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             // hozonArrayにannotationが含まれない場合の処理
             //ボタン押したらarrayに追加するよ
             hozonArray.append(annotation)
+            var ref: DocumentReference? = nil
+             
+                    let coordinate = annotation.coordinate
+                    let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                    geoPoints.append(geoPoint)
+                    
+                    ref = db.collection("hozoncollection").addDocument(data: [
+                        
+                        "idokeido": geoPoint,
+                        "title":   annotation.title!!,
+                        "subtitle":annotation.subtitle!!,
+                        "timestamp": FieldValue.serverTimestamp()
+                    ]) { err in
+                        if let err = err {
+                            print("Error writing document: \(err)")
+                        } else {
+                            print("Document added with ID: \(ref!.documentID)")
+                        }
+                    }
            
-/*            for annotation in hozonArray {
-                let coordinate = annotation.coordinate
-                let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                geoPoints.append(geoPoint)
-            }
-            db.collection("hozoncollection").document("hozondocument").updateData([
-              "hozon": geoPoints
-            ]) { err in
-              if let err = err {
-                print("Error updating document: \(err)")
-              } else {
-                print("Document successfully written!")
-              }
-            }
-*/
-           
-
-           
-
+            print(documentid)
+            misetitle.append(annotation.title!!)
+            misesubtitle.append(annotation.subtitle!!)
+                
+             
+            
+    
         
 
         }
@@ -305,6 +358,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     for hozon in self.hozonArray {
                         let  annotation1 = coloranotation()
                         annotation1.coordinate = hozon.coordinate
+                        annotation1.title = mapItem.name
+                        annotation1.subtitle = mapItem.placemark.title
                         annotation1.pinImage = "blue.png"
                         self.mapView.addAnnotation(annotation1)
                         
@@ -354,16 +409,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-        
-        
-        let pin = hozonArray[indexPath.row]
-        print(hozonArray,"2")
-        print(routes,"2")
         let route = routes[indexPath.row]
-        
-        cell.shopnamelabel?.text = pin.title ?? ""
-        cell.adresslabel?.text = pin.subtitle ?? ""
-        cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
+                    cell.shopnamelabel?.text = misetitle[indexPath.row]
+                    cell.adresslabel?.text = misesubtitle[indexPath.row]
+                    cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
+                
+      
+    
         
         return cell
     }
@@ -395,8 +447,19 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     return
                 }
                 if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
+                    self.db.collection("hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
+                        if let err = err {
+                            print("Error removing document: \(err)")
+                        } else {
+                            print("Document successfully removed!")
+                            self.collectionView.reloadData()
+                        }
+                    }
+                    self.documentid.remove(at: indexPath.row)
                     self.mapView.removeAnnotation(itemToDelete)
                     self.hozonArray.remove(at: indexToDelete)
+                    self.misetitle.remove(at: indexPath.row)
+                    self.misesubtitle.remove(at: indexPath.row)
                     self.collectionView.reloadData()
                     
                 }
@@ -436,6 +499,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
+    
+    
     
     
 }
