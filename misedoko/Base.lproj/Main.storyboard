@@ -106,7 +106,7 @@
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="mainViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="mainViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -156,7 +156,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                 <connections>
-                                    <segue destination="cLo-rL-E9N" kind="show" identifier="totableview" id="2oR-YD-7aL"/>
+                                    <segue destination="cLo-rL-E9N" kind="show" identifier="tocollectionview" id="2oR-YD-7aL"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="〇〇さんでログイン中" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5co-oV-9ZJ">
@@ -179,6 +179,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="tgx-Ud-Zcz"/>
                     <connections>
                         <outlet property="collectionView" destination="EB2-I5-AOi" id="FYA-bH-hgc"/>
                         <outlet property="hozonmapView" destination="kev-wu-73K" id="U2f-yY-by6"/>
@@ -191,33 +192,33 @@
             </objects>
             <point key="canvasLocation" x="101.5267175572519" y="3.5211267605633805"/>
         </scene>
-        <!--Tableview View Controller-->
+        <!--Colectionview View Controller-->
         <scene sceneID="aQ8-B4-RUR">
             <objects>
-                <viewController id="cLo-rL-E9N" customClass="tableviewViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="cLo-rL-E9N" customClass="colectionviewViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MDS-jY-gIj">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="787"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Haf-Kl-q7c">
-                                <rect key="frame" x="0.0" y="82" width="393" height="762"/>
+                                <rect key="frame" x="0.0" y="93" width="393" height="694"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PY9-V4-dEP">
-                                    <size key="itemSize" width="237" height="128"/>
+                                    <size key="itemSize" width="391" height="183"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="ovl-oV-CJ0" customClass="CollectionViewCell" customModule="misedoko" customModuleProvider="target">
-                                        <rect key="frame" x="78" y="0.0" width="237" height="128"/>
+                                        <rect key="frame" x="1" y="0.0" width="391" height="183"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1Gk-p1-sAA">
-                                            <rect key="frame" x="0.0" y="0.0" width="237" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="391" height="183"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="237" height="128"/>
+                                        <size key="customSize" width="391" height="183"/>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
@@ -225,17 +226,36 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="IXl-Bz-COW"/>
                                 </connections>
                             </collectionView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DpM-ng-IQG">
+                                <rect key="frame" x="1" y="766" width="390" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="5IC-0j-h4M">
+                                        <barButtonItem key="leftBarButtonItem" title="戻る" id="4EP-IS-ge9">
+                                            <connections>
+                                                <segue destination="BYZ-38-t0r" kind="show" id="NLP-b1-tBW"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="MnE-dJ-ZLs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="gVB-Nr-hDo"/>
+                    <connections>
+                        <outlet property="collectionView" destination="Haf-Kl-q7c" id="0HV-H2-bqk"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qkj-1k-7J5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="881.53846153846155" y="-12.085308056872037"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="CPA-Lp-exX"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

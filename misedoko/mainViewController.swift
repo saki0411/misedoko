@@ -28,16 +28,14 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-    var hozonString = String()
-    var addresses = [String]()
-    var hozonaddress = [String]()
-    var travelTimeArray = [TimeInterval]()
-    var stringtimeArray = [String]()
-    var hozontimeArray = [String]()
+    
+    
+    
+    
+    
     var searchResults: [MKMapItem] = []
     var selectedPin: MKAnnotation?
     var routes: [MKRoute] = []
-    let saveData: UserDefaults = UserDefaults.standard
     
     var misetitle = [String]()
     var misesubtitle = [String]()
@@ -47,7 +45,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     //firestoreのやつ
     let db = Firestore.firestore()
     var geoPoints =  [GeoPoint]()
-    
+    let uid = Auth.auth().currentUser?.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +89,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         var annotations: [MKAnnotation] = []
         
         // 全てのドキュメントを取得する
-        db.collection("hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+        db.collection(uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
@@ -101,7 +99,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     let idokeido = data["idokeido"] as? GeoPoint
                     let title = data["title"] as? String ?? "title:Error"
                     let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                    let timestamp = data["timestamp"] as? Timestamp
                     self.misetitle.append(title)
                     self.misesubtitle.append(subtitle)
                     
@@ -111,7 +108,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
                     annotations.append(annotation)
-                   
+                    
                     
                     self.documentid.append(document.documentID)
                     print(self.documentid,"CCCCCCC")
@@ -119,36 +116,55 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     self.hozonArray = annotations
                     
                     
-                    for hozonroute in self.hozonArray {
-                        
-                        let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
-                        let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
-                        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
-                        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
-                        
-                        let directionRequest = MKDirections.Request()
-                        directionRequest.source = sourceMapItem
-                        directionRequest.destination = destinationMapItem
-                        directionRequest.transportType = .walking
-                        
-                        let directions = MKDirections(request: directionRequest)
-                        directions.calculate { response, error in
-                            guard let response = response, let route = response.routes.first else {
-                                return
+                    
+                    
+                }
+                
+            }
+            
+            
+            for hozonroute in self.hozonArray {
+                
+                let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
+                let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
+                let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+                let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+                
+                let directionRequest = MKDirections.Request()
+                directionRequest.source = sourceMapItem
+                directionRequest.destination = destinationMapItem
+                directionRequest.transportType = .walking
+                
+                let directions = MKDirections(request: directionRequest)
+                directions.calculate { response, error in
+                    guard let response = response, let route = response.routes.first else {
+                        return
+                    }
+                    
+                    self.routes.append(route)
+                    
+                    if hozonroute.isEqual(self.hozonArray.last){
+                        DispatchQueue.main.async {
+                            //最初からピンを立てたいよ
+                            for (index, hozon) in self.hozonArray.enumerated() {
+                                let  annotation1 = coloranotation()
+                                annotation1.coordinate = hozon.coordinate
+                                annotation1.title = self.misetitle[index]
+                                annotation1.subtitle = self.misesubtitle[index]
+                                annotation1.pinImage = "blue.png"
+                                self.mapView.addAnnotation(annotation1)
                             }
                             
-                            self.routes.append(route)
-                           
-                            if hozonroute.isEqual(self.hozonArray.last){
-                                DispatchQueue.main.async {
-                                    print("全部終わったよ")
-                                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                                    self.collectionView.reloadData()
-                                }
-                                
-                            }
+                            
+                            
+                            print("全部終わったよ")
+                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                            self.collectionView.reloadData()
                         }
+                        
                     }
+                    
+                    
                     
                 }
                 
@@ -157,26 +173,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
         
         
-      
-    
-     //最初からピンを立てたいよ
-        for (index, hozon) in hozonArray.enumerated() {
-            let  annotation1 = coloranotation()
-            annotation1.coordinate = hozon.coordinate
-            annotation1.title = misetitle[index]
-            annotation1.subtitle = misesubtitle[index]
-            annotation1.pinImage = "blue.png"
-            self.mapView.addAnnotation(annotation1)
-            
-            
-            
-            
-        }
- 
-
-       
-
-      
+        
+        
+        
+        
+        
         
     }
     
@@ -236,7 +237,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             
         }
-      
+        
         return picPinView
     }
     //吹き出しのボタン
@@ -252,35 +253,35 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             //ボタン押したらarrayに追加するよ
             hozonArray.append(annotation)
             var ref: DocumentReference? = nil
-             
-                    let coordinate = annotation.coordinate
-                    let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                    geoPoints.append(geoPoint)
-                    
-                    ref = db.collection("hozoncollection").addDocument(data: [
-                        
-                        "idokeido": geoPoint,
-                        "title":   annotation.title!!,
-                        "subtitle":annotation.subtitle!!,
-                        "timestamp": FieldValue.serverTimestamp()
-                    ]) { err in
-                        if let err = err {
-                            print("Error writing document: \(err)")
-                        } else {
-                            self.documentid.append(ref!.documentID)
-                            print("Document added with ID: \(ref!.documentID)")
-                        }
-                    }
-           
+            
+            let coordinate = annotation.coordinate
+            let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            geoPoints.append(geoPoint)
+            
+            ref = db.collection(uid ?? "hozoncollection").addDocument(data: [
+                
+                "idokeido": geoPoint,
+                "title":   annotation.title!!,
+                "subtitle":annotation.subtitle!!,
+                "timestamp": FieldValue.serverTimestamp()
+            ]) { err in
+                if let err = err {
+                    print("Error writing document: \(err)")
+                } else {
+                    self.documentid.append(ref!.documentID)
+                    print("Document added with ID: \(ref!.documentID)")
+                }
+            }
+            
             print(documentid)
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
-                
-             
             
-    
-        
-
+            
+            
+            
+            
+            
         }
         
         
@@ -305,9 +306,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             routes.append(route)
             
-            
-          self.collectionView.reloadData()
-            
+            DispatchQueue.main.async {
+                print("全部",self.misetitle,self.misesubtitle,self.routes)
+                self.collectionView.reloadData()
+            }
         }
         
     }
@@ -423,14 +425,14 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        
+        print("全部2",self.misetitle,self.misesubtitle,self.routes)
         let route = routes[indexPath.row]
-                    cell.shopnamelabel?.text = misetitle[indexPath.row]
-                    cell.adresslabel?.text = misesubtitle[indexPath.row]
-                    cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
-                
-      
-    
+        cell.shopnamelabel?.text = misetitle[indexPath.row]
+        cell.adresslabel?.text = misesubtitle[indexPath.row]
+        cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
+        
+        
+        
         
         return cell
     }
@@ -462,7 +464,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     return
                 }
                 if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
-                    self.db.collection("hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
+                    self.db.collection(self.uid ?? "hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
                         if let err = err {
                             print("Error removing document: \(err)")
                         } else {
@@ -502,10 +504,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "tostart" {
-            let nextView = segue.destination as! tableviewViewController
+        
+        if segue.identifier == "tocollectionview" {
+            let nextView = segue.destination as! colectionviewViewController
             
             nextView.hozonArray = hozonArray
+            nextView.routes = routes
+            nextView.misetitle = misetitle
+            nextView.misesubtitle = misesubtitle
+            nextView.documentid = documentid
             
             
             
