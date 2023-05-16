@@ -11,20 +11,20 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class colectionviewViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,
-UICollectionViewDelegateFlowLayout {
+                                   UICollectionViewDelegateFlowLayout {
     
     var hozonArray = [MKAnnotation]()
-       var routes: [MKRoute] = []
-       
-       var misetitle = [String]()
-       var misesubtitle = [String]()
-       
-       //firestoreのやつ
-       let db = Firestore.firestore()
-       
-       let uid = Auth.auth().currentUser?.uid
-       var documentid = [String]()
-       @IBOutlet var collectionView: UICollectionView!
+    var routes: [MKRoute] = []
+    
+    var misetitle = [String]()
+    var misesubtitle = [String]()
+    
+    //firestoreのやつ
+    let db = Firestore.firestore()
+    
+    let uid = Auth.auth().currentUser?.uid
+    var documentid = [String]()
+    @IBOutlet var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

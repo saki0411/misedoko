@@ -88,14 +88,14 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         var annotations: [MKAnnotation] = []
         let collectionRef = db.collection(uid ?? "hozoncollection")
-
+        
         collectionRef.getDocuments { (snapshot, error) in
             if let error = error {
                 // エラーが発生した場合の処理
                 print("Error fetching documents: \(error)")
                 return
             }
-
+            
             if let snapshot = snapshot, !snapshot.isEmpty {
                 // コレクションにドキュメントが存在する場合の処理
                 print("Collection exists and contains documents")
@@ -190,8 +190,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 self.collectionView.reloadData()
             }
         }
-
-    
+        
+        
         
         
         
