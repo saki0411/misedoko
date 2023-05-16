@@ -87,91 +87,111 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
-        
-        // 全てのドキュメントを取得する
-        db.collection(uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    // 取得したドキュメントごとに実行する
-                    let data = document.data()
-                    let idokeido = data["idokeido"] as? GeoPoint
-                    let title = data["title"] as? String ?? "title:Error"
-                    let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                    self.misetitle.append(title)
-                    self.misesubtitle.append(subtitle)
-                    
-                    let latitude = idokeido?.latitude
-                    let longitude = idokeido?.longitude
-                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotations.append(annotation)
-                    
-                    
-                    self.documentid.append(document.documentID)
-                    print(self.documentid,"CCCCCCC")
-                    
-                    self.hozonArray = annotations
-                    
-                    
-                    
-                    
-                }
-                
+        let collectionRef = db.collection(uid ?? "hozoncollection")
+
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
             }
-            
-            
-            for hozonroute in self.hozonArray {
-                
-                let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
-                let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
-                let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
-                let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
-                
-                let directionRequest = MKDirections.Request()
-                directionRequest.source = sourceMapItem
-                directionRequest.destination = destinationMapItem
-                directionRequest.transportType = .walking
-                
-                let directions = MKDirections(request: directionRequest)
-                directions.calculate { response, error in
-                    guard let response = response, let route = response.routes.first else {
-                        return
-                    }
-                    
-                    self.routes.append(route)
-                    
-                    if hozonroute.isEqual(self.hozonArray.last){
-                        DispatchQueue.main.async {
-                            //最初からピンを立てたいよ
-                            for (index, hozon) in self.hozonArray.enumerated() {
-                                let  annotation1 = coloranotation()
-                                annotation1.coordinate = hozon.coordinate
-                                annotation1.title = self.misetitle[index]
-                                annotation1.subtitle = self.misesubtitle[index]
-                                annotation1.pinImage = "blue.png"
-                                self.mapView.addAnnotation(annotation1)
-                            }
+
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let data = document.data()
+                            let idokeido = data["idokeido"] as? GeoPoint
+                            let title = data["title"] as? String ?? "title:Error"
+                            let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            self.misetitle.append(title)
+                            self.misesubtitle.append(subtitle)
+                            
+                            let latitude = idokeido?.latitude
+                            let longitude = idokeido?.longitude
+                            let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate = coordinate
+                            annotations.append(annotation)
+                            
+                            
+                            self.documentid.append(document.documentID)
+                            print(self.documentid,"CCCCCCC")
+                            
+                            self.hozonArray = annotations
                             
                             
                             
-                            print("全部終わったよ")
-                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                            self.collectionView.reloadData()
+                            
                         }
                         
                     }
                     
                     
+                    for hozonroute in self.hozonArray {
+                        
+                        let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
+                        let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
+                        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+                        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+                        
+                        let directionRequest = MKDirections.Request()
+                        directionRequest.source = sourceMapItem
+                        directionRequest.destination = destinationMapItem
+                        directionRequest.transportType = .walking
+                        
+                        let directions = MKDirections(request: directionRequest)
+                        directions.calculate { response, error in
+                            guard let response = response, let route = response.routes.first else {
+                                return
+                            }
+                            
+                            self.routes.append(route)
+                            
+                            if hozonroute.isEqual(self.hozonArray.last){
+                                DispatchQueue.main.async {
+                                    //最初からピンを立てたいよ
+                                    for (index, hozon) in self.hozonArray.enumerated() {
+                                        let  annotation1 = coloranotation()
+                                        annotation1.coordinate = hozon.coordinate
+                                        annotation1.title = self.misetitle[index]
+                                        annotation1.subtitle = self.misesubtitle[index]
+                                        annotation1.pinImage = "blue.png"
+                                        self.mapView.addAnnotation(annotation1)
+                                    }
+                                    
+                                    
+                                    
+                                    print("全部終わったよ")
+                                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                                    self.collectionView.reloadData()
+                                }
+                                
+                            }
+                            
+                            
+                            
+                        }
+                        
+                    }
                     
                 }
                 
+            } else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is empty")
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
             }
-            
         }
-        
+
+    
         
         
         
