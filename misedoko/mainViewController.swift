@@ -25,14 +25,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var onceOnly = true
     var kensakukekkaArray:[MKAnnotation] = []
     var hozonArray = [MKAnnotation]()
-    
-    
-    
-    
-    
-    
-    
-    
+  
     var searchResults: [MKMapItem] = []
     var selectedPin: MKAnnotation?
     var routes: [MKRoute] = []
@@ -40,6 +33,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misetitle = [String]()
     var misesubtitle = [String]()
     var documentid = [String]()
+    
+   
     
     var loginMailText = ""
     //firestoreのやつ
@@ -76,6 +71,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         layout.minimumInteritemSpacing = 0.0
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
+        
+      
         
         //ログアウト
         loginMailText = Auth.auth().currentUser?.email ?? "エラー"
@@ -155,6 +152,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             self.routes.append(route)
                             
                             if hozonroute.isEqual(self.hozonArray.last){
+                                
+                                
                                 DispatchQueue.main.async {
                                     //最初からピンを立てたいよ
                                     for (index, hozon) in self.hozonArray.enumerated() {
@@ -169,6 +168,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                     
                                     
                                     print("全部終わったよ")
+                                    print(self.routes)
+                                  
                                     self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                                     self.collectionView.reloadData()
                                 }
@@ -185,7 +186,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 
             } else {
                 // コレクションが存在しないかドキュメントが存在しない場合の処理
-                print("Collection does not exist or is empty")
+                print("Collection does not exist or is emptyコレクションがないよ")
                 self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                 self.collectionView.reloadData()
             }
@@ -445,6 +446,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+        
+        cell.indexPath = indexPath // インデックスパスを渡す
+        
         print("全部2",self.misetitle,self.misesubtitle,self.routes)
         let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
@@ -509,6 +513,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         )
         
     }
+
     
     @IBAction func logout(){
         do{

@@ -12,23 +12,30 @@ import FirebaseFirestore
 
 class colectionviewViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,
                                    UICollectionViewDelegateFlowLayout {
+ 
+    
     
     var hozonArray = [MKAnnotation]()
     var routes: [MKRoute] = []
     
     var misetitle = [String]()
     var misesubtitle = [String]()
+    var cellColors = [IndexPath: UIColor]()
     
+   
+   
     //firestoreのやつ
     let db = Firestore.firestore()
     
     let uid = Auth.auth().currentUser?.uid
     var documentid = [String]()
-    @IBOutlet var collectionView: UICollectionView!
+    var savedata: UserDefaults = UserDefaults.standard
+    @IBOutlet  weak var collectionView: UICollectionView!
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("もらう方",hozonArray)
+       
         collectionView.delegate = self
         collectionView.dataSource  = self
         
@@ -40,11 +47,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
+      
+       
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+        
     }
-    
-    
+  
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -61,6 +70,21 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+        
+        
+        
+     
+        cell.indexPath = indexPath
+        
+        cell.backgroundColor = cellColors[indexPath] ?? UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
+               
+               // セルにスワイプジェスチャーレコグナイザーを追加
+               let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+               swipeGesture.direction = .left // スワイプの方向を指定（例: 左方向）
+               cell.addGestureRecognizer(swipeGesture)
+        let swipeGesture2 = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture2(_:)))
+        swipeGesture2.direction = .right // スワイプの方向を指定（例: 左方向）
+        cell.addGestureRecognizer(swipeGesture2)
         
         let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
@@ -125,6 +149,38 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         )
         
     }
+    
+    @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+            guard let cell = gesture.view as? UICollectionViewCell else {
+                return
+            }
+            
+            guard let indexPath = collectionView.indexPath(for: cell) else {
+                return
+            }
+            
+            if gesture.state == .ended {
+                cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)} // スワイプ時の色を設定
+                collectionView.reloadItems(at: [indexPath])
+            }
+        }
+    
+    
+    @objc func handleSwipeGesture2(_ gesture: UISwipeGestureRecognizer) {
+            guard let cell = gesture.view as? UICollectionViewCell else {
+                return
+            }
+            
+            guard let indexPath = collectionView.indexPath(for: cell) else {
+                return
+            }
+            
+            if gesture.state == .ended {
+                cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.9176470588, green: 0.7803921569, blue: 0.6784313725, alpha: 1)} // スワイプ時の色を設定
+                collectionView.reloadItems(at: [indexPath])
+            }
+        }
+   
 }
 
 
