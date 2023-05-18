@@ -22,13 +22,19 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     let userDefaults = UserDefaults.standard
     var indexPath: IndexPath?
     var selectedChoice: String?
+    var savedata: UserDefaults = UserDefaults.standard
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
-        
-        
+     
+      
+        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        }else{
+            zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+            
+        }
         pickerView.delegate = self
         pickerView.dataSource = self
         
@@ -36,21 +42,34 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
      //   zyanruTextField.inputView = pickerView
         createPickerView()
+        for string in zyanru {
+            var index = 0
+            index =  zyanru.firstIndex(of: string) ?? 0
+            pickerView.reloadComponent(index)
+        }
+       
         
     }
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        // インデックスパスがあれば、それに対応するキーで保存された値を取得する
-      
-    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         if let indexPath = indexPath {
             let key = "pickerviewSelectRow\(indexPath.item)" // キーはインデックスパスの番号を含める
             let row = userDefaults.integer(forKey: key) // 保存された行番号を取得する
             pickerView.selectRow(row, inComponent: 0, animated: false) // pickerviewに反映する
-            selectedChoice = zyanru[row] // 選択されたジャンルを更新する
+            if zyanru.isEmpty { // zyanruが空の配列だったら
+              print("zyanruに要素がありません")
+                selectedChoice = ""
+            } else if row < 0 || row >= zyanru.count { // rowがzyanruの範囲外だったら
+              print("rowが不正な値です")
+                selectedChoice = ""
+            } else {
+              // zyanru[row]が存在する場合の処理
+                selectedChoice = zyanru[row] // 選択されたジャンルを更新する
+
+            }
+           
+           
             zyanruTextField.text = selectedChoice // text fieldに反映する
             print("ジャンル表示できてるみたい")
         }else{

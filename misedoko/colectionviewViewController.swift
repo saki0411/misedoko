@@ -22,7 +22,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var misesubtitle = [String]()
     var cellColors = [IndexPath: UIColor]()
     
-   
+    
+    var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+    
    
     //firestoreのやつ
     let db = Firestore.firestore()
@@ -35,7 +37,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+      
         collectionView.delegate = self
         collectionView.dataSource  = self
         
@@ -51,6 +53,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
        
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+        
+       
+        
+        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        }
         
     }
   
@@ -180,6 +188,18 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 collectionView.reloadItems(at: [indexPath])
             }
         }
+   
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toadd" {
+            let nextView = segue.destination as! addViewController
+            nextView.zyanru = zyanru
+        }
+        if segue.identifier == "tomain" {
+            let nextView = segue.destination as! mainViewController
+            nextView.zyanru = zyanru
+        }
+    }
+    
    
 }
 

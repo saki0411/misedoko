@@ -25,6 +25,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var onceOnly = true
     var kensakukekkaArray:[MKAnnotation] = []
     var hozonArray = [MKAnnotation]()
+    var zyanru = [String]()
+    var savedata: UserDefaults = UserDefaults.standard
   
     var searchResults: [MKMapItem] = []
     var selectedPin: MKAnnotation?
@@ -60,7 +62,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
-        
+        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        }
         
         
         
@@ -530,7 +534,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "tocollectionview" {
+        if segue.identifier == "tocollectionview2" {
             let nextView = segue.destination as! colectionviewViewController
             
             nextView.hozonArray = hozonArray
@@ -538,17 +542,18 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.misetitle = misetitle
             nextView.misesubtitle = misesubtitle
             nextView.documentid = documentid
+            nextView.zyanru = zyanru
             
             
             
         }
-        
+      
         
         
     }
     
     
-    
+  
     
 }
 
