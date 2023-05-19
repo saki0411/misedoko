@@ -29,29 +29,22 @@ class loginViewController: UIViewController {
         signUpPasswordConfirmationTextField.text = ""
     }
     override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            
-            // ログイン状態の確認
-            if Auth.auth().currentUser != nil {
-                // ログイン済みの場合、メインページに遷移
-                navigateToMainPage()
-            } else {
-                // ログインされていない場合、ログインページを表示
-                showLoginPage()
-            }
-        }
+        super.viewDidAppear(animated)
         
-        func navigateToMainPage() {
-            // メインページに遷移する処理を実装する
-            // 例えば、Storyboardを使用してSegueを実行する場合は次のように書きます：
-            performSegue(withIdentifier: "tomain", sender: self)
+        // ログイン状態の確認
+        if Auth.auth().currentUser != nil {
+            // ログイン済みの場合、メインページに遷移
+            navigateToMainPage()
+        } else {
+           
         }
-        
-        func showLoginPage() {
-            // ログインページを表示する処理を実装する
-            // 例えば、Storyboardを使用してSegueを実行する場合は次のように書きます：
-         
-        }
+    }
+    
+    func navigateToMainPage() {
+        performSegue(withIdentifier: "tomain", sender: self)
+    }
+    
+   
     
     @IBAction func registerButton() {
         let email = signUpMailTextField.text ?? ""
@@ -82,14 +75,6 @@ class loginViewController: UIViewController {
     }
     
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+   
     
 }

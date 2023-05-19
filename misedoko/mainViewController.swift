@@ -27,16 +27,20 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var hozonArray = [MKAnnotation]()
     var zyanru = [String]()
     var savedata: UserDefaults = UserDefaults.standard
-  
+    
     var searchResults: [MKMapItem] = []
     var selectedPin: MKAnnotation?
     var routes: [MKRoute] = []
     
     var misetitle = [String]()
     var misesubtitle = [String]()
+    
     var documentid = [String]()
     
-   
+    var nearbyAnnotations = [MKAnnotation]()
+    var misetitle2 = [String]()
+    var misesubtitle2 = [String]()
+    
     
     var loginMailText = ""
     //firestoreのやつ
@@ -61,7 +65,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         locationManager.startUpdatingLocation()
         
         
-        
+        //ジャンル保存取り出すよ
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
         }
@@ -76,7 +80,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
-      
+        
         
         //ログアウト
         loginMailText = Auth.auth().currentUser?.email ?? "エラー"
@@ -123,11 +127,30 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             
                             self.documentid.append(document.documentID)
-                            print(self.documentid,"CCCCCCC")
+                          
                             
                             self.hozonArray = annotations
                             
                             
+                            
+                            let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
+                            
+                      
+                                // annotationのCLLocationCoordinate2DをCLLocationに変換する
+                                let annotationLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                                
+                                // 現在地とannotationの距離を計算する
+                                let distance = genzaiti.distance(from: annotationLocation)
+                                
+                                // 距離が1000m以下なら、nearbyAnnotationsに追加する
+                                if distance <= 1000 {
+                                    self.nearbyAnnotations.append(annotation)
+                                    self.misetitle2.append(title)
+                                    self.misesubtitle2.append(subtitle)
+                                }
+                            
+                            
+                           
                             
                             
                         }
@@ -135,7 +158,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     }
                     
                     
-                    for hozonroute in self.hozonArray {
+                    
+                    for hozonroute in self.nearbyAnnotations {
                         
                         let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
                         let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
@@ -155,7 +179,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             self.routes.append(route)
                             
-                            if hozonroute.isEqual(self.hozonArray.last){
+                            if hozonroute.isEqual(self.nearbyAnnotations.last){
                                 
                                 
                                 DispatchQueue.main.async {
@@ -172,8 +196,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                     
                                     
                                     print("全部終わったよ")
-                                    print(self.routes)
                                   
+                                    
                                     self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                                     self.collectionView.reloadData()
                                 }
@@ -332,7 +356,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             routes.append(route)
             
             DispatchQueue.main.async {
-                print("全部",self.misetitle,self.misesubtitle,self.routes)
+               
                 self.collectionView.reloadData()
             }
         }
@@ -441,8 +465,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     // 2-2. セル数
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(hozonArray.count)
-        return hozonArray.count
+      
+        return nearbyAnnotations.count
         
     }
     
@@ -453,10 +477,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         cell.indexPath = indexPath // インデックスパスを渡す
         
-        print("全部2",self.misetitle,self.misesubtitle,self.routes)
+     
         let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle[indexPath.row]
-        cell.adresslabel?.text = misesubtitle[indexPath.row]
+        cell.shopnamelabel?.text = misetitle2[indexPath.row]
+        cell.adresslabel?.text = misesubtitle2[indexPath.row]
         cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
         
         
@@ -517,7 +541,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         )
         
     }
-
+    
     
     @IBAction func logout(){
         do{
@@ -547,14 +571,12 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             
         }
-      
+        
         
         
     }
     
-    
   
-    
 }
 
 
