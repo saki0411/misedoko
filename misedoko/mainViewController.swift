@@ -127,7 +127,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             
                             self.documentid.append(document.documentID)
-                          
+                            
                             
                             self.hozonArray = annotations
                             
@@ -135,24 +135,19 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
                             
-                      
-                                // annotationのCLLocationCoordinate2DをCLLocationに変換する
-                                let annotationLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                                
-                                // 現在地とannotationの距離を計算する
-                                let distance = genzaiti.distance(from: annotationLocation)
-                                
-                                // 距離が1000m以下なら、nearbyAnnotationsに追加する
-                                if distance <= 1000 {
-                                    self.nearbyAnnotations.append(annotation)
-                                    self.misetitle2.append(title)
-                                    self.misesubtitle2.append(subtitle)
-                                }
                             
+                            // annotationのCLLocationCoordinate2DをCLLocationに変換する
+                            let annotationLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
                             
-                           
+                            // 現在地とannotationの距離を計算する
+                            let distance = genzaiti.distance(from: annotationLocation)
                             
-                            
+                            // 距離が1000m以下なら、nearbyAnnotationsに追加する
+                            if distance <= 1000 {
+                                self.nearbyAnnotations.append(annotation)
+                                self.misetitle2.append(title)
+                                self.misesubtitle2.append(subtitle)
+                            }
                         }
                         
                     }
@@ -178,6 +173,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             }
                             
                             self.routes.append(route)
+                            print("できた！　")
                             
                             if hozonroute.isEqual(self.nearbyAnnotations.last){
                                 
@@ -196,7 +192,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                     
                                     
                                     print("全部終わったよ")
-                                  
+                                    
                                     
                                     self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                                     self.collectionView.reloadData()
@@ -355,230 +351,287 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             routes.append(route)
             
-            DispatchQueue.main.async {
-               
-                self.collectionView.reloadData()
-            }
-        }
-        
-    }
-    
-    
-    
-    // MARK: - UISearchBarDelegate
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.mapView.removeAnnotations(self.kensakukekkaArray)
-        
-        self.kensakukekkaArray.removeAll()
-        
-        searchBar.resignFirstResponder()
-        
-        
-        guard let searchText = searchBar.text, !searchText.isEmpty else {
-            return
-        }
-        
-        let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = searchText
-        
-        // 現在地の緯度経度を取得
-        if let currentLocation = currentLocation {
-            let region = MKCoordinateRegion(center: currentLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 1000)
-            searchRequest.region = region
-        }
-        
-        let localSearch = MKLocalSearch(request: searchRequest)
-        localSearch.start { (response, error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
+            let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
+            
+            let coordinate = annotation.coordinate
+            let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            
+            let latitude = geoPoint.latitude
+            let longitude = geoPoint.longitude
+            let coordinate2 = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            
+            // annotationのCLLocationCoordinate2DをCLLocationに変換する
+            let annotationLocation = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+            
+            // 現在地とannotationの距離を計算する
+            let distance = genzaiti.distance(from: annotationLocation)
+            
+            // 距離が1000m以下なら、nearbyAnnotationsに追加する
+            if distance <= 1000 {
+                self.nearbyAnnotations.append(annotation)
+                self.misetitle2.append((annotation.title ?? "") ?? "")
+                self.misesubtitle2.append((annotation.subtitle ?? "") ?? "")
             }
             
-            if let response = response {
-                if response.mapItems.isEmpty {
-                    print("検索結果はありませんでした。")
-                    return
+            
+            
+            
+            
+            
+            
+            for hozonroute in self.nearbyAnnotations {
+                
+                let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
+                let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
+                let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+                let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+                
+                let directionRequest = MKDirections.Request()
+                directionRequest.source = sourceMapItem
+                directionRequest.destination = destinationMapItem
+                directionRequest.transportType = .walking
+                
+                let directions = MKDirections(request: directionRequest)
+                directions.calculate { response, error in
+                    guard let response = response, let route = response.routes.first else {
+                        return
+                    }
+                    
+                    self.routes.append(route)
+                    
                 }
                 
-                for mapItem in response.mapItems {
-                    
-                    
-                    //こっちは普通のピンの設定
-                    let annotation = coloranotation()
-                    
-                    annotation.coordinate = mapItem.placemark.coordinate
-                    annotation.title = mapItem.name
-                    annotation.subtitle = mapItem.placemark.title
-                    annotation.pinImage = "pink.png"
-                    
-                    
-                    
-                    self.searchResults.append(mapItem)
-                    self.kensakukekkaArray.append(annotation)
+                
+                
+                
+                DispatchQueue.main.async {
                     
                     self.collectionView.reloadData()
-                    
-                    
-                    
-                    //hozonarrayを取り出して保存用のピンを指してるよ！
-                    for hozon in self.hozonArray {
-                        let  annotation1 = coloranotation()
-                        annotation1.coordinate = hozon.coordinate
-                        annotation1.title = mapItem.name
-                        annotation1.subtitle = mapItem.placemark.title
-                        annotation1.pinImage = "blue.png"
-                        self.mapView.addAnnotation(annotation1)
-                        
-                        
-                        
-                        
-                    }
-                    //検索結果のピンを指してるよ！
-                    self.mapView.addAnnotations(self.kensakukekkaArray)
-                    
-                    
-                    
-                    
-                    
-                    if let firstMapItem = response.mapItems.first {
-                        let region = MKCoordinateRegion(center: firstMapItem.placemark.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-                        self.mapView.setRegion(region, animated: true)
-                    }
                 }
             }
-            
-            
-            
-            
-            
-            
-            
-            
         }
     }
-    
-    
-    
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    // 2-2. セル数
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      
-        return nearbyAnnotations.count
-        
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        
-        cell.indexPath = indexPath // インデックスパスを渡す
-        
-     
-        let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle2[indexPath.row]
-        cell.adresslabel?.text = misesubtitle2[indexPath.row]
-        cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
-        
-        
-        
-        
-        return cell
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellSizeWidth:CGFloat = 350
-        let cellSizeHeight:CGFloat = 300
-        
-        
-        // widthとheightのサイズを返す
-        return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
-        
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 15.0 // 行間
-    }
-    
-    
-    //長押しのやつ
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
-            //ボタン
-            let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
                 
-                guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
-                    return
-                }
-                if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
-                    self.db.collection(self.uid ?? "hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
-                        if let err = err {
-                            print("Error removing document: \(err)")
-                        } else {
-                            print("Document successfully removed!")
-                            self.collectionView.reloadData()
+                
+                
+                
+                
+                
+                
+                // MARK: - UISearchBarDelegate
+                func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+                    self.mapView.removeAnnotations(self.kensakukekkaArray)
+                    
+                    self.kensakukekkaArray.removeAll()
+                    
+                    searchBar.resignFirstResponder()
+                    
+                    
+                    guard let searchText = searchBar.text, !searchText.isEmpty else {
+                        return
+                    }
+                    
+                    let searchRequest = MKLocalSearch.Request()
+                    searchRequest.naturalLanguageQuery = searchText
+                    
+                    // 現在地の緯度経度を取得
+                    if let currentLocation = currentLocation {
+                        let region = MKCoordinateRegion(center: currentLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 1000)
+                        searchRequest.region = region
+                    }
+                    
+                    let localSearch = MKLocalSearch(request: searchRequest)
+                    localSearch.start { (response, error) in
+                        if let error = error {
+                            print("Error: \(error.localizedDescription)")
+                            return
                         }
+                        
+                        if let response = response {
+                            if response.mapItems.isEmpty {
+                                print("検索結果はありませんでした。")
+                                return
+                            }
+                            
+                            for mapItem in response.mapItems {
+                                
+                                
+                                //こっちは普通のピンの設定
+                                let annotation = coloranotation()
+                                
+                                annotation.coordinate = mapItem.placemark.coordinate
+                                annotation.title = mapItem.name
+                                annotation.subtitle = mapItem.placemark.title
+                                annotation.pinImage = "pink.png"
+                                
+                                
+                                
+                                self.searchResults.append(mapItem)
+                                self.kensakukekkaArray.append(annotation)
+                                
+                                self.collectionView.reloadData()
+                                
+                                
+                                
+                                //hozonarrayを取り出して保存用のピンを指してるよ！
+                                for hozon in self.hozonArray {
+                                    let  annotation1 = coloranotation()
+                                    annotation1.coordinate = hozon.coordinate
+                                    annotation1.title = mapItem.name
+                                    annotation1.subtitle = mapItem.placemark.title
+                                    annotation1.pinImage = "blue.png"
+                                    self.mapView.addAnnotation(annotation1)
+                                    
+                                    
+                                    
+                                    
+                                }
+                                //検索結果のピンを指してるよ！
+                                self.mapView.addAnnotations(self.kensakukekkaArray)
+                                
+                                
+                                
+                                
+                                
+                                if let firstMapItem = response.mapItems.first {
+                                    let region = MKCoordinateRegion(center: firstMapItem.placemark.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                                    self.mapView.setRegion(region, animated: true)
+                                }
+                            }
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                     }
-                    self.documentid.remove(at: indexPath.row)
-                    self.mapView.removeAnnotation(itemToDelete)
-                    self.hozonArray.remove(at: indexToDelete)
-                    self.misetitle.remove(at: indexPath.row)
-                    self.misesubtitle.remove(at: indexPath.row)
-                    self.collectionView.reloadData()
+                }
+                
+                
+                
+                
+                func numberOfSections(in collectionView: UICollectionView) -> Int {
+                    return 1
+                }
+                // 2-2. セル数
+                func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+                    
+                    return nearbyAnnotations.count
                     
                 }
+                
+                
+                func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                    
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+                    
+                    cell.indexPath = indexPath // インデックスパスを渡す
+                    
+                    
+                    let route = routes[indexPath.row]
+                    cell.shopnamelabel?.text = misetitle2[indexPath.row]
+                    cell.adresslabel?.text = misesubtitle2[indexPath.row]
+                    cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
+                    
+                    
+                    
+                    
+                    return cell
+                }
+                
+                
+                func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+                    let cellSizeWidth:CGFloat = 350
+                    let cellSizeHeight:CGFloat = 300
+                    
+                    
+                    // widthとheightのサイズを返す
+                    return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
+                    
+                    
+                }
+                
+                func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+                    return 15.0 // 行間
+                }
+                
+                
+                //長押しのやつ
+                func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+                    return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
+                        //ボタン
+                        let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
+                            
+                            guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
+                                return
+                            }
+                            if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
+                                self.db.collection(self.uid ?? "hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
+                                    if let err = err {
+                                        print("Error removing document: \(err)")
+                                    } else {
+                                        print("Document successfully removed!")
+                                        self.collectionView.reloadData()
+                                    }
+                                }
+                                self.documentid.remove(at: indexPath.row)
+                                self.mapView.removeAnnotation(itemToDelete)
+                                self.hozonArray.remove(at: indexToDelete)
+                                self.misetitle.remove(at: indexPath.row)
+                                self.misesubtitle.remove(at: indexPath.row)
+                                self.collectionView.reloadData()
+                                
+                            }
+                        }
+                        
+                        return UIMenu(title: "Menu", children: [delete])
+                        
+                        
+                    }
+                    )
+                    
+                }
+                
+                
+                @IBAction func logout(){
+                    do{
+                        try Auth.auth().signOut()
+                        self .dismiss(animated: true, completion: nil)
+                    }catch let error as NSError {
+                        print(error)
+                    }
+                }
+                @IBAction func tebleview(){
+                    self.performSegue(withIdentifier: "totableview", sender: nil)
+                }
+                
+                
+                override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+                    
+                    if segue.identifier == "tocollectionview2" {
+                        let nextView = segue.destination as! colectionviewViewController
+                        
+                        nextView.hozonArray = hozonArray
+                        nextView.routes = routes
+                        nextView.misetitle = misetitle
+                        nextView.misesubtitle = misesubtitle
+                        nextView.documentid = documentid
+                        nextView.zyanru = zyanru
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                }
+                
+                
             }
             
-            return UIMenu(title: "Menu", children: [delete])
-            
-            
-        }
-        )
-        
-    }
-    
-    
-    @IBAction func logout(){
-        do{
-            try Auth.auth().signOut()
-            self .dismiss(animated: true, completion: nil)
-        }catch let error as NSError {
-            print(error)
-        }
-    }
-    @IBAction func tebleview(){
-        self.performSegue(withIdentifier: "totableview", sender: nil)
-    }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "tocollectionview2" {
-            let nextView = segue.destination as! colectionviewViewController
-            
-            nextView.hozonArray = hozonArray
-            nextView.routes = routes
-            nextView.misetitle = misetitle
-            nextView.misesubtitle = misesubtitle
-            nextView.documentid = documentid
-            nextView.zyanru = zyanru
             
             
             
-        }
-        
-        
-        
-    }
-    
-  
-}
-
-
-
-
