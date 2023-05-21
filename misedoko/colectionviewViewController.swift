@@ -66,7 +66,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-   
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return hozonArray.count
         
@@ -93,10 +93,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         swipeGesture2.direction = .right // スワイプの方向を指定（例: 左方向）
         cell.addGestureRecognizer(swipeGesture2)
         
-       // let route = routes[indexPath.row]
+        // let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
         cell.adresslabel?.text = misesubtitle[indexPath.row]
-     //   cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
+        //   cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
         
         
         
