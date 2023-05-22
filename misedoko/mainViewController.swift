@@ -48,6 +48,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var geoPoints =  [GeoPoint]()
     let uid = Auth.auth().currentUser?.uid
     
+    //多次元配列、位置情報とジャンルを入れたい
+    var hozondic = [[String]]()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,7 +68,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        
+    
         //ジャンル保存取り出すよ
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
@@ -154,7 +158,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     
                     
-                    for hozonroute in self.nearbyAnnotations {
+                    for hozonroute in self.hozonArray {
                         
                         let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
                         let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
@@ -175,7 +179,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             self.routes.append(route)
                             print("できた！　")
                             
-                            if hozonroute.isEqual(self.nearbyAnnotations.last){
+                            if hozonroute.isEqual(self.hozonArray.last){
                                 
                                 
                                 DispatchQueue.main.async {
@@ -187,6 +191,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                         annotation1.subtitle = self.misesubtitle[index]
                                         annotation1.pinImage = "blue.png"
                                         self.mapView.addAnnotation(annotation1)
+                                       
                                     }
                                     
                                     
@@ -379,7 +384,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             
             
-            for hozonroute in self.nearbyAnnotations {
+            for hozonroute in self.hozonArray {
                 
                 let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
                 let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
@@ -474,18 +479,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     
                     //hozonarrayを取り出して保存用のピンを指してるよ！
-                    for hozon in self.hozonArray {
+                    for (index, hozon) in self.hozonArray.enumerated() {
                         let  annotation1 = coloranotation()
                         annotation1.coordinate = hozon.coordinate
-                        annotation1.title = mapItem.name
-                        annotation1.subtitle = mapItem.placemark.title
+                        annotation1.title = self.misetitle[index]
+                        annotation1.subtitle = self.misesubtitle[index]
                         annotation1.pinImage = "blue.png"
                         self.mapView.addAnnotation(annotation1)
-                        
-                        
-                        
-                        
+                       
                     }
+                    
                     //検索結果のピンを指してるよ！
                     self.mapView.addAnnotations(self.kensakukekkaArray)
                     
@@ -519,7 +522,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     // 2-2. セル数
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return nearbyAnnotations.count
+        return hozonArray.count
         
     }
     
@@ -532,8 +535,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle2[indexPath.row]
-        cell.adresslabel?.text = misesubtitle2[indexPath.row]
+        cell.shopnamelabel?.text = misetitle[indexPath.row]
+        cell.adresslabel?.text = misesubtitle[indexPath.row]
         cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
         
         

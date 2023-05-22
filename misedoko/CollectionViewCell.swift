@@ -23,12 +23,13 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var indexPath: IndexPath?
     var selectedChoice: String?
     var savedata: UserDefaults = UserDefaults.standard
+    var hozondic = [[String]]()
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
+      
+     
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
         }else{

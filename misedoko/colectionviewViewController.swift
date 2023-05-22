@@ -24,20 +24,22 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     
     var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+    var savedata: UserDefaults = UserDefaults.standard
+   
     
-    
+     
     //firestoreのやつ
     let db = Firestore.firestore()
     
     let uid = Auth.auth().currentUser?.uid
     var documentid = [String]()
-    var savedata: UserDefaults = UserDefaults.standard
+  
     @IBOutlet  weak var collectionView: UICollectionView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+     
         collectionView.delegate = self
         collectionView.dataSource  = self
         
@@ -58,6 +60,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
+          
+           
         }
         
     }
@@ -144,6 +148,32 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.hozonArray.remove(at: indexToDelete)
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
+                    
+                    let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow1
+
+                    // UserDefaultsに保存されているすべてのキーを取得する
+                    let keys = Array (UserDefaults.standard.dictionaryRepresentation ().keys)
+
+                    // "pickerviewSelectRow"で始まるキーだけをカウントする
+                    let count = keys.filter {$0.hasPrefix ("pickerviewSelectRow")}.count
+
+                    // 削除したいキー以降のキーに対応する値を取得してずらす
+                    if indexPath.item < count - 1 { // インデックスが最後の要素以外のときだけ実行する
+                        for i in indexPath.item..<count - 1 {
+                            let nextKey = "pickerviewSelectRow\(i + 2)" // pickerviewSelectRow3, pickerviewSelectRow4, ...
+                            let row = self.savedata.integer(forKey: nextKey) // 3, 4, ...
+                            let currentKey = "pickerviewSelectRow\(i + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
+                            self.savedata.set(row, forKey: currentKey) // pickerviewSelectRow2に3を設定する, pickerviewSelectRow3に4を設定する, ...
+                        }
+                    }
+
+                    // 配列の最後の要素に対応するキーを削除する
+                    let lastKey = "pickerviewSelectRow\(count - 1)" // pickerviewSelectRow4
+                    self.savedata.removeObject(forKey: lastKey)
+
+                    self.savedata.synchronize()
+
+
                     collectionView.reloadData()
                     
                 }

@@ -12,7 +12,7 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
     
-    var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店","スタバ"]
+    var zyanru = [String]()
     
     var savedata: UserDefaults = UserDefaults.standard
     
