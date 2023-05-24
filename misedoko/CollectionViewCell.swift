@@ -50,6 +50,8 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         }
         
         
+        
+        
     }
     
     override func layoutSubviews() {

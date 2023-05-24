@@ -81,8 +81,19 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        
-        
+      
+        let row = cell.pickerView.selectedRow(inComponent: 0)
+        // ユーザーデフォルトにキーを作る
+        let key = "pickerviewSelectRow\(indexPath.item + 1)"
+        if  savedata.object(forKey: key) == nil{
+            // ユーザーデフォルトに値を保存する
+            UserDefaults.standard.set(row, forKey: key)
+            
+        }
+     
+        cell.pickerView.selectRow(row, inComponent: 0, animated: false)
+          // セルを返す
+       
         
         
         cell.indexPath = indexPath
@@ -140,7 +151,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             print("Error removing document: \(err)")
                         } else {
                             print("Document successfully removed!")
-                            collectionView.reloadData()
+                            
                         }
                     }
                     self.documentid.remove(at: indexPath.row)
@@ -149,28 +160,57 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
                     
-                 
-                    let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow1
+                   
+                    let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
+
                     // UserDefaultsに保存されているキーの値を取得する
+
                     let row = self.savedata.integer(forKey: key) // 1
-                  
+
+                    // 配列から要素を削除する
+
+                    self.savedata.removeObject(forKey: key)
+
                     // UserDefaultsに保存されているすべてのキーを取得する
+
                     let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
-                    // "pickerviewSelectRow"で始まるキーだけをカウントする
+
                     let count = keys.filter {$0.hasPrefix("pickerviewSelectRow")}.count
+
+
+
+                    print("これだよ",keys.filter {$0.hasPrefix("pickerviewSelectRow")})
+
+                    print(count)
+
                     // 削除したいキー以降のキーに対応する値を取得してずらす
+
                     if indexPath.item < count - 1 { // インデックスが最後の要素以外のときだけ実行する
-                      for i in indexPath.item..<count - 1 {
-                        let nextKey = "pickerviewSelectRow\(i + 2)" // pickerviewSelectRow3, pickerviewSelectRow4, ...
-                        let nextRow = self.savedata.integer(forKey: nextKey) // 3, 4, ...
-                        let currentKey = "pickerviewSelectRow\(i + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
-                        self.savedata.set(nextRow, forKey: currentKey) // pickerviewSelectRow2に3を設定する, pickerviewSelectRow3に4を設定する, ...
-                      }
+
+                    print("できてる")
+
+                    for i in indexPath.item..<count - 1 {
+
+                    let nextKey = "pickerviewSelectRow\(i + 1)"
+
+                    let nextRow = self.savedata.integer(forKey: nextKey)
+
+                    let currentKey = "pickerviewSelectRow\(i + 2)"
+
+                    self.savedata.set(nextRow, forKey: currentKey)
+
                     }
-                    // 配列の最後の要素に対応するキーを削除する
-                    let lastKey = "pickerviewSelectRow\(count - 1)" // pickerviewSelectRow4
+
+                    }
+
+
+
+                    let lastKey = "pickerviewSelectRow\(count)"
+
                     self.savedata.removeObject(forKey: lastKey)
-                    // UserDefaultsに保存したデータを確実に反映させる
+
+
+
                     self.savedata.synchronize()
 
 
@@ -186,6 +226,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         )
         
     }
+   
     
     @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
         guard let cell = gesture.view as? UICollectionViewCell else {
@@ -228,6 +269,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             nextView.zyanru = zyanru
         }
     }
+    
+    
     
     
 }

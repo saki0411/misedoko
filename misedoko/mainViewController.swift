@@ -531,6 +531,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
+        let row = cell.pickerView.selectedRow(inComponent: 0)
+        // ユーザーデフォルトにキーを作る
+        let key = "pickerviewSelectRow\(indexPath.item + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
+        if  savedata.object(forKey: key) == nil{
+            // ユーザーデフォルトに値を保存する
+            UserDefaults.standard.set(row, forKey: key)
+            
+        }
+       
         cell.indexPath = indexPath // インデックスパスを渡す
         
         
