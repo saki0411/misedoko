@@ -40,7 +40,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var nearbyAnnotations = [MKAnnotation]()
     var misetitle2 = [String]()
     var misesubtitle2 = [String]()
-    
+    //var genres: [String] = []
+    var genres: [(genre: String, documentID: String)] = []
     
     var loginMailText = ""
     //firestoreのやつ
@@ -119,6 +120,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             let idokeido = data["idokeido"] as? GeoPoint
                             let title = data["title"] as? String ?? "title:Error"
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            
+                            let genre = document.data()["genre"] as? String ?? "カフェ"
+                           
+                            let documentID = document.documentID
+                            self.genres.append((genre, documentID))
+                            print(self.genres,"ジャンルだよ")
+                            
                             self.misetitle.append(title)
                             self.misesubtitle.append(subtitle)
                             
@@ -131,11 +139,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             
                             self.documentid.append(document.documentID)
+                            print(self.documentid)
                             
                             
                             self.hozonArray = annotations
-                            
-                            
+                      
                             
                             let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
                             
@@ -313,7 +321,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 "idokeido": geoPoint,
                 "title":   annotation.title!!,
                 "subtitle":annotation.subtitle!!,
-                "timestamp": FieldValue.serverTimestamp()
+                "timestamp": FieldValue.serverTimestamp(),
+                "genre":"カフェ"
             ]) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
@@ -531,6 +540,18 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
+       
+        if !genres.isEmpty {
+
+        // セルにジャンルの配列を渡す（これが重要です）
+
+        cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
+
+        }
+       
+
+        
+
         let row = cell.pickerView.selectedRow(inComponent: 0)
         // ユーザーデフォルトにキーを作る
         let key = "pickerviewSelectRow\(indexPath.item + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
@@ -632,6 +653,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.misesubtitle = misesubtitle
             nextView.documentid = documentid
             nextView.zyanru = zyanru
+            nextView.genres = genres
             
             
             

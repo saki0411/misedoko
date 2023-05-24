@@ -25,6 +25,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
     var savedata: UserDefaults = UserDefaults.standard
+    
+    var genres: [(genre: String, documentID: String)] = []
    
     
      
@@ -82,6 +84,15 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
       
+        if !genres.isEmpty {
+
+        // セルにジャンルの配列を渡す（これが重要です）
+
+        cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
+
+        }
+       
+        
         let row = cell.pickerView.selectedRow(inComponent: 0)
         // ユーザーデフォルトにキーを作る
         let key = "pickerviewSelectRow\(indexPath.item + 1)"
@@ -161,7 +172,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.misesubtitle.remove(at: indexPath.row)
                     
                    
-                    let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
+          /*         let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
 
                     // UserDefaultsに保存されているキーの値を取得する
 
@@ -212,7 +223,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
 
 
                     self.savedata.synchronize()
-
+*/
 
                     collectionView.reloadData()
                     

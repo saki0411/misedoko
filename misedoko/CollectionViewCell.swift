@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseAuth
 
 class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -24,13 +26,19 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var selectedChoice: String?
     var savedata: UserDefaults = UserDefaults.standard
     var hozondic = [[String]]()
+    var documentid = [String]()
+    var genres: [(genre: String, documentID: String)] = []
     
+    
+    let db = Firestore.firestore()
+    let uid = Auth.auth().currentUser?.uid
+  
     
     override func awakeFromNib() {
         super.awakeFromNib()
       
-     
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+
+       if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
         }else{
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
@@ -56,7 +64,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if let indexPath = indexPath {
+ /*       if let indexPath = indexPath {
             let key = "pickerviewSelectRow\(indexPath.item)" // キーはインデックスパスの番号を含める
             let row = userDefaults.integer(forKey: key) // 保存された行番号を取得する
             pickerView.selectRow(row, inComponent: 0, animated: false) // pickerviewに反映する
@@ -78,6 +86,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         }else{
             print("ジャンル保存できてないみたい")
         }
+  */
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -91,18 +100,45 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         return zyanru[row]
+        
     }
     
     
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if !genres.isEmpty {
+print(genres,"これだよ")
+            let genre = genres[row].genre
+           
+          
+            let documentID = genres[row - 1].documentID
+            
+            print("あああ",documentid)
+            db.collection(self.uid ?? "hozoncollection").document(documentID).updateData(["genre": genre]) { error in
+                
+                if let error = error {
+                    
+                    print("エラーが発生しました: \(error)")
+                    
+                } else {
+                    
+                    print("ジャンルを更新しました")
+                    
+                }
+                
+            }
+        }else{
+            print("ああああああ")
+        }
         
         selectedChoice = zyanru[row]
         self.zyanruTextField.text =  selectedChoice
-        if let indexPath = indexPath {
+   /*     if let indexPath = indexPath {
             let key = "pickerviewSelectRow\(indexPath.item)"
             userDefaults.set(row, forKey: key)
             userDefaults.synchronize()
-        }
+    
+    */
         
         
         
