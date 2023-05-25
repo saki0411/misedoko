@@ -13,6 +13,7 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     @IBOutlet weak var textField: UITextField!
     
     var zyanru = [String]()
+    var selectedChoice: String?
     
     var savedata: UserDefaults = UserDefaults.standard
     

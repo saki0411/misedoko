@@ -27,6 +27,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var savedata: UserDefaults = UserDefaults.standard
     
     var genres: [(genre: String, documentID: String)] = []
+    var selectedChoices = [String]()
    
     
      
@@ -87,7 +88,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if !genres.isEmpty {
 
         // セルにジャンルの配列を渡す（これが重要です）
-
+            cell.documentid = documentid
+            cell.selectedChoices = selectedChoices
         cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
 
         }

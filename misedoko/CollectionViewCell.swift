@@ -28,6 +28,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var hozondic = [[String]]()
     var documentid = [String]()
     var genres: [(genre: String, documentID: String)] = []
+    var selectedChoices = [String]()
     
     
     let db = Firestore.firestore()
@@ -44,6 +45,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
             
         }
+        
+        
+        
         pickerView.delegate = self
         pickerView.dataSource = self
         
@@ -106,15 +110,40 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if !genres.isEmpty {
-print(genres,"これだよ")
-            let genre = genres[row].genre
+       
+        
+        for choice in selectedChoices {
+            selectedChoice?.append(choice)
+            print(documentid)
+            let docRef = db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0])
+        docRef.getDocument { (document, error) in
+          if let document = document, document.exists {
+            let data = document.data()
+            let name = data?["genre"] as? String ?? "genre:Error"
+              self.selectedChoice = name
+              self.zyanruTextField.text =  self.selectedChoice
+            print("Success! Name:\(name)")
+          } else {
+            print("Document does not exist")
+          }
+        }
+           
+        }
+      
+       
+            
+         selectedChoice = zyanru[row]
+           
+            self.zyanruTextField.text =  selectedChoice
+        print(selectedChoice as Any)
+           
            
           
-            let documentID = genres[row - 1].documentID
+         //   let documentID = genres[row].documentID
             
+           
             print("あああ",documentid)
-            db.collection(self.uid ?? "hozoncollection").document(documentID).updateData(["genre": genre]) { error in
+        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ?? "カフェ"]) { error in
                 
                 if let error = error {
                     
@@ -127,12 +156,12 @@ print(genres,"これだよ")
                 }
                 
             }
-        }else{
-            print("ああああああ")
-        }
         
-        selectedChoice = zyanru[row]
-        self.zyanruTextField.text =  selectedChoice
+        
+    //    selectedChoice = zyanru[row]
+    //    self.zyanruTextField.text =  selectedChoice
+        
+        
    /*     if let indexPath = indexPath {
             let key = "pickerviewSelectRow\(indexPath.item)"
             userDefaults.set(row, forKey: key)

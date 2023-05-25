@@ -36,6 +36,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misesubtitle = [String]()
     
     var documentid = [String]()
+    var selectedChoice: String?
+    var selectedChoices = [String]()
     
     var nearbyAnnotations = [MKAnnotation]()
     var misetitle2 = [String]()
@@ -122,10 +124,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
                             
                             let genre = document.data()["genre"] as? String ?? "カフェ"
-                           
-                            let documentID = document.documentID
-                            self.genres.append((genre, documentID))
-                            print(self.genres,"ジャンルだよ")
+                            self.selectedChoices.append(genre)
+                          
+                            
+                          
                             
                             self.misetitle.append(title)
                             self.misesubtitle.append(subtitle)
@@ -137,9 +139,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             annotation.coordinate = coordinate
                             annotations.append(annotation)
                             
+                           
                             
-                            self.documentid.append(document.documentID)
-                            print(self.documentid)
+                            
                             
                             
                             self.hozonArray = annotations
@@ -541,13 +543,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
        
-        if !genres.isEmpty {
-
+       
+        print(documentid,"な")
         // セルにジャンルの配列を渡す（これが重要です）
+            cell.documentid = documentid
 
         cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
+            cell.selectedChoice = selectedChoice
 
-        }
+        
        
 
         
@@ -654,7 +658,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.documentid = documentid
             nextView.zyanru = zyanru
             nextView.genres = genres
-            
+            nextView.selectedChoices = selectedChoices
             
             
         }
