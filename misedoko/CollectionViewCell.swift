@@ -23,12 +23,13 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var pickerView: UIPickerView = UIPickerView()
     let userDefaults = UserDefaults.standard
     var indexPath: IndexPath?
-    var selectedChoice: String?
+    var selectedChoice: String = ""
     var savedata: UserDefaults = UserDefaults.standard
     var hozondic = [[String]]()
     var documentid = [String]()
     var genres: [(genre: String, documentID: String)] = []
     var selectedChoices = [String]()
+    var choicecount = Int()
     
     
     let db = Firestore.firestore()
@@ -102,7 +103,8 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
+      
+      
         return zyanru[row]
         
     }
@@ -111,39 +113,21 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
        
-        
-        for choice in selectedChoices {
-            selectedChoice?.append(choice)
-            print(documentid)
-            let docRef = db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0])
-        docRef.getDocument { (document, error) in
-          if let document = document, document.exists {
-            let data = document.data()
-            let name = data?["genre"] as? String ?? "genre:Error"
-              self.selectedChoice = name
-              self.zyanruTextField.text =  self.selectedChoice
-            print("Success! Name:\(name)")
-          } else {
-            print("Document does not exist")
-          }
-        }
-           
-        }
+     
       
+        
+        self.zyanruTextField.text =  selectedChoice
+    print(selectedChoice as Any)
        
-            
-         selectedChoice = zyanru[row]
-           
-            self.zyanruTextField.text =  selectedChoice
-        print(selectedChoice as Any)
-           
+        
+        
            
           
          //   let documentID = genres[row].documentID
             
            
             print("あああ",documentid)
-        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ?? "カフェ"]) { error in
+        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ]) { error in
                 
                 if let error = error {
                     

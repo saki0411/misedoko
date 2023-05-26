@@ -36,7 +36,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misesubtitle = [String]()
     
     var documentid = [String]()
-    var selectedChoice: String?
+    var selectedChoice: String = ""
     var selectedChoices = [String]()
     
     var nearbyAnnotations = [MKAnnotation]()
@@ -44,6 +44,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misesubtitle2 = [String]()
     //var genres: [String] = []
     var genres: [(genre: String, documentID: String)] = []
+    var choicecount = Int()
     
     var loginMailText = ""
     //firestoreのやつ
@@ -53,6 +54,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     //多次元配列、位置情報とジャンルを入れたい
     var hozondic = [[String]]()
+    
     
     
     override func viewDidLoad() {
@@ -71,7 +73,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-    
+        
         //ジャンル保存取り出すよ
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
@@ -124,10 +126,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
                             
                             let genre = document.data()["genre"] as? String ?? "カフェ"
-                            self.selectedChoices.append(genre)
-                          
                             
-                          
+                            self.selectedChoices.append(genre)
+                            print(self.selectedChoices,"choicesだよ！")
+                            self.documentid.append(document.documentID)
+                            
+                            
+                            
                             
                             self.misetitle.append(title)
                             self.misesubtitle.append(subtitle)
@@ -139,13 +144,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             annotation.coordinate = coordinate
                             annotations.append(annotation)
                             
-                           
+                            
                             
                             
                             
                             
                             self.hozonArray = annotations
-                      
+                            
                             
                             let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
                             
@@ -184,12 +189,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         directions.calculate { response, error in
                             guard let response = response, let route = response.routes.first else {
                                 return
+                                
                             }
                             
                             self.routes.append(route)
-                            print("できた！　")
+                            print("routeだよ")
+                            
+                            
                             
                             if hozonroute.isEqual(self.hozonArray.last){
+                                
                                 
                                 
                                 DispatchQueue.main.async {
@@ -201,10 +210,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                         annotation1.subtitle = self.misesubtitle[index]
                                         annotation1.pinImage = "blue.png"
                                         self.mapView.addAnnotation(annotation1)
-                                       
+                                        
                                     }
                                     
-                                    
+                                    print("できたよ！！!",self.routes)
                                     
                                     print("全部終わったよ")
                                     
@@ -214,7 +223,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                 }
                                 
                             }
-                            
                             
                             
                         }
@@ -421,6 +429,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 
                 
                 DispatchQueue.main.async {
+                    print("aaaaaaaaa")
                     
                     self.collectionView.reloadData()
                 }
@@ -497,7 +506,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         annotation1.subtitle = self.misesubtitle[index]
                         annotation1.pinImage = "blue.png"
                         self.mapView.addAnnotation(annotation1)
-                       
+                        
                     }
                     
                     //検索結果のピンを指してるよ！
@@ -542,21 +551,32 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-       
-       
-        print(documentid,"な")
-        // セルにジャンルの配列を渡す（これが重要です）
-            cell.documentid = documentid
-
-        cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
-            cell.selectedChoice = selectedChoice
-
+        cell.documentid = documentid
         
-       
-
+        cell.genres = genres
         
-
+        cell.selectedChoices = selectedChoices
+        print(selectedChoices,"ここは！？")
+        
+      
+        for choice in selectedChoices {
+            
+            choicecount = zyanru.firstIndex(of: choice) ?? 0
+            cell.pickerView.selectRow(choicecount, inComponent: 0, animated: false)
+            selectedChoice = choice
+            print(selectedChoice as Any,"ここ！!")
+         
+            
+            cell.zyanruTextField.text = selectedChoice
+            
+            
+        }
+        
+        
+        
+        
         let row = cell.pickerView.selectedRow(inComponent: 0)
+    
         // ユーザーデフォルトにキーを作る
         let key = "pickerviewSelectRow\(indexPath.item + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
         if  savedata.object(forKey: key) == nil{
@@ -564,10 +584,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             UserDefaults.standard.set(row, forKey: key)
             
         }
-       
+        
         cell.indexPath = indexPath // インデックスパスを渡す
         
-        
+        print(routes)
         let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
         cell.adresslabel?.text = misesubtitle[indexPath.row]

@@ -28,6 +28,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var genres: [(genre: String, documentID: String)] = []
     var selectedChoices = [String]()
+    var selectedChoice: String = ""
    
     
      
@@ -85,15 +86,23 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
       
-        if !genres.isEmpty {
-
-        // セルにジャンルの配列を渡す（これが重要です）
-            cell.documentid = documentid
-            cell.selectedChoices = selectedChoices
-        cell.genres = genres // ここでgenresはCustomCellクラスで定義したプロパティです。
-
+        cell.documentid = documentid
+        
+        cell.genres = genres
+        
+        cell.selectedChoices = selectedChoices
+        print(selectedChoices,"ここは！？")
+        
+        for choice in selectedChoices {
+            
+            selectedChoice = choice
+            print(selectedChoice as Any,"ここ！!")
+            cell.zyanruTextField.text =  self.selectedChoice
+            
+            cell.zyanruTextField.text =  self.selectedChoice
+            
+            
         }
-       
         
         let row = cell.pickerView.selectedRow(inComponent: 0)
         // ユーザーデフォルトにキーを作る
