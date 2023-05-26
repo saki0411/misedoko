@@ -29,6 +29,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var genres: [(genre: String, documentID: String)] = []
     var selectedChoices = [String]()
     var selectedChoice: String = ""
+    var choicecount = [Int]()
    
     
      
@@ -86,24 +87,28 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
       
+        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+             zyanru = savedata.object(forKey: "zyanru") as! [String]
+         }else{
+             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+             
+         }
+         
         cell.documentid = documentid
         
         cell.genres = genres
-        
         cell.selectedChoices = selectedChoices
-        print(selectedChoices,"ここは！？")
-        
+        let componentCount = cell.pickerView.numberOfComponents
         for choice in selectedChoices {
-            
-            selectedChoice = choice
-            print(selectedChoice as Any,"ここ！!")
-            cell.zyanruTextField.text =  self.selectedChoice
-            
-            cell.zyanruTextField.text =  self.selectedChoice
-            
-            
+            choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
+          
         }
         
+      
+        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
+          cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
+          cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+
         let row = cell.pickerView.selectedRow(inComponent: 0)
         // ユーザーデフォルトにキーを作る
         let key = "pickerviewSelectRow\(indexPath.item + 1)"

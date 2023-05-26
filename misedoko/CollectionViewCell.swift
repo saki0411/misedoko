@@ -69,6 +69,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+      
+        
  /*       if let indexPath = indexPath {
             let key = "pickerviewSelectRow\(indexPath.item)" // キーはインデックスパスの番号を含める
             let row = userDefaults.integer(forKey: key) // 保存された行番号を取得する
@@ -112,17 +115,24 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-       
-     
       
-        
-        self.zyanruTextField.text =  selectedChoice
-    print(selectedChoice as Any)
-       
+        selectedChoice = zyanru[row]
+          // テキストフィールドに表示
+          zyanruTextField.text = selectedChoice
+      
+  /*      self.zyanruTextField.text =  selectedChoice
+            print(selectedChoice as Any)
+
+
+                 selectedChoice = zyanru[row]
+
+                    self.zyanruTextField.text =  selectedChoice
+                print(selectedChoice as Any)
+      selectedChoice = zyanru[row]
         
         
            
-          
+          */
          //   let documentID = genres[row].documentID
             
            
@@ -156,6 +166,21 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
         
         
+    }
+    func pickerstart(){
+        
+             
+             choicecount = zyanru.firstIndex(of: selectedChoice) ?? 0
+          pickerView.selectRow(choicecount, inComponent: 0, animated: false)
+            
+             print(selectedChoice as Any,"ここ！!")
+          
+             selectedChoice = zyanru[choicecount] // 選択されたジャンルを更新する
+          zyanruTextField.text = selectedChoice
+             
+             
+         
+         
     }
     
     func createPickerView() {

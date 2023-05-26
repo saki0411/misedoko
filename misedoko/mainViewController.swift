@@ -44,7 +44,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misesubtitle2 = [String]()
     //var genres: [String] = []
     var genres: [(genre: String, documentID: String)] = []
-    var choicecount = Int()
+    var choicecount = [Int]()
     
     var loginMailText = ""
     //firestoreのやつ
@@ -550,29 +550,49 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        
+        if  savedata.object(forKey: "zyanru") as? [String] != nil{
+             zyanru = savedata.object(forKey: "zyanru") as! [String]
+         }else{
+             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+             
+         }
+         
         cell.documentid = documentid
         
         cell.genres = genres
-        
         cell.selectedChoices = selectedChoices
+        let componentCount = cell.pickerView.numberOfComponents
+        for choice in selectedChoices {
+            choicecount.append(zyanru.firstIndex(of: choice) ?? 0)
+            print(zyanru.firstIndex(of: choice) ?? 0)
+          
+        }
+        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
+          cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
+          cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+
+        
+        /*      DispatchQueue.main.async {
+            print(self.choicecount)
+            for component in 0..<componentCount {
+                cell.pickerView.selectRow(self.choicecount[component], inComponent: component, animated: false)
+                cell.zyanruTextField.text = self.zyanru[self.choicecount[component]]
+            }
+           
+        }
+       */
+ //       selectedChoice =  // 選択されたジャンルを更新する
+ //       cell.zyanruTextField.text = selectedChoice
+  /*      for choice in selectedChoices {
+           
+            cell.selectedChoice = choice
+            cell.pickerstart()
+        }
+      
         print(selectedChoices,"ここは！？")
         
       
-        for choice in selectedChoices {
-            
-            choicecount = zyanru.firstIndex(of: choice) ?? 0
-            cell.pickerView.selectRow(choicecount, inComponent: 0, animated: false)
-            selectedChoice = choice
-            print(selectedChoice as Any,"ここ！!")
-         
-            
-            cell.zyanruTextField.text = selectedChoice
-            
-            
-        }
-        
-        
+      */
         
         
         let row = cell.pickerView.selectedRow(inComponent: 0)
