@@ -70,6 +70,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
             
         }
+        selectedChoices = []
         let collectionRef = db.collection(uid ?? "hozoncollection")
         
         collectionRef.getDocuments { (snapshot, error) in
@@ -104,8 +105,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         self.choicecount  = []
                         for choice in self.selectedChoices {
                             self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
-                            print(self.choicecount,"c")
+                           
                         }
+                        print(self.choicecount,"c")
                     }
                     self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                     self.collectionView.reloadData()
