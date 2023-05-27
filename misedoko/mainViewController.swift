@@ -193,7 +193,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             }
                             
                             self.routes.append(route)
-                            print("routeだよ")
+                        
                             
                             
                             
@@ -213,7 +213,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                         
                                     }
                                     
-                                    print("できたよ！！!",self.routes)
+                                  
+                                    
                                     
                                     print("全部終わったよ")
                                     
@@ -550,60 +551,29 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+        
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
-             zyanru = savedata.object(forKey: "zyanru") as! [String]
-         }else{
-             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
-             
-         }
-         
+            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        }else{
+            zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+            
+        }
+        
         cell.documentid = documentid
         
         cell.genres = genres
-        cell.selectedChoices = selectedChoices
-        let componentCount = cell.pickerView.numberOfComponents
+      //  cell.selectedChoices = selectedChoices
+        choicecount = []
         for choice in selectedChoices {
-            choicecount.append(zyanru.firstIndex(of: choice) ?? 0)
-            print(zyanru.firstIndex(of: choice) ?? 0)
-          
-        }
-        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
-          cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
-          cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
-
-        
-        /*      DispatchQueue.main.async {
-            print(self.choicecount)
-            for component in 0..<componentCount {
-                cell.pickerView.selectRow(self.choicecount[component], inComponent: component, animated: false)
-                cell.zyanruTextField.text = self.zyanru[self.choicecount[component]]
-            }
-           
-        }
-       */
- //       selectedChoice =  // 選択されたジャンルを更新する
- //       cell.zyanruTextField.text = selectedChoice
-  /*      for choice in selectedChoices {
-           
-            cell.selectedChoice = choice
-            cell.pickerstart()
-        }
-      
-        print(selectedChoices,"ここは！？")
-        
-      
-      */
-        
-        
-        let row = cell.pickerView.selectedRow(inComponent: 0)
-    
-        // ユーザーデフォルトにキーを作る
-        let key = "pickerviewSelectRow\(indexPath.item + 1)" // pickerviewSelectRow2, pickerviewSelectRow3, ...
-        if  savedata.object(forKey: key) == nil{
-            // ユーザーデフォルトに値を保存する
-            UserDefaults.standard.set(row, forKey: key)
+            choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
+        print("collection",selectedChoices)
+        
+        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
+        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
+        cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+        
         
         cell.indexPath = indexPath // インデックスパスを渡す
         
@@ -691,6 +661,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         if segue.identifier == "tocollectionview2" {
             let nextView = segue.destination as! colectionviewViewController
             
+            
             nextView.hozonArray = hozonArray
             nextView.routes = routes
             nextView.misetitle = misetitle
@@ -698,8 +669,34 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.documentid = documentid
             nextView.zyanru = zyanru
             nextView.genres = genres
-            nextView.selectedChoices = selectedChoices
+            db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    self.selectedChoices = []
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        let genre = document.data()["genre"] as? String ?? "カフェ"
+                        
+                        self.selectedChoices.append(genre)
+                        print(self.selectedChoices,"choicesだよ！")
+                     
+                        self.documentid.append(document.documentID)
+                        
+                    }
+                    
+                }
+            }
             
+          
+         choicecount  = []
+            for choice in selectedChoices {
+                self.choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
+                
+            }
+            nextView.selectedChoices = selectedChoices
+            nextView.choicecount = choicecount
+            print(choicecount,"a")
             
         }
         

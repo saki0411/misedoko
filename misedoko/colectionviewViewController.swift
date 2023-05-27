@@ -30,23 +30,26 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var selectedChoices = [String]()
     var selectedChoice: String = ""
     var choicecount = [Int]()
-   
     
-     
+    
+    
     //firestoreのやつ
     let db = Firestore.firestore()
     
     let uid = Auth.auth().currentUser?.uid
     var documentid = [String]()
-  
+    
     @IBOutlet  weak var collectionView: UICollectionView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        
         collectionView.delegate = self
         collectionView.dataSource  = self
+        
+        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
@@ -58,19 +61,66 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         
-        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-        collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+     
         
         
         
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
             zyanru = savedata.object(forKey: "zyanru") as! [String]
-          
-           
+            
+            
         }
+        let collectionRef = db.collection(uid ?? "hozoncollection")
         
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let genre = document.data()["genre"] as? String ?? "カフェ"
+                            
+                            self.selectedChoices.append(genre)
+                            print(self.selectedChoices,"choicesだよ！")
+                            self.documentid.append(document.documentID)
+                            
+                          
+                            
+                                
+                                
+                                
+                            }
+                        self.choicecount  = []
+                        for choice in self.selectedChoices {
+                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                            print(self.choicecount,"c")
+                        }
+                    }
+                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                    self.collectionView.reloadData()
+                    
+                }
+            }else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
+            }
+            
+        }
+      
     }
-    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -86,43 +136,31 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-      
+        
         if  savedata.object(forKey: "zyanru") as? [String] != nil{
-             zyanru = savedata.object(forKey: "zyanru") as! [String]
-         }else{
-             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
-             
-         }
-         
+            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        }else{
+            zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
+            
+        }
+        
         cell.documentid = documentid
         
         cell.genres = genres
-        cell.selectedChoices = selectedChoices
-        let componentCount = cell.pickerView.numberOfComponents
+      //  cell.selectedChoices = selectedChoices
+        
         for choice in selectedChoices {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
-          
+            print(choicecount,"c")
         }
+        print("collection",selectedChoices)
         
-      
-        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
-          cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
-          cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
-
-        let row = cell.pickerView.selectedRow(inComponent: 0)
-        // ユーザーデフォルトにキーを作る
-        let key = "pickerviewSelectRow\(indexPath.item + 1)"
-        if  savedata.object(forKey: key) == nil{
-            // ユーザーデフォルトに値を保存する
-            UserDefaults.standard.set(row, forKey: key)
-            
-        }
+        let initialRow = choicecount[indexPath.row]
+        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
+        cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+        
+        
      
-        cell.pickerView.selectRow(row, inComponent: 0, animated: false)
-          // セルを返す
-       
-        
-        
         cell.indexPath = indexPath
         
         cell.backgroundColor = cellColors[indexPath] ?? UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
@@ -187,60 +225,60 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
                     
-                   
-          /*         let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
-
-                    // UserDefaultsに保存されているキーの値を取得する
-
-                    let row = self.savedata.integer(forKey: key) // 1
-
-                    // 配列から要素を削除する
-
-                    self.savedata.removeObject(forKey: key)
-
-                    // UserDefaultsに保存されているすべてのキーを取得する
-
-                    let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
-
-                    let count = keys.filter {$0.hasPrefix("pickerviewSelectRow")}.count
-
-
-
-                    print("これだよ",keys.filter {$0.hasPrefix("pickerviewSelectRow")})
-
-                    print(count)
-
-                    // 削除したいキー以降のキーに対応する値を取得してずらす
-
-                    if indexPath.item < count - 1 { // インデックスが最後の要素以外のときだけ実行する
-
-                    print("できてる")
-
-                    for i in indexPath.item..<count - 1 {
-
-                    let nextKey = "pickerviewSelectRow\(i + 1)"
-
-                    let nextRow = self.savedata.integer(forKey: nextKey)
-
-                    let currentKey = "pickerviewSelectRow\(i + 2)"
-
-                    self.savedata.set(nextRow, forKey: currentKey)
-
-                    }
-
-                    }
-
-
-
-                    let lastKey = "pickerviewSelectRow\(count)"
-
-                    self.savedata.removeObject(forKey: lastKey)
-
-
-
-                    self.savedata.synchronize()
-*/
-
+                    
+                    /*         let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
+                     
+                     // UserDefaultsに保存されているキーの値を取得する
+                     
+                     let row = self.savedata.integer(forKey: key) // 1
+                     
+                     // 配列から要素を削除する
+                     
+                     self.savedata.removeObject(forKey: key)
+                     
+                     // UserDefaultsに保存されているすべてのキーを取得する
+                     
+                     let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
+                     
+                     let count = keys.filter {$0.hasPrefix("pickerviewSelectRow")}.count
+                     
+                     
+                     
+                     print("これだよ",keys.filter {$0.hasPrefix("pickerviewSelectRow")})
+                     
+                     print(count)
+                     
+                     // 削除したいキー以降のキーに対応する値を取得してずらす
+                     
+                     if indexPath.item < count - 1 { // インデックスが最後の要素以外のときだけ実行する
+                     
+                     print("できてる")
+                     
+                     for i in indexPath.item..<count - 1 {
+                     
+                     let nextKey = "pickerviewSelectRow\(i + 1)"
+                     
+                     let nextRow = self.savedata.integer(forKey: nextKey)
+                     
+                     let currentKey = "pickerviewSelectRow\(i + 2)"
+                     
+                     self.savedata.set(nextRow, forKey: currentKey)
+                     
+                     }
+                     
+                     }
+                     
+                     
+                     
+                     let lastKey = "pickerviewSelectRow\(count)"
+                     
+                     self.savedata.removeObject(forKey: lastKey)
+                     
+                     
+                     
+                     self.savedata.synchronize()
+                     */
+                    
                     collectionView.reloadData()
                     
                 }
@@ -253,7 +291,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         )
         
     }
-   
+    
     
     @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
         guard let cell = gesture.view as? UICollectionViewCell else {
