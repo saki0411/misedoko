@@ -17,6 +17,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     @IBOutlet var adresslabel: UILabel!
     @IBOutlet var timelabel: UILabel!
     @IBOutlet  var zyanruTextField: UITextField!
+    @IBOutlet var commentlabel: UILabel!
     
     
     var zyanru = [String]()
@@ -31,9 +32,14 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var selectedChoices = [String]()
     var choicecount = [Int]()
     
+    var cellSizeWidth:CGFloat = 350
+    var cellSizeHeight:CGFloat = 300
+    
     
     let db = Firestore.firestore()
     let uid = Auth.auth().currentUser?.uid
+    
+    @IBOutlet weak var commentButton: UIButton!
     
     
     override func awakeFromNib() {
@@ -52,7 +58,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         pickerView.delegate = self
         pickerView.dataSource = self
         
-        
+       
         
         
         createPickerView()
@@ -154,6 +160,20 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         zyanruTextField.endEditing(true)
     }
+    
+    @IBAction func comment(){
+         cellSizeWidth = 350
+       cellSizeHeight = 600
+        print("ボタン",cellSizeHeight)
+        
+        
+    }
+    func sizeheight(){
+        cellSizeWidth = 350
+      cellSizeHeight = 600
+    }
+    
+    
     
     
 }

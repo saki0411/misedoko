@@ -615,7 +615,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
-        print("collection",selectedChoices)
+        cell.commentButton.isHidden = true
         
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -754,8 +754,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
-    
-    
+   
 }
 
 

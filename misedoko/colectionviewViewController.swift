@@ -31,7 +31,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var selectedChoice: String = ""
     var choicecount = [Int]()
     
-    
+    var cellSizeWidth:CGFloat = 350
+    var cellSizeHeight:CGFloat = 300
     
     //firestoreのやつ
     let db = Firestore.firestore()
@@ -150,8 +151,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         cell.genres = genres
         
-     
-        print("collection",selectedChoices)
+        cellSizeWidth = cell.cellSizeWidth
+        cellSizeHeight = cell.cellSizeHeight
+        
+        print("view",cellSizeHeight)
         
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -184,10 +187,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellSizeWidth:CGFloat = 350
-        let cellSizeHeight:CGFloat = 300
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+      
+        cellSizeWidth = cell.cellSizeWidth
+        cellSizeHeight = cell.cellSizeHeight
         
+        print("cell",cellSizeHeight)
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
         

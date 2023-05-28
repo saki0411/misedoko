@@ -57,6 +57,23 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" alpha="0.45000000000000001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLf-5C-6Pr">
+                        <rect key="frame" x="231" y="119" width="94" height="35"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="コメント"/>
+                        <connections>
+                            <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="CPY-zX-AG7"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ofi-ap-SRI">
+                        <rect key="frame" x="8" y="164" width="219" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.4941176471" green="0.74509803919999995" blue="0.6705882353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
@@ -80,6 +97,8 @@
             <size key="customSize" width="325" height="180"/>
             <connections>
                 <outlet property="adresslabel" destination="V8R-Pb-EFf" id="9Ku-7E-Z79"/>
+                <outlet property="commentButton" destination="QLf-5C-6Pr" id="eL0-ZB-JaS"/>
+                <outlet property="commentlabel" destination="Ofi-ap-SRI" id="Z7c-td-KNw"/>
                 <outlet property="shopnamelabel" destination="0QF-lj-kZ8" id="e8k-5N-TR4"/>
                 <outlet property="timelabel" destination="0Nj-YX-3o6" id="flg-1m-8WJ"/>
                 <outlet property="zyanruTextField" destination="sbF-UE-U5w" id="D3Z-xh-pd9"/>
