@@ -45,6 +45,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     //var genres: [String] = []
     var genres: [(genre: String, documentID: String)] = []
     var choicecount = [Int]()
+    var distanceArray = [CLLocation]()
+    var distanceArray3 = [CLLocation]()
+    var distanceArray2 = [CLLocationCoordinate2D]()
     
     var loginMailText = ""
     //firestoreのやつ
@@ -52,8 +55,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var geoPoints =  [GeoPoint]()
     let uid = Auth.auth().currentUser?.uid
     
-    //多次元配列、位置情報とジャンルを入れたい
-    var hozondic = [[String]]()
+  
     
     
     
@@ -127,16 +129,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             let genre = document.data()["genre"] as? String ?? "カフェ"
                             
-                            self.selectedChoices.append(genre)
-                            print(self.selectedChoices,"choicesだよ！")
-                            self.documentid.append(document.documentID)
-                            
-                            
-                            
-                            
-                            self.misetitle.append(title)
-                            self.misesubtitle.append(subtitle)
-                            
+                         
                             let latitude = idokeido?.latitude
                             let longitude = idokeido?.longitude
                             let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
@@ -150,6 +143,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             
                             self.hozonArray = annotations
+                            self.selectedChoices.append(genre)
+                            print(self.selectedChoices,"choicesだよ！")
+                            self.documentid.append(document.documentID)
+                            
+                            
+                            
+                            
+                            self.misetitle.append(title)
+                            self.misesubtitle.append(subtitle)
                             
                             
                             let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
@@ -160,10 +162,28 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             // 現在地とannotationの距離を計算する
                             let distance = genzaiti.distance(from: annotationLocation)
-                            
+                            self.distanceArray.append(annotationLocation)
+                           
+
                             // 距離が1000m以下なら、nearbyAnnotationsに追加する
                             if distance <= 1000 {
+                                
+                       /*         let sortedLocations = self.distanceArray.sorted(by: { location1, location2 in
+                                    let distance1 = location1.distance(from: genzaiti)
+                                    let distance2 = location2.distance(from: genzaiti)
+                                    return distance1 < distance2 // 距離が小さい方が前にくるようにソート
+                                })
+                                self.distanceArray3.append(contentsOf: sortedLocations)
+                                for array in self.distanceArray3 {
+                                    let cordinate = array.coordinate
+                                    self.distanceArray2.append(cordinate)
+                                    let annotation = MKPointAnnotation()
+                                    annotation.coordinate = coordinate
+                                   
+                                }
+                        */
                                 self.nearbyAnnotations.append(annotation)
+                         
                                 self.misetitle2.append(title)
                                 self.misesubtitle2.append(subtitle)
                             }
@@ -173,7 +193,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     
                     
-                    for hozonroute in self.hozonArray {
+                    for hozonroute in self.nearbyAnnotations {
+                        
+                      
+                        
                         
                         let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
                         let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
@@ -193,11 +216,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             }
                             
                             self.routes.append(route)
-                        
                             
                             
                             
-                            if hozonroute.isEqual(self.hozonArray.last){
+                            
+                            if hozonroute.isEqual(self.nearbyAnnotations.last){
                                 
                                 
                                 
@@ -213,7 +236,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                         
                                     }
                                     
-                                  
+                                    
                                     
                                     
                                     print("全部終わったよ")
@@ -346,7 +369,31 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             print(documentid)
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
+            db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    self.selectedChoices = []
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        let genre = document.data()["genre"] as? String ?? "カフェ"
+                        
+                        self.selectedChoices.append(genre)
+                        print(self.selectedChoices,"choicesだよ！")
+                        
+                        self.documentid.append(document.documentID)
+                        
+                    }
+                }
+            }
             
+          
+            choicecount = []
+            for choice in selectedChoices {
+                choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
+                
+            }
+            print("choicecount",choicecount)
             
             
             
@@ -543,7 +590,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     // 2-2. セル数
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return hozonArray.count
+        return nearbyAnnotations.count
         
     }
     
@@ -562,7 +609,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.documentid = documentid
         
         cell.genres = genres
-      //  cell.selectedChoices = selectedChoices
+        //  cell.selectedChoices = selectedChoices
         choicecount = []
         for choice in selectedChoices {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
@@ -570,17 +617,17 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
         print("collection",selectedChoices)
         
-        let initialRow = choicecount[indexPath.row] // インデックスをintArrayの要素で取得
-        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
-        cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+        let initialRow = choicecount[indexPath.row]
+        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
+        cell.zyanruTextField.text = zyanru[initialRow]
         
         
         cell.indexPath = indexPath // インデックスパスを渡す
         
         print(routes)
         let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle[indexPath.row]
-        cell.adresslabel?.text = misesubtitle[indexPath.row]
+        cell.shopnamelabel?.text = misetitle2[indexPath.row]
+        cell.adresslabel?.text = misesubtitle2[indexPath.row]
         cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
         
         
@@ -624,11 +671,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             self.collectionView.reloadData()
                         }
                     }
-                    self.documentid.remove(at: indexPath.row)
+                    // データを消去する
+                   self.documentid.remove(at: indexPath.row)
                     self.mapView.removeAnnotation(itemToDelete)
                     self.hozonArray.remove(at: indexToDelete)
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
+                    self.selectedChoices.remove(at: indexPath.row)
+                    self.choicecount.remove(at: indexPath.row)
+                    self.routes.remove(at: indexPath.row)
                     self.collectionView.reloadData()
                     
                 }
@@ -680,7 +731,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         
                         self.selectedChoices.append(genre)
                         print(self.selectedChoices,"choicesだよ！")
-                     
+                        
                         self.documentid.append(document.documentID)
                         
                     }
@@ -688,8 +739,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 }
             }
             
-          
-         choicecount  = []
+            
+            choicecount  = []
             for choice in selectedChoices {
                 self.choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
                 

@@ -92,9 +92,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
         zyanruTextField.text = selectedChoice
         print(self.choicecount,"b")
-       
+        
         print("あああ",documentid)
-      
+        
         db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -106,20 +106,20 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                     
                     self.selectedChoices.append(genre)
                     print(self.selectedChoices,"choicesだよ！")
-                 
+                    
                     self.documentid.append(document.documentID)
                     
                 }
             }
         }
-      
+        choicecount = []
         for choice in selectedChoices {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 0)
             print(zyanru.firstIndex(of: choice) ?? 0)
             
             
         }
-       
+        
         db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ]) { error in
             
             if let error = error {
@@ -127,7 +127,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                 print("エラーが発生しました: \(error)")
                 
             } else {
-               
+                
                 print("ジャンルを更新しました")
                 
                 

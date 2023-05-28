@@ -61,7 +61,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         
-     
+        
         
         
         
@@ -96,16 +96,16 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             print(self.selectedChoices,"choicesだよ！")
                             self.documentid.append(document.documentID)
                             
-                          
                             
-                                
-                                
-                                
-                            }
+                            
+                            
+                            
+                            
+                        }
                         self.choicecount  = []
                         for choice in self.selectedChoices {
                             self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
-                           
+                            
                         }
                         print(self.choicecount,"c")
                     }
@@ -121,7 +121,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             }
             
         }
-      
+        
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -149,20 +149,16 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.documentid = documentid
         
         cell.genres = genres
-      //  cell.selectedChoices = selectedChoices
         
-        for choice in selectedChoices {
-            choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
-            print(choicecount,"c")
-        }
+     
         print("collection",selectedChoices)
         
         let initialRow = choicecount[indexPath.row]
-        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false) // ピッカービューの初期値を設定
-        cell.zyanruTextField.text = zyanru[initialRow] // テキストフィールドの初期値を設定
+        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
+        cell.zyanruTextField.text = zyanru[initialRow] 
         
         
-     
+        
         cell.indexPath = indexPath
         
         cell.backgroundColor = cellColors[indexPath] ?? UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
@@ -178,7 +174,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         // let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
         cell.adresslabel?.text = misesubtitle[indexPath.row]
-        //   cell.timelabel.text = "\(round(route.expectedTravelTime / 60)) 分"
+    
         
         
         
@@ -227,59 +223,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
                     
+                    self.selectedChoices.remove(at: indexPath.row)
+                    self.choicecount.remove(at: indexPath.row)
+                    self.routes.remove(at: indexPath.row)
                     
-                    /*         let key = "pickerviewSelectRow\(indexPath.item)" // pickerviewSelectRow2
-                     
-                     // UserDefaultsに保存されているキーの値を取得する
-                     
-                     let row = self.savedata.integer(forKey: key) // 1
-                     
-                     // 配列から要素を削除する
-                     
-                     self.savedata.removeObject(forKey: key)
-                     
-                     // UserDefaultsに保存されているすべてのキーを取得する
-                     
-                     let keys = Array(UserDefaults.standard.dictionaryRepresentation().keys)
-                     
-                     let count = keys.filter {$0.hasPrefix("pickerviewSelectRow")}.count
-                     
-                     
-                     
-                     print("これだよ",keys.filter {$0.hasPrefix("pickerviewSelectRow")})
-                     
-                     print(count)
-                     
-                     // 削除したいキー以降のキーに対応する値を取得してずらす
-                     
-                     if indexPath.item < count - 1 { // インデックスが最後の要素以外のときだけ実行する
-                     
-                     print("できてる")
-                     
-                     for i in indexPath.item..<count - 1 {
-                     
-                     let nextKey = "pickerviewSelectRow\(i + 1)"
-                     
-                     let nextRow = self.savedata.integer(forKey: nextKey)
-                     
-                     let currentKey = "pickerviewSelectRow\(i + 2)"
-                     
-                     self.savedata.set(nextRow, forKey: currentKey)
-                     
-                     }
-                     
-                     }
-                     
-                     
-                     
-                     let lastKey = "pickerviewSelectRow\(count)"
-                     
-                     self.savedata.removeObject(forKey: lastKey)
-                     
-                     
-                     
-                     self.savedata.synchronize()
-                     */
                     
                     collectionView.reloadData()
                     
@@ -321,7 +268,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         
         if gesture.state == .ended {
-            cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.9176470588, green: 0.7803921569, blue: 0.6784313725, alpha: 1)} 
+            cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)} 
             collectionView.reloadItems(at: [indexPath])
         }
     }
