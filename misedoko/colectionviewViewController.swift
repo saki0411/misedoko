@@ -30,9 +30,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var selectedChoices = [String]()
     var selectedChoice: String = ""
     var choicecount = [Int]()
-    
-    var cellSizeWidth:CGFloat = 350
-    var cellSizeHeight:CGFloat = 300
+  
+    var selectedCell: Int  = -1
     
     //firestoreのやつ
     let db = Firestore.firestore()
@@ -151,10 +150,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         cell.genres = genres
         
-        cellSizeWidth = cell.cellSizeWidth
-        cellSizeHeight = cell.cellSizeHeight
+        cell.commentButton.tag = indexPath.row
         
-        print("view",cellSizeHeight)
+        cell.commentlabel.isHidden = true
+      
         
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -187,22 +186,27 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-      
-        cellSizeWidth = cell.cellSizeWidth
-        cellSizeHeight = cell.cellSizeHeight
-        
+
+        var cellSizeWidth:CGFloat = 350
+        var cellSizeHeight:CGFloat = 300
+        // タップされたセルのインデックスと一致する場合は高さを変更する
+        if indexPath.row == selectedCell {
+            print("できた")
+            cellSizeHeight = 600
+            cell.commentlabel.isHidden = false
+        }
+
         print("cell",cellSizeHeight)
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
-        
-        
+
     }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 15.0 // 行間
     }
+    
+  
     
     
     //長押しのやつ
@@ -291,7 +295,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     
     
+    func selectedd(gotselectedcell: Int){
+        selectedCell = gotselectedcell
+      
+        collectionView.reloadData()
+    }
     
+  
     
 }
 

@@ -616,6 +616,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
         }
         cell.commentButton.isHidden = true
+        cell.commentlabel.isHidden = true
         
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)

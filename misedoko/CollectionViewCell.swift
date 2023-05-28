@@ -18,6 +18,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     @IBOutlet var timelabel: UILabel!
     @IBOutlet  var zyanruTextField: UITextField!
     @IBOutlet var commentlabel: UILabel!
+    @IBOutlet weak var commentButton: UIButton!
     
     
     var zyanru = [String]()
@@ -39,7 +40,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     let db = Firestore.firestore()
     let uid = Auth.auth().currentUser?.uid
     
-    @IBOutlet weak var commentButton: UIButton!
+  
     
     
     override func awakeFromNib() {
@@ -160,19 +161,31 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         zyanruTextField.endEditing(true)
     }
+      
+      // MARK: - Action
+      @objc    func testAction(){
+          print(commentButton.tag)
+      }
     
     @IBAction func comment(){
-         cellSizeWidth = 350
-       cellSizeHeight = 600
-        print("ボタン",cellSizeHeight)
-        
-        
+        let num: Int = Int("\(commentButton.tag)")!
+        if let topViewController: colectionviewViewController = getTopViewController() as? colectionviewViewController {
+            topViewController.selectedd(gotselectedcell: num)
+        }
     }
-    func sizeheight(){
-        cellSizeWidth = 350
-      cellSizeHeight = 600
+    func getTopViewController() -> UIViewController? {
+        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
+            var topViewController: UIViewController = rootViewController
+
+            while let presentedViewController = topViewController.presentedViewController {
+                topViewController = presentedViewController
+            }
+
+            return topViewController
+        } else {
+            return nil
+        }
     }
-    
     
     
     

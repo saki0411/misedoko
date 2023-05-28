@@ -11,10 +11,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="gTV-IL-0wX" customClass="CollectionViewCell" customModule="misedoko" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="325" height="180"/>
+            <rect key="frame" x="0.0" y="0.0" width="325" height="366"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="325" height="180"/>
+                <rect key="frame" x="0.0" y="0.0" width="325" height="366"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0QF-lj-kZ8">
@@ -66,24 +66,36 @@
                             <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="CPY-zX-AG7"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ofi-ap-SRI">
-                        <rect key="frame" x="8" y="164" width="219" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ofi-ap-SRI">
+                        <rect key="frame" x="8" y="345.66666666666669" width="41.333333333333336" height="20.333333333333314"/>
                         <color key="backgroundColor" red="0.4941176471" green="0.74509803919999995" blue="0.6705882353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cM9-j8-D3s">
+                        <rect key="frame" x="7" y="182" width="233" height="34"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3gV-Ts-8YT">
+                        <rect key="frame" x="251" y="182" width="59" height="35"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="保存"/>
+                    </button>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <color key="backgroundColor" red="0.95686274510000002" green="0.70196078429999997" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
                 <constraint firstItem="sbF-UE-U5w" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="25" id="3vx-Li-iHC"/>
-                <constraint firstAttribute="bottom" secondItem="V8R-Pb-EFf" secondAttribute="bottom" constant="15" id="7Ps-zU-WrA"/>
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="DbE-bR-QHh"/>
                 <constraint firstItem="V8R-Pb-EFf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="EQv-Pc-nCd"/>
-                <constraint firstAttribute="bottom" secondItem="V8R-Pb-EFf" secondAttribute="bottom" constant="15" id="EpF-a8-JS8"/>
+                <constraint firstItem="V8R-Pb-EFf" firstAttribute="top" secondItem="0QF-lj-kZ8" secondAttribute="bottom" constant="8" symbolic="YES" id="G2q-ma-cQn"/>
+                <constraint firstItem="Ofi-ap-SRI" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="Qc8-hK-zLg"/>
+                <constraint firstAttribute="bottom" secondItem="Ofi-ap-SRI" secondAttribute="bottom" id="SVj-F6-gwA"/>
                 <constraint firstItem="V8R-Pb-EFf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="UY7-fT-VgU"/>
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="XHz-bZ-JBb"/>
                 <constraint firstAttribute="trailing" secondItem="sbF-UE-U5w" secondAttribute="trailing" constant="27" id="c0y-lU-YbF"/>
@@ -94,7 +106,7 @@
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qQT-hN-DBV"/>
                 <constraint firstAttribute="trailing" secondItem="0Nj-YX-3o6" secondAttribute="trailing" constant="11" id="qkH-EK-ySl"/>
             </constraints>
-            <size key="customSize" width="325" height="180"/>
+            <size key="customSize" width="325" height="366"/>
             <connections>
                 <outlet property="adresslabel" destination="V8R-Pb-EFf" id="9Ku-7E-Z79"/>
                 <outlet property="commentButton" destination="QLf-5C-6Pr" id="eL0-ZB-JaS"/>
@@ -103,7 +115,7 @@
                 <outlet property="timelabel" destination="0Nj-YX-3o6" id="flg-1m-8WJ"/>
                 <outlet property="zyanruTextField" destination="sbF-UE-U5w" id="D3Z-xh-pd9"/>
             </connections>
-            <point key="canvasLocation" x="327.48091603053433" y="64.788732394366207"/>
+            <point key="canvasLocation" x="327.48091603053433" y="130.28169014084509"/>
         </collectionViewCell>
     </objects>
 </document>
