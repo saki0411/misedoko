@@ -98,9 +98,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         selectedChoice = zyanru[row]
         
         zyanruTextField.text = selectedChoice
-        print(self.choicecount,"b")
-        
-        print("あああ",documentid)
+      
         
         db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -109,10 +107,10 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                 self.selectedChoices = []
                 for document in querySnapshot!.documents {
                     let data = document.data()
-                    let genre = document.data()["genre"] as? String ?? "カフェ"
+                    let genre = data["genre"] as? String ?? "カフェ"
                     
                     self.selectedChoices.append(genre)
-                    print(self.selectedChoices,"choicesだよ！")
+                 
                     
                     self.documentid.append(document.documentID)
                     

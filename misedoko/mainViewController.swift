@@ -38,16 +38,20 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var documentid = [String]()
     var selectedChoice: String = ""
     var selectedChoices = [String]()
+    var selectedChoices2 = [String]()
     
     var nearbyAnnotations = [MKAnnotation]()
     var misetitle2 = [String]()
     var misesubtitle2 = [String]()
-    //var genres: [String] = []
-    var genres: [(genre: String, documentID: String)] = []
+    
+   
     var choicecount = [Int]()
+    
     var distanceArray = [CLLocation]()
     var distanceArray3 = [CLLocation]()
     var distanceArray2 = [CLLocationCoordinate2D]()
+    
+    var colorArray = [String]()
     
     var loginMailText = ""
     //firestoreのやつ
@@ -127,8 +131,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             let title = data["title"] as? String ?? "title:Error"
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
                             
-                            let genre = document.data()["genre"] as? String ?? "カフェ"
-                            
+                            let genre = data["genre"] as? String ?? "カフェ"
+                            let color = data["color"] as? String ?? "pink"
                          
                             let latitude = idokeido?.latitude
                             let longitude = idokeido?.longitude
@@ -148,7 +152,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             self.documentid.append(document.documentID)
                             
                             
-                            
+                            self.colorArray.append(color)
                             
                             self.misetitle.append(title)
                             self.misesubtitle.append(subtitle)
@@ -183,7 +187,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                 }
                         */
                                 self.nearbyAnnotations.append(annotation)
-                         
+                                self.selectedChoices2.append(genre)
                                 self.misetitle2.append(title)
                                 self.misesubtitle2.append(subtitle)
                             }
@@ -356,7 +360,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 "title":   annotation.title!!,
                 "subtitle":annotation.subtitle!!,
                 "timestamp": FieldValue.serverTimestamp(),
-                "genre":"カフェ"
+                "genre":"カフェ",
+                "color": "pink"
             ]) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
@@ -367,6 +372,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             }
             
             print(documentid)
+            colorArray.append("pink")
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
             db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
@@ -608,16 +614,19 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         cell.documentid = documentid
         
-        cell.genres = genres
+       
         //  cell.selectedChoices = selectedChoices
         choicecount = []
-        for choice in selectedChoices {
+        for choice in selectedChoices2 {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
         cell.commentButton.isHidden = true
         cell.commentlabel.isHidden = true
-        
+        cell.pickerView.isHidden = true
+        cell.zyanruTextField.inputAccessoryView?.isHidden = true
+        cell.zyanruTextField.inputView?.isHidden = true
+        cell.zyanruTextField.isUserInteractionEnabled = false
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
@@ -626,12 +635,18 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.indexPath = indexPath // インデックスパスを渡す
         
         print(routes)
-        let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle2[indexPath.row]
-        cell.adresslabel?.text = misesubtitle2[indexPath.row]
-        cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
-        
-        
+        if routes.count == misetitle2.count{
+            let route = routes[indexPath.row]
+            cell.shopnamelabel?.text = misetitle2[indexPath.row]
+            cell.adresslabel?.text = misesubtitle2[indexPath.row]
+            cell.timelabel?.text = "\(round(route.expectedTravelTime / 60)) 分"
+            
+            
+        }else{
+            cell.shopnamelabel?.text = misetitle2[indexPath.row]
+            cell.adresslabel?.text = misesubtitle2[indexPath.row]
+        }
+      
         
         
         return cell
@@ -681,6 +696,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     self.selectedChoices.remove(at: indexPath.row)
                     self.choicecount.remove(at: indexPath.row)
                     self.routes.remove(at: indexPath.row)
+                    self.colorArray.remove(at: indexPath.row)
                     self.collectionView.reloadData()
                     
                 }
@@ -720,7 +736,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.misesubtitle = misesubtitle
             nextView.documentid = documentid
             nextView.zyanru = zyanru
-            nextView.genres = genres
+          
             db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -748,7 +764,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             }
             nextView.selectedChoices = selectedChoices
             nextView.choicecount = choicecount
-            print(choicecount,"a")
+        //   nextView.colorArray = colorArray
             
         }
         

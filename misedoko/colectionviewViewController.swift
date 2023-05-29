@@ -20,7 +20,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var misetitle = [String]()
     var misesubtitle = [String]()
-    var cellColors = [IndexPath: UIColor]()
+   
+    
+    var colorArray = [String]()
     
     
     var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
@@ -45,11 +47,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.delegate = self
-        collectionView.dataSource  = self
-        
-        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+    
+      
+     
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
@@ -71,6 +71,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
         }
         selectedChoices = []
+        
+        
         let collectionRef = db.collection(uid ?? "hozoncollection")
         
         collectionRef.getDocuments { (snapshot, error) in
@@ -91,8 +93,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         for document in querySnapshot!.documents {
                             // 取得したドキュメントごとに実行する
                             let genre = document.data()["genre"] as? String ?? "カフェ"
+                            let color = document.data()["color"] as? String ?? "pink"
                             
                             self.selectedChoices.append(genre)
+                           self.colorArray.append(color)
                             print(self.selectedChoices,"choicesだよ！")
                             self.documentid.append(document.documentID)
                             
@@ -107,20 +111,33 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
                             
                         }
-                        print(self.choicecount,"c")
+                     
+                            print(self.choicecount,"c")
+                        self.collectionView.delegate = self
+                        self.collectionView.dataSource  = self
+                        
+                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                            self.collectionView.reloadData()
+                        
                     }
-                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                    self.collectionView.reloadData()
+                   
                     
                 }
             }else {
                 // コレクションが存在しないかドキュメントが存在しない場合の処理
                 print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.delegate = self
+                self.collectionView.dataSource  = self
+                
+                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+
                 self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                 self.collectionView.reloadData()
             }
             
         }
+        print(colorArray)
         
     }
     
@@ -162,9 +179,18 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         cell.indexPath = indexPath
-        
-        cell.backgroundColor = cellColors[indexPath] ?? UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
-        
+        print(colorArray)
+            let color = colorArray[indexPath.row]
+          
+        if color == "pink"{
+            cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
+          
+        }else{
+            cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
+            
+        }
+      
+       
         // セルにスワイプジェスチャーレコグナイザーを追加
         let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
         swipeGesture.direction = .left // スワイプの方向を指定（例: 左方向）
@@ -179,7 +205,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
         
         
-        
+       
         
         return cell
     }
@@ -188,7 +214,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
 
-        var cellSizeWidth:CGFloat = 350
+        let cellSizeWidth:CGFloat = 350
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
         if indexPath.row == selectedCell {
@@ -235,8 +261,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     
                     self.selectedChoices.remove(at: indexPath.row)
                     self.choicecount.remove(at: indexPath.row)
-                    self.routes.remove(at: indexPath.row)
-                    
+                   
+                    self.colorArray.remove(at: indexPath.row)
                     
                     collectionView.reloadData()
                     
@@ -253,6 +279,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     
     @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+       
         guard let cell = gesture.view as? UICollectionViewCell else {
             return
         }
@@ -262,13 +289,36 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         
         if gesture.state == .ended {
-            cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
-            collectionView.reloadItems(at: [indexPath])
+            
+            colorArray[indexPath.row] = "blue"
+            db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath.row ]).updateData(["color": "blue" ]) { error in
+                
+                if let error = error {
+                    
+                    print("エラーが発生しました: \(error)")
+                    
+                } else {
+                    
+                    print("ジャンルを更新しました")
+                    print("dekita",[indexPath])
+                    self.collectionView.reloadData()
+                    
+                    
+                }
+                
+            }
+           
+          
+                     
+                 
+         
+           
         }
     }
     
     
     @objc func handleSwipeGesture2(_ gesture: UISwipeGestureRecognizer) {
+       
         guard let cell = gesture.view as? UICollectionViewCell else {
             return
         }
@@ -278,8 +328,25 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         
         if gesture.state == .ended {
-            cellColors[indexPath] = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)} 
-            collectionView.reloadItems(at: [indexPath])
+            colorArray[indexPath.row] = "pink"
+            db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath.row ]).updateData(["color": "pink" ]) { error in
+                
+                if let error = error {
+                    
+                    print("エラーが発生しました: \(error)")
+                    
+                } else {
+                    
+                    print("ジャンルを更新しました")
+                    self.collectionView.reloadData()
+                    
+                    
+                }
+                
+            }
+          
+                    
+                 
         }
     }
     
