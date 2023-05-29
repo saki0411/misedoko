@@ -58,10 +58,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" alpha="0.45000000000000001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLf-5C-6Pr">
-                        <rect key="frame" x="231" y="119" width="94" height="35"/>
+                        <rect key="frame" x="249" y="119" width="59" height="35"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="plain" title="コメント"/>
+                        <buttonConfiguration key="configuration" style="plain" title="詳細"/>
                         <connections>
                             <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="CPY-zX-AG7"/>
                         </connections>
@@ -73,17 +73,35 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cM9-j8-D3s">
-                        <rect key="frame" x="7" y="182" width="233" height="34"/>
+                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="コメント" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cM9-j8-D3s">
+                        <rect key="frame" x="8" y="179" width="233" height="34"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5UJ-D7-JcX">
+                        <rect key="frame" x="8" y="229" width="233" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3gV-Ts-8YT">
-                        <rect key="frame" x="251" y="182" width="59" height="35"/>
+                        <rect key="frame" x="251" y="176" width="59" height="35"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain" title="保存"/>
+                        <connections>
+                            <action selector="commenthozon" destination="gTV-IL-0wX" eventType="touchUpInside" id="UUe-H9-LSB"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2P0-5J-9Q5">
+                        <rect key="frame" x="242" y="227" width="83" height="35"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="URLへ"/>
+                        <connections>
+                            <action selector="URLButton" destination="gTV-IL-0wX" eventType="touchUpInside" id="hNf-SB-ub4"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>
@@ -108,9 +126,12 @@
             </constraints>
             <size key="customSize" width="325" height="366"/>
             <connections>
+                <outlet property="URLbutton" destination="2P0-5J-9Q5" id="yDs-SA-cXk"/>
+                <outlet property="URLtextfield" destination="5UJ-D7-JcX" id="zyI-r9-da5"/>
                 <outlet property="adresslabel" destination="V8R-Pb-EFf" id="9Ku-7E-Z79"/>
                 <outlet property="commentButton" destination="QLf-5C-6Pr" id="eL0-ZB-JaS"/>
                 <outlet property="commentlabel" destination="Ofi-ap-SRI" id="Z7c-td-KNw"/>
+                <outlet property="commenttextfield" destination="cM9-j8-D3s" id="vUz-BM-bt8"/>
                 <outlet property="shopnamelabel" destination="0QF-lj-kZ8" id="e8k-5N-TR4"/>
                 <outlet property="timelabel" destination="0Nj-YX-3o6" id="flg-1m-8WJ"/>
                 <outlet property="zyanruTextField" destination="sbF-UE-U5w" id="D3Z-xh-pd9"/>

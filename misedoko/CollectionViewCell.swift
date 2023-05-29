@@ -9,7 +9,11 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerViewDataSource {
+
+protocol CustomCellDelegate: AnyObject { func showAlert(message: String) }
+protocol CustomCellDelegate2: AnyObject { func reloadCollectionView() }
+
+class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerViewDataSource,UITextFieldDelegate {
     
     
     
@@ -19,7 +23,10 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     @IBOutlet  var zyanruTextField: UITextField!
     @IBOutlet var commentlabel: UILabel!
     @IBOutlet weak var commentButton: UIButton!
-    
+    @IBOutlet var commenttextfield: UITextField!
+    @IBOutlet var URLtextfield: UITextField!
+    @IBOutlet var URLtextview: UITextView!
+    @IBOutlet var URLbutton: UIButton!
     
     var zyanru = [String]()
     var pickerView: UIPickerView = UIPickerView()
@@ -32,15 +39,19 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     var genres: [(genre: String, documentID: String)] = []
     var selectedChoices = [String]()
     var choicecount = [Int]()
+    var URLArray = [String]()
     
     var cellSizeWidth:CGFloat = 350
     var cellSizeHeight:CGFloat = 300
+    
+    weak var delegate: CustomCellDelegate?
+    weak var delegate2: CustomCellDelegate2?
     
     
     let db = Firestore.firestore()
     let uid = Auth.auth().currentUser?.uid
     
-  
+    
     
     
     override func awakeFromNib() {
@@ -56,10 +67,12 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
         
         
+        
+        commenttextfield.delegate = self
         pickerView.delegate = self
         pickerView.dataSource = self
         
-       
+        
         
         
         createPickerView()
@@ -98,7 +111,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         selectedChoice = zyanru[row]
         
         zyanruTextField.text = selectedChoice
-      
+        
         
         db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -110,7 +123,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                     let genre = data["genre"] as? String ?? "カフェ"
                     
                     self.selectedChoices.append(genre)
-                 
+                    
                     
                     self.documentid.append(document.documentID)
                     
@@ -134,6 +147,11 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             } else {
                 
                 print("ジャンルを更新しました")
+               
+               
+              
+              
+              
                 
                 
             }
@@ -159,11 +177,11 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         zyanruTextField.endEditing(true)
     }
-      
-      // MARK: - Action
-      @objc    func testAction(){
-          print(commentButton.tag)
-      }
+    
+    // MARK: - Action
+    @objc    func testAction(){
+        print(commentButton.tag)
+    }
     
     @IBAction func comment(){
         let num: Int = Int("\(commentButton.tag)")!
@@ -174,17 +192,57 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     func getTopViewController() -> UIViewController? {
         if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
             var topViewController: UIViewController = rootViewController
-
+            
             while let presentedViewController = topViewController.presentedViewController {
                 topViewController = presentedViewController
             }
-
+            
             return topViewController
         } else {
             return nil
         }
     }
-    
-    
-    
+    @IBAction func commenthozon(){
+        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["comment": commenttextfield.text ?? "" ]) { error in
+            
+            if let error = error {
+                
+                print("エラーが発生しました: \(error)")
+                
+            } else {
+                
+                print("コメントを更新しました")
+               
+                
+             
+                
+            }
+            
+        }
+        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["URL": URLtextfield.text ?? "" ]) { error in
+            
+            if let error = error {
+                
+                print("エラーが発生しました: \(error)")
+                
+            } else {
+                
+                print("URLを更新しました")
+              
+             
+                
+            }
+            
+        }
+        self.delegate?.showAlert(message: "ボタンを長押ししました")
+    }
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+      
+        return true
+    }
+    @IBAction func URLButton(){
+        guard let url = URL(string: self.URLtextfield.text ?? "https://www.google.com/?hl=ja") else { return }
+           UIApplication.shared.open(url)
+    }
 }

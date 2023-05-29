@@ -44,7 +44,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misetitle2 = [String]()
     var misesubtitle2 = [String]()
     
-   
+    
+    var commentArray = [String]()
+    
     var choicecount = [Int]()
     
     var distanceArray = [CLLocation]()
@@ -59,7 +61,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var geoPoints =  [GeoPoint]()
     let uid = Auth.auth().currentUser?.uid
     
-  
+    
     
     
     
@@ -133,7 +135,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             let genre = data["genre"] as? String ?? "カフェ"
                             let color = data["color"] as? String ?? "pink"
-                         
+                            let comment = data["comment"] as? String ?? ""
+                            
                             let latitude = idokeido?.latitude
                             let longitude = idokeido?.longitude
                             let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
@@ -144,11 +147,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             
                             
                             
-                            
+                            self.commentArray.append(comment)
                             
                             self.hozonArray = annotations
-                            self.selectedChoices.append(genre)
-                            print(self.selectedChoices,"choicesだよ！")
+                            self.selectedChoices.append(genre)     
                             self.documentid.append(document.documentID)
                             
                             
@@ -167,25 +169,12 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             // 現在地とannotationの距離を計算する
                             let distance = genzaiti.distance(from: annotationLocation)
                             self.distanceArray.append(annotationLocation)
-                           
-
+                            
+                            
                             // 距離が1000m以下なら、nearbyAnnotationsに追加する
                             if distance <= 1000 {
                                 
-                       /*         let sortedLocations = self.distanceArray.sorted(by: { location1, location2 in
-                                    let distance1 = location1.distance(from: genzaiti)
-                                    let distance2 = location2.distance(from: genzaiti)
-                                    return distance1 < distance2 // 距離が小さい方が前にくるようにソート
-                                })
-                                self.distanceArray3.append(contentsOf: sortedLocations)
-                                for array in self.distanceArray3 {
-                                    let cordinate = array.coordinate
-                                    self.distanceArray2.append(cordinate)
-                                    let annotation = MKPointAnnotation()
-                                    annotation.coordinate = coordinate
-                                   
-                                }
-                        */
+                                
                                 self.nearbyAnnotations.append(annotation)
                                 self.selectedChoices2.append(genre)
                                 self.misetitle2.append(title)
@@ -195,65 +184,92 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         
                     }
                     
-                    
-                    
-                    for hozonroute in self.nearbyAnnotations {
-                        
-                      
+                    if !self.nearbyAnnotations.isEmpty{
                         
                         
-                        let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
-                        let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
-                        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
-                        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
                         
-                        let directionRequest = MKDirections.Request()
-                        directionRequest.source = sourceMapItem
-                        directionRequest.destination = destinationMapItem
-                        directionRequest.transportType = .walking
-                        
-                        let directions = MKDirections(request: directionRequest)
-                        directions.calculate { response, error in
-                            guard let response = response, let route = response.routes.first else {
-                                return
+                        for hozonroute in self.nearbyAnnotations {
+                            
+                            
+                            
+                            
+                            let sourcePlacemark = MKPlacemark(coordinate: self.mapView.userLocation.coordinate)
+                            let destinationPlacemark = MKPlacemark(coordinate:hozonroute.coordinate)
+                            let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+                            let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+                            
+                            let directionRequest = MKDirections.Request()
+                            directionRequest.source = sourceMapItem
+                            directionRequest.destination = destinationMapItem
+                            directionRequest.transportType = .walking
+                            
+                            let directions = MKDirections(request: directionRequest)
+                            directions.calculate { response, error in
+                                guard let response = response, let route = response.routes.first else {
+                                    return
+                                    
+                                }
                                 
-                            }
-                            
-                            self.routes.append(route)
-                            
-                            
-                            
-                            
-                            if hozonroute.isEqual(self.nearbyAnnotations.last){
+                                self.routes.append(route)
                                 
                                 
                                 
-                                DispatchQueue.main.async {
-                                    //最初からピンを立てたいよ
-                                    for (index, hozon) in self.hozonArray.enumerated() {
-                                        let  annotation1 = coloranotation()
-                                        annotation1.coordinate = hozon.coordinate
-                                        annotation1.title = self.misetitle[index]
-                                        annotation1.subtitle = self.misesubtitle[index]
-                                        annotation1.pinImage = "blue.png"
-                                        self.mapView.addAnnotation(annotation1)
+                                
+                                if hozonroute.isEqual(self.nearbyAnnotations.last){
+                                    
+                                    
+                                    
+                                    DispatchQueue.main.async {
+                                        //最初からピンを立てたいよ
+                                        for (index, hozon) in self.hozonArray.enumerated() {
+                                            let  annotation1 = coloranotation()
+                                            annotation1.coordinate = hozon.coordinate
+                                            annotation1.title = self.misetitle[index]
+                                            annotation1.subtitle = self.misesubtitle[index]
+                                            annotation1.pinImage = "blue.png"
+                                            self.mapView.addAnnotation(annotation1)
+                                            
+                                        }
                                         
+                                        
+                                        
+                                        
+                                        print("全部終わったよ")
+                                        
+                                        
+                                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                                        self.collectionView.reloadData()
                                     }
                                     
-                                    
-                                    
-                                    
-                                    print("全部終わったよ")
-                                    
-                                    
-                                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                                    self.collectionView.reloadData()
                                 }
                                 
                             }
-                            
-                            
                         }
+                        
+                    }else{
+                        
+                        DispatchQueue.main.async {
+                            //最初からピンを立てたいよ
+                            for (index, hozon) in self.hozonArray.enumerated() {
+                                let  annotation1 = coloranotation()
+                                annotation1.coordinate = hozon.coordinate
+                                annotation1.title = self.misetitle[index]
+                                annotation1.subtitle = self.misesubtitle[index]
+                                annotation1.pinImage = "blue.png"
+                                self.mapView.addAnnotation(annotation1)
+                                
+                            }
+                            
+                            
+                            
+                            
+                            print("全部終わったよ")
+                            
+                            
+                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                            self.collectionView.reloadData()
+                        }
+                        
                         
                     }
                     
@@ -371,21 +387,23 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 }
             }
             
-            print(documentid)
+           
             colorArray.append("pink")
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
+            self.selectedChoices = []
+            self.selectedChoices2 = []
             db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
-                    self.selectedChoices = []
+                  
                     for document in querySnapshot!.documents {
                         let data = document.data()
-                        let genre = document.data()["genre"] as? String ?? "カフェ"
-                        
-                        self.selectedChoices.append(genre)
-                        print(self.selectedChoices,"choicesだよ！")
+                        let genre = data["genre"] as? String ?? "カフェ"
+                       
+                        self.selectedChoices2.append(genre)
+                    
                         
                         self.documentid.append(document.documentID)
                         
@@ -393,13 +411,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 }
             }
             
+            
           
-            choicecount = []
-            for choice in selectedChoices {
-                choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
-                
-            }
-            print("choicecount",choicecount)
+         
             
             
             
@@ -483,8 +497,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 
                 
                 DispatchQueue.main.async {
-                    print("aaaaaaaaa")
-                    
                     self.collectionView.reloadData()
                 }
             }
@@ -614,8 +626,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         cell.documentid = documentid
         
-       
-        //  cell.selectedChoices = selectedChoices
+        
+      
         choicecount = []
         for choice in selectedChoices2 {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
@@ -624,17 +636,22 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.commentButton.isHidden = true
         cell.commentlabel.isHidden = true
         cell.pickerView.isHidden = true
-        cell.zyanruTextField.inputAccessoryView?.isHidden = true
-        cell.zyanruTextField.inputView?.isHidden = true
+      
+        cell.URLtextfield.isHidden = true
+        cell.URLbutton.isHidden = true
+        
+        
+     
         cell.zyanruTextField.isUserInteractionEnabled = false
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
         
         
+        cell.commenttextfield.text = commentArray[indexPath.row]
         cell.indexPath = indexPath // インデックスパスを渡す
         
-        print(routes)
+       
         if routes.count == misetitle2.count{
             let route = routes[indexPath.row]
             cell.shopnamelabel?.text = misetitle2[indexPath.row]
@@ -646,7 +663,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             cell.shopnamelabel?.text = misetitle2[indexPath.row]
             cell.adresslabel?.text = misesubtitle2[indexPath.row]
         }
-      
+        
         
         
         return cell
@@ -669,46 +686,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     
-    //長押しのやつ
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
-            //ボタン
-            let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
-                
-                guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
-                    return
-                }
-                if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
-                    self.db.collection(self.uid ?? "hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
-                        if let err = err {
-                            print("Error removing document: \(err)")
-                        } else {
-                            print("Document successfully removed!")
-                            self.collectionView.reloadData()
-                        }
-                    }
-                    // データを消去する
-                   self.documentid.remove(at: indexPath.row)
-                    self.mapView.removeAnnotation(itemToDelete)
-                    self.hozonArray.remove(at: indexToDelete)
-                    self.misetitle.remove(at: indexPath.row)
-                    self.misesubtitle.remove(at: indexPath.row)
-                    self.selectedChoices.remove(at: indexPath.row)
-                    self.choicecount.remove(at: indexPath.row)
-                    self.routes.remove(at: indexPath.row)
-                    self.colorArray.remove(at: indexPath.row)
-                    self.collectionView.reloadData()
-                    
-                }
-            }
-            
-            return UIMenu(title: "Menu", children: [delete])
-            
-            
-        }
-        )
-        
-    }
+  
     
     
     @IBAction func logout(){
@@ -736,7 +714,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.misesubtitle = misesubtitle
             nextView.documentid = documentid
             nextView.zyanru = zyanru
-          
+            
             db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -747,7 +725,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         let genre = document.data()["genre"] as? String ?? "カフェ"
                         
                         self.selectedChoices.append(genre)
-                        print(self.selectedChoices,"choicesだよ！")
+                      
                         
                         self.documentid.append(document.documentID)
                         
@@ -764,14 +742,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             }
             nextView.selectedChoices = selectedChoices
             nextView.choicecount = choicecount
-        //   nextView.colorArray = colorArray
+            
+            //   nextView.colorArray = colorArray
             
         }
         
         
         
     }
-   
+  
+    
 }
 
 

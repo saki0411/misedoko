@@ -11,7 +11,23 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class colectionviewViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,
-                                   UICollectionViewDelegateFlowLayout {
+                                   UICollectionViewDelegateFlowLayout, CustomCellDelegate {
+    func showAlert(message: String) {
+        let alert: UIAlertController = UIAlertController(title: "保存", message: "コメントの保存しました", preferredStyle: .alert)
+        
+        
+        alert.addAction(
+            UIAlertAction(title: "OK",
+                          style: .default,
+                          handler: { action in
+                             
+                             
+                          })
+           
+        )
+        self.present(alert,animated: true,completion: nil)
+    }
+    
     
     
     
@@ -20,10 +36,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var misetitle = [String]()
     var misesubtitle = [String]()
-   
+    
     
     var colorArray = [String]()
-    
+    var URLArray = [String]()
     
     var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
     var savedata: UserDefaults = UserDefaults.standard
@@ -32,7 +48,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var selectedChoices = [String]()
     var selectedChoice: String = ""
     var choicecount = [Int]()
-  
+    
+    var commentArray = [String]()
+
     var selectedCell: Int  = -1
     
     //firestoreのやつ
@@ -47,9 +65,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    
+        
       
-     
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
@@ -94,14 +111,16 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             // 取得したドキュメントごとに実行する
                             let genre = document.data()["genre"] as? String ?? "カフェ"
                             let color = document.data()["color"] as? String ?? "pink"
-                            
+                            let comment = document.data()["comment"] as? String ?? ""
+                            let URL = document.data()["URL"] as? String ?? ""
                             self.selectedChoices.append(genre)
-                           self.colorArray.append(color)
-                            print(self.selectedChoices,"choicesだよ！")
+                            self.colorArray.append(color)
+                           
                             self.documentid.append(document.documentID)
                             
+                            self.commentArray.append(comment)
                             
-                            
+                            self.URLArray.append(URL)
                             
                             
                             
@@ -111,17 +130,18 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
                             
                         }
+                        
                      
-                            print(self.choicecount,"c")
+                       
+                        
                         self.collectionView.delegate = self
                         self.collectionView.dataSource  = self
-                        
                         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                            self.collectionView.reloadData()
+                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                        self.collectionView.reloadData()
                         
                     }
-                   
+                    
                     
                 }
             }else {
@@ -131,13 +151,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 self.collectionView.dataSource  = self
                 
                 let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-
+                
                 self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                 self.collectionView.reloadData()
             }
             
         }
-        print(colorArray)
+      
         
     }
     
@@ -162,11 +182,11 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
             
         }
-        
+        cell.delegate = self
         cell.documentid = documentid
         
         cell.genres = genres
-        
+        cell.URLArray = URLArray
         cell.commentButton.tag = indexPath.row
         
         cell.commentlabel.isHidden = true
@@ -176,21 +196,23 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow] 
         
-        
+        cell.commenttextfield.text = commentArray[indexPath.row]
+        cell.URLtextfield.text = URLArray[indexPath.row]
+       
         
         cell.indexPath = indexPath
-        print(colorArray)
-            let color = colorArray[indexPath.row]
-          
+      
+        let color = colorArray[indexPath.row]
+        
         if color == "pink"{
             cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
-          
+            
         }else{
             cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
             
         }
-      
-       
+        
+        
         // セルにスワイプジェスチャーレコグナイザーを追加
         let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
         swipeGesture.direction = .left // スワイプの方向を指定（例: 左方向）
@@ -202,10 +224,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         // let route = routes[indexPath.row]
         cell.shopnamelabel?.text = misetitle[indexPath.row]
         cell.adresslabel?.text = misesubtitle[indexPath.row]
-    
         
         
-       
+        
+        
         
         return cell
     }
@@ -213,26 +235,25 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-
+        
         let cellSizeWidth:CGFloat = 350
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
         if indexPath.row == selectedCell {
-            print("できた")
             cellSizeHeight = 600
             cell.commentlabel.isHidden = false
         }
-
-        print("cell",cellSizeHeight)
+        
+       
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
-
+        
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 15.0 // 行間
     }
     
-  
+    
     
     
     //長押しのやつ
@@ -258,10 +279,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.hozonArray.remove(at: indexToDelete)
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
-                    
+                    self.URLArray.remove(at: indexPath.row)
                     self.selectedChoices.remove(at: indexPath.row)
                     self.choicecount.remove(at: indexPath.row)
-                   
+                    self.commentArray.remove(at: indexPath.row)
                     self.colorArray.remove(at: indexPath.row)
                     
                     collectionView.reloadData()
@@ -279,7 +300,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     
     @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-       
+        
         guard let cell = gesture.view as? UICollectionViewCell else {
             return
         }
@@ -300,25 +321,25 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 } else {
                     
                     print("ジャンルを更新しました")
-                    print("dekita",[indexPath])
+                    
                     self.collectionView.reloadData()
                     
                     
                 }
                 
             }
-           
-          
-                     
-                 
-         
-           
+            
+            
+            
+            
+            
+            
         }
     }
     
     
     @objc func handleSwipeGesture2(_ gesture: UISwipeGestureRecognizer) {
-       
+        
         guard let cell = gesture.view as? UICollectionViewCell else {
             return
         }
@@ -344,9 +365,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 }
                 
             }
-          
-                    
-                 
+            
+            
+            
         }
     }
     
@@ -364,11 +385,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     func selectedd(gotselectedcell: Int){
         selectedCell = gotselectedcell
-      
+        
         collectionView.reloadData()
     }
     
-  
+   
+    
     
 }
 

@@ -14,6 +14,7 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     
     var zyanru = [String]()
     var selectedChoice: String?
+    var commentArray = [String]()
     
     var savedata: UserDefaults = UserDefaults.standard
     
