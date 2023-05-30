@@ -147,11 +147,11 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             } else {
                 
                 print("ジャンルを更新しました")
-               
-               
-              
-              
-              
+                
+                
+                
+                
+                
                 
                 
             }
@@ -212,9 +212,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             } else {
                 
                 print("コメントを更新しました")
-               
                 
-             
+                
+                
                 
             }
             
@@ -228,8 +228,8 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             } else {
                 
                 print("URLを更新しました")
-              
-             
+                
+                
                 
             }
             
@@ -238,11 +238,11 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     }
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-      
+        
         return true
     }
     @IBAction func URLButton(){
         guard let url = URL(string: self.URLtextfield.text ?? "https://www.google.com/?hl=ja") else { return }
-           UIApplication.shared.open(url)
+        UIApplication.shared.open(url)
     }
 }

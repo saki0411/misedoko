@@ -20,10 +20,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             UIAlertAction(title: "OK",
                           style: .default,
                           handler: { action in
-                             
-                             
+                              
+                              
                           })
-           
+            
         )
         self.present(alert,animated: true,completion: nil)
     }
@@ -50,7 +50,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var choicecount = [Int]()
     
     var commentArray = [String]()
-
+    
     var selectedCell: Int  = -1
     
     //firestoreのやつ
@@ -66,7 +66,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         super.viewDidLoad()
         
         
-      
+        
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
@@ -115,7 +115,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             let URL = document.data()["URL"] as? String ?? ""
                             self.selectedChoices.append(genre)
                             self.colorArray.append(color)
-                           
+                            
                             self.documentid.append(document.documentID)
                             
                             self.commentArray.append(comment)
@@ -131,8 +131,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             
                         }
                         
-                     
-                       
+                        
+                        
                         
                         self.collectionView.delegate = self
                         self.collectionView.dataSource  = self
@@ -157,7 +157,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             }
             
         }
-      
+        
         
     }
     
@@ -190,7 +190,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.commentButton.tag = indexPath.row
         
         cell.commentlabel.isHidden = true
-      
+        
         
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -198,10 +198,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         cell.commenttextfield.text = commentArray[indexPath.row]
         cell.URLtextfield.text = URLArray[indexPath.row]
-       
+        
         
         cell.indexPath = indexPath
-      
+        
         let color = colorArray[indexPath.row]
         
         if color == "pink"{
@@ -244,7 +244,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             cell.commentlabel.isHidden = false
         }
         
-       
+        
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
         
@@ -389,7 +389,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         collectionView.reloadData()
     }
     
-   
+    
     
     
 }

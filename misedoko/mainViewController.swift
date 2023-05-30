@@ -387,7 +387,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 }
             }
             
-           
+            
             colorArray.append("pink")
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
@@ -397,13 +397,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
-                  
+                    
                     for document in querySnapshot!.documents {
                         let data = document.data()
                         let genre = data["genre"] as? String ?? "カフェ"
-                       
+                        
                         self.selectedChoices2.append(genre)
-                    
+                        
                         
                         self.documentid.append(document.documentID)
                         
@@ -412,8 +412,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             }
             
             
-          
-         
+            
+            
             
             
             
@@ -627,7 +627,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.documentid = documentid
         
         
-      
+        
         choicecount = []
         for choice in selectedChoices2 {
             choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
@@ -636,12 +636,12 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.commentButton.isHidden = true
         cell.commentlabel.isHidden = true
         cell.pickerView.isHidden = true
-      
+        
         cell.URLtextfield.isHidden = true
         cell.URLbutton.isHidden = true
         
         
-     
+        
         cell.zyanruTextField.isUserInteractionEnabled = false
         let initialRow = choicecount[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -651,7 +651,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.commenttextfield.text = commentArray[indexPath.row]
         cell.indexPath = indexPath // インデックスパスを渡す
         
-       
+        
         if routes.count == misetitle2.count{
             let route = routes[indexPath.row]
             cell.shopnamelabel?.text = misetitle2[indexPath.row]
@@ -686,7 +686,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     
-  
+    
     
     
     @IBAction func logout(){
@@ -725,7 +725,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         let genre = document.data()["genre"] as? String ?? "カフェ"
                         
                         self.selectedChoices.append(genre)
-                      
+                        
                         
                         self.documentid.append(document.documentID)
                         
@@ -750,7 +750,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
-  
+    
     
 }
 
