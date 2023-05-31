@@ -4,6 +4,8 @@ import MapKit
 import CoreLocation
 import FirebaseAuth
 import FirebaseFirestore
+import BackgroundTasks
+import UserNotifications
 
 
 
@@ -11,7 +13,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-    
+    let backgroundTaskIdentifier = "com.hosonuma.sakki.misedoko.backgroundTask"
+    let notificationCenter = UNUserNotificationCenter.current()
     
     
     @IBOutlet weak var mapView: MKMapView!
@@ -50,8 +53,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var choicecount = [Int]()
     
     var distanceArray = [CLLocation]()
-    var distanceArray3 = [CLLocation]()
-    var distanceArray2 = [CLLocationCoordinate2D]()
+    
     
     var colorArray = [String]()
     
@@ -98,6 +100,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
         
+        
+  
         
         //ログアウト
         loginMailText = Auth.auth().currentUser?.email ?? "エラー"
@@ -150,7 +154,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             self.commentArray.append(comment)
                             
                             self.hozonArray = annotations
-                            self.selectedChoices.append(genre)     
+                            self.selectedChoices.append(genre)
                             self.documentid.append(document.documentID)
                             
                             
@@ -750,9 +754,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
+ 
+ }
     
-    
-}
+
 
 
 
