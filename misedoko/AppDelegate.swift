@@ -15,6 +15,7 @@ import FirebaseAuth
 
 
 @main
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
 
@@ -37,6 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupNotification()
         return true
     }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+     // アプリがフォアグラウンドに入ったときに呼ばれる
+     submitTaskRequest() // ここで呼ぶ
+     }
 
     // MARK: UISceneSession Lifecycle
 
@@ -79,12 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 // 取得したドキュメントごとに実行する
                                 let data = document.data()
                                 let idokeido = data["idokeido"] as? GeoPoint
-                                let title = data["title"] as? String ?? "title:Error"
-                                let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                                
-                                let genre = data["genre"] as? String ?? "カフェ"
-                                let color = data["color"] as? String ?? "pink"
-                                let comment = data["comment"] as? String ?? ""
+                             
                                 
                                 let latitude = idokeido?.latitude
                                 let longitude = idokeido?.longitude
