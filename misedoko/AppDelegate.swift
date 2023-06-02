@@ -18,7 +18,7 @@ import FirebaseAuth
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-
+    
     let backgroundTaskIdentifier = "com.hosonuma.sakki.misedoko.backgroundTask"
     let notificationCenter = UNUserNotificationCenter.current()
     
@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-         db = Firestore.firestore()
+        db = Firestore.firestore()
         uid = Auth.auth().currentUser?.uid
         // バックグラウンドタスクの登録
         registerBackgroundTask()
@@ -38,20 +38,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupNotification()
         return true
     }
-
+    
     func applicationWillEnterForeground(_ application: UIApplication) {
-     // アプリがフォアグラウンドに入ったときに呼ばれる
-     submitTaskRequest() // ここで呼ぶ
-     }
-
+        // アプリがフォアグラウンドに入ったときに呼ばれる
+        submitTaskRequest() // ここで呼ぶ
+    }
+    
     // MARK: UISceneSession Lifecycle
-
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-
+    
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 // 取得したドキュメントごとに実行する
                                 let data = document.data()
                                 let idokeido = data["idokeido"] as? GeoPoint
-                             
+                                
                                 
                                 let latitude = idokeido?.latitude
                                 let longitude = idokeido?.longitude
@@ -97,16 +97,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 
                                 
                                 
-                            
+                                
                                 let locationManager = CLLocationManager()
-                                          locationManager.requestWhenInUseAuthorization()
-                                          guard let currentLocation = locationManager.location else {
-                                              // 現在地が取得できなかったら、タスクを完了する
-                                              task.setTaskCompleted(success: false)
-                                              return
-                                          }
-                              
-                               
+                                locationManager.requestWhenInUseAuthorization()
+                                guard let currentLocation = locationManager.location else {
+                                    // 現在地が取得できなかったら、タスクを完了する
+                                    task.setTaskCompleted(success: false)
+                                    return
+                                }
+                                
+                                
                                 
                                 // annotationのCLLocationCoordinate2DをCLLocationに変換する
                                 let annotationLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -121,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     
                                     
                                     self.nearbyAnnotations.append(annotation)
-                                   
+                                    
                                 }
                                 
                                 
@@ -151,63 +151,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // 通知の許可と内容を設定するメソッド
-     func setupNotification() {
-         // 通知の種類を指定
-         let options: UNAuthorizationOptions = [.alert, .sound]
-         
-         // 通知の許可をユーザーに求める
-         notificationCenter.requestAuthorization(options: options) { (granted, error) in
-             if let error = error {
-                 print("Error: \(error.localizedDescription)")
-             }
-         }
-         
-         // 通知の内容を作成
-         let content = UNMutableNotificationContent()
-         content.title = "お店の情報"
-         content.sound = .default
-         
-         // 通知の内容を登録
-         notificationCenter.setNotificationCategories([UNNotificationCategory(identifier: "backgroundTask", actions: [], intentIdentifiers: [], options: [])])
-     }
-     
-     // 通知を表示するメソッド
-     func showNotification(message: String) {
-         // 通知の内容を取得
-         let content = UNMutableNotificationContent()
-         content.title = "お店の情報"
-         content.body = message
-         content.sound = .default
-         
-         // 通知のトリガーを作成（即時発火）
-         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-         
-         // 通知のリクエストを作成
-         let request = UNNotificationRequest(identifier: "backgroundTask", content: content, trigger: trigger)
-         
-         // 通知を登録
-         notificationCenter.add(request) { (error) in
-             if let error = error {
-                 print("Error: \(error.localizedDescription)")
-             }
-         }
-     }
-     
-     // タスクリクエストを送信するメソッド
-     func submitTaskRequest() {
-         // BGAppRefreshTaskRequestクラスのインスタンスを作成
-         let request = BGAppRefreshTaskRequest(identifier: backgroundTaskIdentifier)
-         
-         // 最小間隔を1時間に設定
-         request.earliestBeginDate = Date(timeIntervalSinceNow: 100)
-         
-         // タスクリクエストを送信
-         do {
-             try BGTaskScheduler.shared.submit(request)
-         } catch {
-             print("Error: \(error.localizedDescription)")
-         }
-     }
-
+    func setupNotification() {
+        // 通知の種類を指定
+        let options: UNAuthorizationOptions = [.alert, .sound]
+        
+        // 通知の許可をユーザーに求める
+        notificationCenter.requestAuthorization(options: options) { (granted, error) in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+        
+        // 通知の内容を作成
+        let content = UNMutableNotificationContent()
+        content.title = "お店の情報"
+        content.sound = .default
+        
+        // 通知の内容を登録
+        notificationCenter.setNotificationCategories([UNNotificationCategory(identifier: "backgroundTask", actions: [], intentIdentifiers: [], options: [])])
+    }
+    
+    // 通知を表示するメソッド
+    func showNotification(message: String) {
+        // 通知の内容を取得
+        let content = UNMutableNotificationContent()
+        content.title = "お店の情報"
+        content.body = message
+        content.sound = .default
+        
+        // 通知のトリガーを作成（即時発火）
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        
+        // 通知のリクエストを作成
+        let request = UNNotificationRequest(identifier: "backgroundTask", content: content, trigger: trigger)
+        
+        // 通知を登録
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // タスクリクエストを送信するメソッド
+    func submitTaskRequest() {
+        // BGAppRefreshTaskRequestクラスのインスタンスを作成
+        let request = BGAppRefreshTaskRequest(identifier: backgroundTaskIdentifier)
+        
+        // 最小間隔を1時間に設定
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 100)
+        
+        // タスクリクエストを送信
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    
 }
 

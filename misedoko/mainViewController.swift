@@ -101,7 +101,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
-  
+        
         
         //ログアウト
         loginMailText = Auth.auth().currentUser?.email ?? "エラー"
@@ -747,16 +747,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.selectedChoices = selectedChoices
             nextView.choicecount = choicecount
             
-            //   nextView.colorArray = colorArray
+            //   nextView.colorArray = colorArray 
             
         }
         
         
         
     }
- 
- }
     
+}
+
 
 
 
