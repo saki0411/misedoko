@@ -16,7 +16,7 @@ import FirebaseAuth
 
 @main
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     
     let backgroundTaskIdentifier = "com.hosonuma.sakki.misedoko.backgroundTask"
@@ -31,37 +31,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         db = Firestore.firestore()
         uid = Auth.auth().currentUser?.uid
-        // バックグラウンドタスクの登録
-        registerBackgroundTask()
-        
-        // 通知の許可と内容を設定する
-        setupNotification()
-        return true
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // アプリがフォアグラウンドに入ったときに呼ばれる
-        submitTaskRequest() // ここで呼ぶ
-    }
-    
-    // MARK: UISceneSession Lifecycle
-    
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-    
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-    
-    
-    func registerBackgroundTask() {
-        // BGTaskSchedulerにバックグラウンドタスクの識別子と実行内容を登録する
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil) { task in
+        // 通知許可の取得
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]){
+                (granted, _) in
+                if granted{
+                    UNUserNotificationCenter.current().delegate = self
+                } else {
+                    print("通知が許可されていない")
+                }
+            }
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.hosonuma.sakki.misedoko.backgroundTask", using: nil) { task in
+            // バックグラウンド処理したい内容 ※後述します
+            
+            
             // バックグラウンドタスクが実行されたら、このクロージャーが呼ばれる
             var annotations: [MKAnnotation] = []
             let collectionRef = self.db.collection(self.uid ?? "hozoncollection")
@@ -140,7 +123,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 // arrayに情報が入っている場合は、ローカル通知を表示する
                 if !self.nearbyAnnotations.isEmpty {
-                    self.showNotification(message: "近くに\(self.nearbyAnnotations.count)件のお店があります")
+                    let content = UNMutableNotificationContent()
+                          content.title = "お知らせ"
+                          content.body = "近くにあります"
+                          content.sound = UNNotificationSound.default
+
+                         
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0, repeats: false)
+                          let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+                          UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    
                 }
                 
                 // バックグラウンドタスクの処理が終了したら、タスクの完了を通知する
@@ -148,66 +140,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        
+        return true
     }
     
-    // 通知の許可と内容を設定するメソッド
-    func setupNotification() {
-        // 通知の種類を指定
-        let options: UNAuthorizationOptions = [.alert, .sound]
+    func applicationWillEnterForeground(_ application: UIApplication) {
         
-        // 通知の許可をユーザーに求める
-        notificationCenter.requestAuthorization(options: options) { (granted, error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-            }
-        }
-        
-        // 通知の内容を作成
-        let content = UNMutableNotificationContent()
-        content.title = "お店の情報"
-        content.sound = .default
-        
-        // 通知の内容を登録
-        notificationCenter.setNotificationCategories([UNNotificationCategory(identifier: "backgroundTask", actions: [], intentIdentifiers: [], options: [])])
     }
     
-    // 通知を表示するメソッド
-    func showNotification(message: String) {
-        // 通知の内容を取得
-        let content = UNMutableNotificationContent()
-        content.title = "お店の情報"
-        content.body = message
-        content.sound = .default
-        
-        // 通知のトリガーを作成（即時発火）
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        
-        // 通知のリクエストを作成
-        let request = UNNotificationRequest(identifier: "backgroundTask", content: content, trigger: trigger)
-        
-        // 通知を登録
-        notificationCenter.add(request) { (error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-            }
-        }
+    // MARK: UISceneSession Lifecycle
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     
-    // タスクリクエストを送信するメソッド
-    func submitTaskRequest() {
-        // BGAppRefreshTaskRequestクラスのインスタンスを作成
-        let request = BGAppRefreshTaskRequest(identifier: backgroundTaskIdentifier)
-        
-        // 最小間隔を1時間に設定
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 100)
-        
-        // タスクリクエストを送信
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Called when the user discards a scene session.
+        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // アプリ起動中でもアラートと音で通知
+        completionHandler([.alert, .sound])
+        
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
+        
+    }
+    
+    
     
 }
-
+    
+ 

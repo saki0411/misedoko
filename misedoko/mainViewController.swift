@@ -9,7 +9,7 @@ import UserNotifications
 
 
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate{
     
     
     
@@ -89,8 +89,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             zyanru = savedata.object(forKey: "zyanru") as! [String]
         }
         
-        
-        
+       
+      
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
@@ -702,7 +702,17 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
     }
     @IBAction func tebleview(){
-        self.performSegue(withIdentifier: "totableview", sender: nil)
+     
+            let content = UNMutableNotificationContent()
+                  content.title = "お知らせ"
+                  content.body = "ボタンを押しました。"
+                  content.sound = UNNotificationSound.default
+
+                 
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+                  let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+                  UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+      
     }
     
     
