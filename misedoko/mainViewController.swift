@@ -51,6 +51,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var commentArray = [String]()
     
     var choicecount = [Int]()
+    var choicecount2 = [Int]()
     
     var distanceArray = [CLLocation]()
     
@@ -89,8 +90,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             zyanru = savedata.object(forKey: "zyanru") as! [String]
         }
         
-       
-      
+        
+        
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
@@ -368,6 +369,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             // hozonArrayにannotationが含まれない場合の処理
             //ボタン押したらarrayに追加するよ
             hozonArray.append(annotation)
+            
             var ref: DocumentReference? = nil
             
             let coordinate = annotation.coordinate
@@ -395,8 +397,35 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             colorArray.append("pink")
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
-            self.selectedChoices = []
-            self.selectedChoices2 = []
+          
+            let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
+            
+            
+        
+           
+            
+            let latitude = geoPoint.latitude
+            let longitude = geoPoint.longitude
+            let coordinate2 = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            
+            // annotationのCLLocationCoordinate2DをCLLocationに変換する
+            let annotationLocation = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+            
+            // 現在地とannotationの距離を計算する
+            let distance = genzaiti.distance(from: annotationLocation)
+            
+            
+            // 距離が1000m以下なら、nearbyAnnotationsに追加する
+            if distance <= 1000 {
+                print("aaaa")
+                self.selectedChoices2.append("カフェ")
+                self.nearbyAnnotations.append(annotation)
+                self.misetitle2.append((annotation.title ?? "") ?? "")
+                self.misesubtitle2.append((annotation.subtitle ?? "") ?? "")
+            }
+            
+            
+            
             db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -406,10 +435,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         let data = document.data()
                         let genre = data["genre"] as? String ?? "カフェ"
                         
-                        self.selectedChoices2.append(genre)
+                        self.selectedChoices.append(genre)
                         
                         
                         self.documentid.append(document.documentID)
+                    
                         
                     }
                 }
@@ -447,27 +477,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             routes.append(route)
             
-            let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
-            
-            let coordinate = annotation.coordinate
-            let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            
-            let latitude = geoPoint.latitude
-            let longitude = geoPoint.longitude
-            let coordinate2 = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-            
-            // annotationのCLLocationCoordinate2DをCLLocationに変換する
-            let annotationLocation = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
-            
-            // 現在地とannotationの距離を計算する
-            let distance = genzaiti.distance(from: annotationLocation)
-            
-            // 距離が1000m以下なら、nearbyAnnotationsに追加する
-            if distance <= 1000 {
-                self.nearbyAnnotations.append(annotation)
-                self.misetitle2.append((annotation.title ?? "") ?? "")
-                self.misesubtitle2.append((annotation.subtitle ?? "") ?? "")
-            }
             
             
             
@@ -497,12 +506,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                 }
                 
-                
-                
-                
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
+            }
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                print("完了",self.selectedChoices2)
             }
         }
     }
@@ -632,11 +639,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
-        choicecount = []
+        choicecount2 = []
         for choice in selectedChoices2 {
-            choicecount.append(zyanru.firstIndex(of: choice) ?? 2)
+            choicecount2.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
+        print(selectedChoices2,"これ")
+        print(choicecount2,"これ！")
         cell.commentButton.isHidden = true
         cell.commentlabel.isHidden = true
         cell.pickerView.isHidden = true
@@ -647,7 +656,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         cell.zyanruTextField.isUserInteractionEnabled = false
-        let initialRow = choicecount[indexPath.row]
+        let initialRow = choicecount2[indexPath.row]
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
         
@@ -702,17 +711,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
     }
     @IBAction func tebleview(){
-     
-            let content = UNMutableNotificationContent()
-                  content.title = "お知らせ"
-                  content.body = "ボタンを押しました。"
-                  content.sound = UNNotificationSound.default
-
-                 
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-                  let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-                  UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-      
+        
+        
+        
     }
     
     
@@ -757,7 +758,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.selectedChoices = selectedChoices
             nextView.choicecount = choicecount
             
-            //   nextView.colorArray = colorArray 
+            //   nextView.colorArray = colorArray
             
         }
         
