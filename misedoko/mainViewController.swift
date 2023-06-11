@@ -13,7 +13,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-    let backgroundTaskIdentifier = "com.hosonuma.sakki.misedoko.backgroundTask"
+   
     let notificationCenter = UNUserNotificationCenter.current()
     
     
@@ -712,6 +712,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     @IBAction func tebleview(){
         
+        let content = UNMutableNotificationContent()
+              content.title = "お知らせ"
+              content.body = "近くにあります"
+              content.sound = UNNotificationSound.default
+
+             
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+              let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+              UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         
         
     }
@@ -737,7 +746,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     self.selectedChoices = []
                     for document in querySnapshot!.documents {
                         let data = document.data()
-                        let genre = document.data()["genre"] as? String ?? "カフェ"
+                        let genre = data["genre"] as? String ?? "カフェ"
                         
                         self.selectedChoices.append(genre)
                         
