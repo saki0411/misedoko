@@ -112,8 +112,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
         zyanruTextField.text = selectedChoice
         
-        
-        db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+        db.collection("users").document(uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
@@ -128,24 +127,29 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                     self.documentid.append(document.documentID)
                     
                 }
+                DispatchQueue.main.async {
+                    self.choicecount = []
+                    for choice in self.selectedChoices {
+                         self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
+                        print(self.zyanru.firstIndex(of: choice) ?? 0)
+                     
+                     
+                     }
+             
+                  
+                }
             }
         }
-        choicecount = []
-        for choice in selectedChoices {
-            choicecount.append(zyanru.firstIndex(of: choice) ?? 0)
-            print(zyanru.firstIndex(of: choice) ?? 0)
-            
-            
-        }
+      
         
-        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ]) { error in
+        db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ]) { error in
             
             if let error = error {
                 
                 print("エラーが発生しました: \(error)")
                 
             } else {
-                
+              
                 print("ジャンルを更新しました")
                 
                 
@@ -157,6 +161,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             }
             
         }
+        
     }
     
     func createPickerView() {
@@ -172,6 +177,12 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     @objc func donePicker() {
         zyanruTextField.endEditing(true)
+        if let topViewController: colectionviewViewController = self.getTopViewController() as? colectionviewViewController {
+            topViewController.choicecount = self.choicecount
+            
+            topViewController.collectionView.reloadData()
+        }
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -203,7 +214,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         }
     }
     @IBAction func commenthozon(){
-        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["comment": commenttextfield.text ?? "" ]) { error in
+        db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["comment": commenttextfield.text ?? "" ]) { error in
             
             if let error = error {
                 
@@ -219,7 +230,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             }
             
         }
-        db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath?.row ?? 0]).updateData(["URL": URLtextfield.text ?? "" ]) { error in
+        db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["URL": URLtextfield.text ?? "" ]) { error in
             
             if let error = error {
                 

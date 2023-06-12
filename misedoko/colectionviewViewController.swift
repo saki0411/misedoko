@@ -60,12 +60,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var documentid = [String]()
     
     @IBOutlet  weak var collectionView: UICollectionView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        segmentedControl.selectedSegmentIndex = 0
         
         
         //collectionview長押しのやつ
@@ -87,79 +88,130 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
             
         }
-        selectedChoices = []
-        
-        
-        let collectionRef = db.collection(uid ?? "hozoncollection")
-        
-        collectionRef.getDocuments { (snapshot, error) in
-            if let error = error {
-                // エラーが発生した場合の処理
-                print("Error fetching documents: \(error)")
-                return
-            }
-            
-            if let snapshot = snapshot, !snapshot.isEmpty {
-                // コレクションにドキュメントが存在する場合の処理
-                print("Collection exists and contains documents")
-                // 全てのドキュメントを取得する
-                self.db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            // 取得したドキュメントごとに実行する
-                            let genre = document.data()["genre"] as? String ?? "カフェ"
-                            let color = document.data()["color"] as? String ?? "pink"
-                            let comment = document.data()["comment"] as? String ?? ""
-                            let URL = document.data()["URL"] as? String ?? ""
-                            self.selectedChoices.append(genre)
-                            self.colorArray.append(color)
+     syutoku()
+        db.collection("users").document(uid ?? "").collection("shop").whereField("kyouyu", isEqualTo: true)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        // 取得したドキュメントごとに実行する
+                        let data = document.data()
+                        let idokeido = data["idokeido"] as? GeoPoint
+                        let title = data["title"] as? String ?? "title:Error"
+                        let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                        
+                        let genre = data["genre"] as? String ?? "カフェ"
+                        let color = data["color"] as? String ?? "pink"
+                        let comment = data["comment"] as? String ?? ""
+                        let timestamp = data["timestamp"]
+                        
+                        var ref: DocumentReference? = nil
+                    
+                        
+                        ref = self.db.collection("users").document(self.uid ?? "").collection("public").addDocument(data: [
                             
-                            self.documentid.append(document.documentID)
-                            
-                            self.commentArray.append(comment)
-                            
-                            self.URLArray.append(URL)
-                            
-                            
-                            
+                            "idokeido": idokeido ?? "",
+                            "title":   title,
+                            "subtitle":subtitle,
+                            "timestamp": timestamp ?? "",
+                            "genre":"カフェ",
+                            "kyouyu": false,
+                            "color": "pink"
+                        ]) { err in
+                            if let err = err {
+                                print("Error writing document: \(err)")
+                            } else {
+                                self.documentid.append(ref!.documentID)
+                                print("Document added with ID: \(ref!.documentID)")
+                            }
                         }
-                        self.choicecount  = []
-                        for choice in self.selectedChoices {
-                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
-                            
-                        }
-                        
-                        
-                        
-                        
-                        self.collectionView.delegate = self
-                        self.collectionView.dataSource  = self
-                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                        self.collectionView.reloadData()
-                        
                     }
-                    
-                    
                 }
-            }else {
-                // コレクションが存在しないかドキュメントが存在しない場合の処理
-                print("Collection does not exist or is emptyコレクションがないよ")
-                self.collectionView.delegate = self
-                self.collectionView.dataSource  = self
-                
-                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-                
-                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                self.collectionView.reloadData()
-            }
-            
         }
         
-        
     }
+    @IBAction func segmentedControl(_ sender: UISegmentedControl) {
+            print(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
+        if sender.selectedSegmentIndex == 0{
+            syutoku()
+            
+        }else if sender.selectedSegmentIndex == 1{
+            
+            let collectionRef = db.collection("users").document(uid ?? "").collection("public")
+            
+            collectionRef.getDocuments { (snapshot, error) in
+                if let error = error {
+                    // エラーが発生した場合の処理
+                    print("Error fetching documents: \(error)")
+                    return
+                }
+                
+                if let snapshot = snapshot, !snapshot.isEmpty {
+                    // コレクションにドキュメントが存在する場合の処理
+                    print("Collection exists and contains documents")
+                    // 全てのドキュメントを取得する
+                    self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                // 取得したドキュメントごとに実行する
+                                let genre = document.data()["genre"] as? String ?? "カフェ"
+                                let color = document.data()["color"] as? String ?? "pink"
+                                let comment = document.data()["comment"] as? String ?? ""
+                                let URL = document.data()["URL"] as? String ?? ""
+                                self.selectedChoices.append(genre)
+                                self.colorArray.append(color)
+                                
+                                self.documentid.append(document.documentID)
+                                
+                                self.commentArray.append(comment)
+                                
+                                self.URLArray.append(URL)
+                                
+                                
+                                
+                            }
+                            self.choicecount  = []
+                            for choice in self.selectedChoices {
+                                self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                                
+                            }
+                            
+                            
+                            
+                            
+                            self.collectionView.delegate = self
+                            self.collectionView.dataSource  = self
+                            let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                            self.collectionView.reloadData()
+                            
+                        }
+                        
+                        
+                    }
+                }else {
+                    // コレクションが存在しないかドキュメントが存在しない場合の処理
+                    print("Collection does not exist or is emptyコレクションがないよ")
+                    self.collectionView.delegate = self
+                    self.collectionView.dataSource  = self
+                    
+                    let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                    
+                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                    self.collectionView.reloadData()
+                }
+                
+            }
+            
+        }else{
+            
+        }
+        }
+    
+    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -182,6 +234,18 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
             
         }
+        if segmentedControl.selectedSegmentIndex != 0{
+            cell.commentButton.isHidden = true
+            cell.commentlabel.isHidden = true
+            cell.pickerView.isHidden = true
+            
+            cell.URLtextfield.isHidden = true
+            cell.URLbutton.isHidden = true
+            cell.zyanruTextField.isUserInteractionEnabled = false
+           
+        }
+        
+      
         cell.delegate = self
         cell.documentid = documentid
         
@@ -196,8 +260,14 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow] 
         
-        cell.commenttextfield.text = commentArray[indexPath.row]
-        cell.URLtextfield.text = URLArray[indexPath.row]
+        if !commentArray.isEmpty{
+            cell.commenttextfield.text = commentArray[indexPath.row]
+        }
+        if !URLArray.isEmpty{
+            cell.URLtextfield.text = URLArray[indexPath.row]
+        }
+
+        
         
         
         cell.indexPath = indexPath
@@ -266,7 +336,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     return
                 }
                 if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
-                    self.db.collection(self.uid ?? "hozoncollection").document(self.documentid[indexPath.row]).delete() { err in
+                    self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row]).delete() { err in
                         if let err = err {
                             print("Error removing document: \(err)")
                         } else {
@@ -275,7 +345,6 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         }
                     }
                     self.documentid.remove(at: indexPath.row)
-                    
                     self.hozonArray.remove(at: indexToDelete)
                     self.misetitle.remove(at: indexPath.row)
                     self.misesubtitle.remove(at: indexPath.row)
@@ -312,7 +381,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if gesture.state == .ended {
             
             colorArray[indexPath.row] = "blue"
-            db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath.row ]).updateData(["color": "blue" ]) { error in
+            db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath.row ]).updateData(["color": "blue" ]) { error in
                 
                 if let error = error {
                     
@@ -350,7 +419,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         if gesture.state == .ended {
             colorArray[indexPath.row] = "pink"
-            db.collection(self.uid ?? "hozoncollection").document(documentid[indexPath.row ]).updateData(["color": "pink" ]) { error in
+            db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath.row ]).updateData(["color": "pink" ]) { error in
                 
                 if let error = error {
                     
@@ -388,10 +457,80 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         collectionView.reloadData()
     }
-    
-    
-    
-    
+   
+    func syutoku(){
+        selectedChoices = []
+        
+        
+        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let genre = document.data()["genre"] as? String ?? "カフェ"
+                            let color = document.data()["color"] as? String ?? "pink"
+                            let comment = document.data()["comment"] as? String ?? ""
+                            let URL = document.data()["URL"] as? String ?? ""
+                            self.selectedChoices.append(genre)
+                            self.colorArray.append(color)
+                            
+                            self.documentid.append(document.documentID)
+                            
+                            self.commentArray.append(comment)
+                            
+                            self.URLArray.append(URL)
+                            
+                            
+                            
+                        }
+                        self.choicecount  = []
+                        for choice in self.selectedChoices {
+                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                            
+                        }
+                        
+                        
+                        
+                        
+                        self.collectionView.delegate = self
+                        self.collectionView.dataSource  = self
+                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                        self.collectionView.reloadData()
+                        
+                    }
+                    
+                    
+                }
+            }else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.delegate = self
+                self.collectionView.dataSource  = self
+                
+                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
+            }
+            
+        }
+        
+    }
 }
 
 

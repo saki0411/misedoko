@@ -114,7 +114,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
-        let collectionRef = db.collection(uid ?? "hozoncollection")
+        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
         collectionRef.getDocuments { (snapshot, error) in
             if let error = error {
@@ -127,7 +127,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 // コレクションにドキュメントが存在する場合の処理
                 print("Collection exists and contains documents")
                 // 全てのドキュメントを取得する
-                self.db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                     } else {
@@ -282,7 +282,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 
             } else {
                 // コレクションが存在しないかドキュメントが存在しない場合の処理
-                print("Collection does not exist or is emptyコレクションがないよ")
+                print("コレクションがないよ")
+                
                 self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
                 self.collectionView.reloadData()
             }
@@ -376,13 +377,14 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             let geoPoint = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
             geoPoints.append(geoPoint)
             
-            ref = db.collection(uid ?? "hozoncollection").addDocument(data: [
+            ref = db.collection("users").document(uid ?? "").collection("shop").addDocument(data: [
                 
                 "idokeido": geoPoint,
                 "title":   annotation.title!!,
                 "subtitle":annotation.subtitle!!,
                 "timestamp": FieldValue.serverTimestamp(),
                 "genre":"カフェ",
+                "kyouyu": false,
                 "color": "pink"
             ]) { err in
                 if let err = err {
@@ -426,7 +428,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             
             
-            db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+            db.collection("users").document(uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
@@ -660,8 +662,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
         
-        
-        cell.commenttextfield.text = commentArray[indexPath.row]
+    
+      
         cell.indexPath = indexPath // インデックスパスを渡す
         
         
@@ -739,7 +741,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             nextView.documentid = documentid
             nextView.zyanru = zyanru
             
-            db.collection(self.uid ?? "hozoncollection").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+            db.collection("users").document(uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
