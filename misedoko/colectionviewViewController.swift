@@ -36,9 +36,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var misetitle = [String]()
     var misesubtitle = [String]()
+    var publicmisetitle = [String]()
+    var publicmisesubtitle = [String]()
     
     
     var colorArray = [String]()
+    var publiccolorArray = [String]()
     var URLArray = [String]()
     
     var zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
@@ -46,8 +49,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var genres: [(genre: String, documentID: String)] = []
     var selectedChoices = [String]()
+    var publicselectedChoices = [String]()
     var selectedChoice: String = ""
     var choicecount = [Int]()
+    var publicchoicecount = [Int]()
     
     var commentArray = [String]()
     
@@ -58,6 +63,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     let uid = Auth.auth().currentUser?.uid
     var documentid = [String]()
+    var publicdocumentid = [String]()
     
     @IBOutlet  weak var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -89,46 +95,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
         }
      syutoku()
-        db.collection("users").document(uid ?? "").collection("shop").whereField("kyouyu", isEqualTo: true)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        // 取得したドキュメントごとに実行する
-                        let data = document.data()
-                        let idokeido = data["idokeido"] as? GeoPoint
-                        let title = data["title"] as? String ?? "title:Error"
-                        let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                        
-                        let genre = data["genre"] as? String ?? "カフェ"
-                        let color = data["color"] as? String ?? "pink"
-                        let comment = data["comment"] as? String ?? ""
-                        let timestamp = data["timestamp"]
-                        
-                        var ref: DocumentReference? = nil
-                    
-                        
-                        ref = self.db.collection("users").document(self.uid ?? "").collection("public").addDocument(data: [
-                            
-                            "idokeido": idokeido ?? "",
-                            "title":   title,
-                            "subtitle":subtitle,
-                            "timestamp": timestamp ?? "",
-                            "genre":"カフェ",
-                            "kyouyu": false,
-                            "color": "pink"
-                        ]) { err in
-                            if let err = err {
-                                print("Error writing document: \(err)")
-                            } else {
-                                self.documentid.append(ref!.documentID)
-                                print("Document added with ID: \(ref!.documentID)")
-                            }
-                        }
-                    }
-                }
-        }
+      
+        deletekyouyu()
+        
+     
         
     }
     @IBAction func segmentedControl(_ sender: UISegmentedControl) {
@@ -137,75 +107,22 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             syutoku()
             
         }else if sender.selectedSegmentIndex == 1{
-            
-            let collectionRef = db.collection("users").document(uid ?? "").collection("public")
-            
-            collectionRef.getDocuments { (snapshot, error) in
-                if let error = error {
-                    // エラーが発生した場合の処理
-                    print("Error fetching documents: \(error)")
-                    return
-                }
-                
-                if let snapshot = snapshot, !snapshot.isEmpty {
-                    // コレクションにドキュメントが存在する場合の処理
-                    print("Collection exists and contains documents")
-                    // 全てのドキュメントを取得する
-                    self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                        } else {
-                            for document in querySnapshot!.documents {
-                                // 取得したドキュメントごとに実行する
-                                let genre = document.data()["genre"] as? String ?? "カフェ"
-                                let color = document.data()["color"] as? String ?? "pink"
-                                let comment = document.data()["comment"] as? String ?? ""
-                                let URL = document.data()["URL"] as? String ?? ""
-                                self.selectedChoices.append(genre)
-                                self.colorArray.append(color)
-                                
-                                self.documentid.append(document.documentID)
-                                
-                                self.commentArray.append(comment)
-                                
-                                self.URLArray.append(URL)
-                                
-                                
-                                
-                            }
-                            self.choicecount  = []
-                            for choice in self.selectedChoices {
-                                self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
-                                
-                            }
-                            
-                            
-                            
-                            
-                            self.collectionView.delegate = self
-                            self.collectionView.dataSource  = self
-                            let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                            self.collectionView.reloadData()
-                            
-                        }
-                        
-                        
-                    }
-                }else {
-                    // コレクションが存在しないかドキュメントが存在しない場合の処理
-                    print("Collection does not exist or is emptyコレクションがないよ")
-                    self.collectionView.delegate = self
-                    self.collectionView.dataSource  = self
-                    
-                    let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-                    
-                    self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+        
+            print("えええ")
+            DispatchQueue.global().async {
+              
+                DispatchQueue.main.sync {
+                    print(self.publicmisetitle)
                     self.collectionView.reloadData()
                 }
-                
+                // 三番目に実行
             }
+           
+                           
             
+        
+                      
+               
         }else{
             
         }
@@ -218,7 +135,14 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return hozonArray.count
+        if  segmentedControl.selectedSegmentIndex == 0{
+            return misetitle.count
+        }else if segmentedControl.selectedSegmentIndex == 1{
+            return publicmisetitle.count
+        }else{
+            return misetitle.count
+        }
+       
         
     }
     
@@ -254,12 +178,20 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.commentButton.tag = indexPath.row
         
         cell.commentlabel.isHidden = true
-        
-        
-        let initialRow = choicecount[indexPath.row]
-        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
-        cell.zyanruTextField.text = zyanru[initialRow] 
-        
+        if segmentedControl.selectedSegmentIndex == 0{
+            let initialRow = choicecount[indexPath.row]
+            cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
+            cell.zyanruTextField.text = zyanru[initialRow]
+            
+         
+            print(publicchoicecount,"2")
+        }else if segmentedControl.selectedSegmentIndex == 1{
+            let initialRow = publicchoicecount[indexPath.row]
+            cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
+            cell.zyanruTextField.text = zyanru[initialRow]
+        }
+       
+      
         if !commentArray.isEmpty{
             cell.commenttextfield.text = commentArray[indexPath.row]
         }
@@ -271,30 +203,50 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         cell.indexPath = indexPath
-        
-        let color = colorArray[indexPath.row]
-        
-        if color == "pink"{
-            cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
+      
+        if segmentedControl.selectedSegmentIndex == 0{
             
+            let color = colorArray[indexPath.row]
+           
+            if color == "pink"{
+                cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
+                
+            }else{
+                cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
+                
+            }
+            // セルにスワイプジェスチャーレコグナイザーを追加
+            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+            swipeGesture.direction = .left // スワイプの方向を指定（例: 左方向）
+            cell.addGestureRecognizer(swipeGesture)
+            let swipeGesture2 = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture2(_:)))
+            swipeGesture2.direction = .right // スワイプの方向を指定（例: 左方向）
+            cell.addGestureRecognizer(swipeGesture2)
         }else{
-            cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
+           
+            let color = publiccolorArray[indexPath.row]
+           
+            if color == "pink"{
+                cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
+                
+            }else{
+                cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
+                
+            }
+                
             
         }
-        
-        
-        // セルにスワイプジェスチャーレコグナイザーを追加
-        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
-        swipeGesture.direction = .left // スワイプの方向を指定（例: 左方向）
-        cell.addGestureRecognizer(swipeGesture)
-        let swipeGesture2 = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture2(_:)))
-        swipeGesture2.direction = .right // スワイプの方向を指定（例: 左方向）
-        cell.addGestureRecognizer(swipeGesture2)
-        
-        // let route = routes[indexPath.row]
-        cell.shopnamelabel?.text = misetitle[indexPath.row]
-        cell.adresslabel?.text = misesubtitle[indexPath.row]
-        
+            // let route = routes[indexPath.row]
+            if  segmentedControl.selectedSegmentIndex == 0{
+                cell.shopnamelabel?.text = misetitle[indexPath.row]
+                cell.adresslabel?.text = misesubtitle[indexPath.row]
+            }else if segmentedControl.selectedSegmentIndex == 1{
+                cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
+                cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
+            }
+            
+            
+       
         
         
         
@@ -330,36 +282,74 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
             //ボタン
-            let delete = UIAction(title: "DELETE", image: UIImage(systemName: "trash.fill")) { action in
-                
-                guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
-                    return
-                }
-                if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
-                    self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row]).delete() { err in
+            let delete = UIAction(title: "削除", image: UIImage(systemName: "trash.fill")) { action in
+                if self.segmentedControl.selectedSegmentIndex == 0{
+                    
+                    
+                    guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
+                        return
+                    }
+                    if let indexToDelete = self.hozonArray.firstIndex(where: { $0 === itemToDelete }) {
+                        self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row]).delete() { err in
+                            if let err = err {
+                                print("Error removing document: \(err)")
+                            } else {
+                                print("Document successfully removed!")
+                                self.deletekyouyu()
+                                
+                            }
+                        }
+                        self.documentid.remove(at: indexPath.row)
+                        self.hozonArray.remove(at: indexToDelete)
+                        self.misetitle.remove(at: indexPath.row)
+                        self.misesubtitle.remove(at: indexPath.row)
+                        self.URLArray.remove(at: indexPath.row)
+                        self.selectedChoices.remove(at: indexPath.row)
+                        self.choicecount.remove(at: indexPath.row)
+                        self.commentArray.remove(at: indexPath.row)
+                        self.colorArray.remove(at: indexPath.row)
+                        
+                        
+                        collectionView.reloadData()
+                        
+                    }
+                }else if self.segmentedControl.selectedSegmentIndex == 1{
+                 
+                    self.db.collection("users").document(self.uid ?? "").collection("public").document(self.publicdocumentid[indexPath.row]).delete() { err in
                         if let err = err {
                             print("Error removing document: \(err)")
                         } else {
                             print("Document successfully removed!")
+                            self.deletekyouyu()
+                            
                             
                         }
                     }
-                    self.documentid.remove(at: indexPath.row)
-                    self.hozonArray.remove(at: indexToDelete)
-                    self.misetitle.remove(at: indexPath.row)
-                    self.misesubtitle.remove(at: indexPath.row)
-                    self.URLArray.remove(at: indexPath.row)
-                    self.selectedChoices.remove(at: indexPath.row)
-                    self.choicecount.remove(at: indexPath.row)
-                    self.commentArray.remove(at: indexPath.row)
-                    self.colorArray.remove(at: indexPath.row)
+                    self.publicdocumentid.remove(at: indexPath.row)
+                    self.publiccolorArray.remove(at: indexPath.row)
+                }
+            }
+            let addlist = UIAction(title: "共有リストに追加", image: UIImage(systemName: "square.on.square.badge.person.crop.fill")) { action in
+                self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row ]).updateData(["kyouyu": true]) { error in
                     
-                    collectionView.reloadData()
-                    
+                    if let error = error {
+                        
+                        print("エラーが発生しました: \(error)")
+                        
+                    } else {
+                     
+                        self.deletekyouyu()
+                        
+                       
+                        print("共有リストを更新しました")
+                        
+                        
+                        
+                    }
                 }
             }
             
-            return UIMenu(title: "Menu", children: [delete])
+            return UIMenu(title: "Menu", children: [addlist, delete])
             
             
         }
@@ -390,7 +380,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 } else {
                     
                     print("ジャンルを更新しました")
-                    
+                    self.deletekyouyu()
                     self.collectionView.reloadData()
                     
                     
@@ -426,7 +416,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     print("エラーが発生しました: \(error)")
                     
                 } else {
-                    
+                    self.deletekyouyu()
                     print("ジャンルを更新しました")
                     self.collectionView.reloadData()
                     
@@ -530,6 +520,78 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
         }
         
+    }
+    func deletekyouyu(){
+        publicmisetitle = []
+        publicmisesubtitle = []
+        publicdocumentid = []
+        publiccolorArray = []
+        publicchoicecount = []
+        publicselectedChoices = []
+        db.collection("users").document(uid ?? "").collection("public").getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        document.reference.delete()
+                    }
+                }
+            }
+    
+        db.collection("users").document(uid ?? "").collection("shop").whereField("kyouyu", isEqualTo: true)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        // 取得したドキュメントごとに実行する
+                        let data = document.data()
+                        let idokeido = data["idokeido"] as? GeoPoint
+                        let title = data["title"] as? String ?? "title:Error"
+                        let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                        
+                        let genre = data["genre"] as? String ?? "カフェ"
+                        let color = data["color"] as? String ?? "pink"
+                      let kyouyu = data["kyouyu"] as? Bool ?? false
+                        let timestamp = data["timestamp"]
+                        
+                        var ref: DocumentReference? = nil
+                    
+                        
+                        ref = self.db.collection("users").document(self.uid ?? "").collection("public").addDocument(data: [
+                            
+                            "idokeido": idokeido ?? "",
+                            "title":   title,
+                            "subtitle":subtitle,
+                            "timestamp": timestamp ?? "",
+                            "genre":genre,
+                            "kyouyu": kyouyu,
+                            "color": color
+                        ]) { err in
+                            if let err = err {
+                                print("Error writing document: \(err)")
+                            } else {
+                                
+                                self.publicmisetitle.append(title)
+                                self.publicmisesubtitle.append(subtitle)
+                                self.publicdocumentid.append(ref!.documentID)
+                                self.publiccolorArray.append(color)
+                                self.publicselectedChoices.append(genre)
+                                print(self.selectedChoices)
+                                for choice in self.publicselectedChoices {
+                                     self.publicchoicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
+                                 
+                                 
+                                 }
+                                print("Document added with ID2: \(ref!.documentID)")
+                            }
+                        }
+                    }
+                }
+             
+              
+        }
+    
     }
 }
 

@@ -135,8 +135,8 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                      
                      
                      }
-             
-                  
+                    
+                 
                 }
             }
         }
@@ -149,7 +149,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                 print("エラーが発生しました: \(error)")
                 
             } else {
-              
+                if let topViewController: colectionviewViewController = self.getTopViewController() as? colectionviewViewController {
+                    topViewController.deletekyouyu()
+                }
                 print("ジャンルを更新しました")
                 
                 
