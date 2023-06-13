@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		721377962A38863A00921D24 /* friendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721377952A38863A00921D24 /* friendViewController.swift */; };
 		72282E9829F511E300EB8A90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282E9729F511E300EB8A90 /* AppDelegate.swift */; };
 		72282E9A29F511E300EB8A90 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282E9929F511E300EB8A90 /* SceneDelegate.swift */; };
 		72282E9F29F511E300EB8A90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72282E9D29F511E300EB8A90 /* Main.storyboard */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		721377952A38863A00921D24 /* friendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = friendViewController.swift; sourceTree = "<group>"; };
 		72282E9429F511E300EB8A90 /* misedoko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = misedoko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72282E9729F511E300EB8A90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		72282E9929F511E300EB8A90 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				72E1E3552A0DE50700C27772 /* loginViewController.swift */,
 				72E1E35B2A11DD8400C27772 /* colectionviewViewController.swift */,
 				72E1E3612A1518EE00C27772 /* addViewController.swift */,
+				721377952A38863A00921D24 /* friendViewController.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				721377962A38863A00921D24 /* friendViewController.swift in Sources */,
 				72E1E3562A0DE50700C27772 /* loginViewController.swift in Sources */,
 				725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */,
 				72E1E35C2A11DD8400C27772 /* colectionviewViewController.swift in Sources */,

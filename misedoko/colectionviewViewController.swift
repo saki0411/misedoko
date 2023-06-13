@@ -124,7 +124,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                       
                
         }else{
-            
+         
         }
         }
     
@@ -437,6 +437,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         if segue.identifier == "tomain" {
             let nextView = segue.destination as! mainViewController
+            nextView.zyanru = zyanru
+        }
+        if segue.identifier == "tofriend" {
+            let nextView = segue.destination as! friendViewController
             nextView.zyanru = zyanru
         }
     }

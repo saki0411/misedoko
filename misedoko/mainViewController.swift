@@ -707,7 +707,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBAction func logout(){
         do{
             try Auth.auth().signOut()
-            self .dismiss(animated: true, completion: nil)
+           // self.dismiss(animated: true, completion: nil)
+       self.performSegue(withIdentifier: "torogin", sender: nil)
+
+            
         }catch let error as NSError {
             print(error)
         }
@@ -771,6 +774,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             //   nextView.colorArray = colorArray
             
+        }
+        if segue.identifier == "tofriend" {
+            let nextView = segue.destination as! friendViewController
+            nextView.zyanru = zyanru
         }
         
         
