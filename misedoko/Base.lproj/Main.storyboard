@@ -228,11 +228,18 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Title" id="5IC-0j-h4M">
-                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="sh3-jq-ALI">
-                                            <connections>
-                                                <segue destination="hRx-HW-oF9" kind="show" identifier="toadd" id="0fi-JH-Ya1"/>
-                                            </connections>
-                                        </barButtonItem>
+                                        <rightBarButtonItems>
+                                            <barButtonItem style="plain" systemItem="add" id="sh3-jq-ALI">
+                                                <connections>
+                                                    <segue destination="hRx-HW-oF9" kind="show" identifier="toadd" id="0fi-JH-Ya1"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Item" image="square.and.arrow.up" catalog="system" style="plain" id="xl5-V0-82Q">
+                                                <connections>
+                                                    <action selector="shareWithSender:" destination="cLo-rL-E9N" id="ok3-dn-1W4"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -439,21 +446,21 @@
                                 <rect key="frame" x="0.0" y="90" width="393" height="680"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="zHI-gA-HBe">
-                                    <size key="itemSize" width="391" height="183"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="zHI-gA-HBe">
+                                    <size key="itemSize" width="391" height="156"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="tYU-Kq-B9f" customClass="CollectionViewCell" customModule="misedoko" customModuleProvider="target">
-                                        <rect key="frame" x="1" y="0.0" width="391" height="183"/>
+                                        <rect key="frame" x="1" y="0.0" width="391" height="156"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="cWb-Tn-4Ua">
-                                            <rect key="frame" x="0.0" y="0.0" width="391" height="183"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="391" height="156"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="391" height="183"/>
+                                        <size key="customSize" width="391" height="156"/>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
@@ -467,13 +474,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="UVu-ex-8KS"/>
                     <connections>
-                        <outlet property="collectiionview" destination="c2s-a6-IDa" id="4Zu-8t-lZZ"/>
+                        <outlet property="collectionview" destination="c2s-a6-IDa" id="Bx3-UV-PML"/>
                         <outlet property="searchField" destination="30H-ox-1dt" id="1Vl-wp-jLJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zbz-ez-02l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="828" y="850"/>
+            <point key="canvasLocation" x="827.69230769230762" y="849.52606635071083"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -481,6 +488,7 @@
         <segue reference="NLP-b1-tBW"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

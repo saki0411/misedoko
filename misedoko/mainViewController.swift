@@ -646,10 +646,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             choicecount2.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
-        print(selectedChoices2,"これ")
-        print(choicecount2,"これ！")
+      
         cell.commentButton.isHidden = true
-        cell.commentlabel.isHidden = true
+       
         cell.pickerView.isHidden = true
         
         cell.URLtextfield.isHidden = true

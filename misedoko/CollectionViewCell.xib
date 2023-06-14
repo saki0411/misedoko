@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -66,13 +66,6 @@
                             <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="CPY-zX-AG7"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ofi-ap-SRI">
-                        <rect key="frame" x="8" y="345.66666666666669" width="41.333333333333336" height="20.333333333333314"/>
-                        <color key="backgroundColor" red="0.4941176471" green="0.74509803919999995" blue="0.6705882353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="コメント" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cM9-j8-D3s">
                         <rect key="frame" x="8" y="179" width="233" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -112,8 +105,6 @@
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="DbE-bR-QHh"/>
                 <constraint firstItem="V8R-Pb-EFf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="EQv-Pc-nCd"/>
                 <constraint firstItem="V8R-Pb-EFf" firstAttribute="top" secondItem="0QF-lj-kZ8" secondAttribute="bottom" constant="8" symbolic="YES" id="G2q-ma-cQn"/>
-                <constraint firstItem="Ofi-ap-SRI" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="Qc8-hK-zLg"/>
-                <constraint firstAttribute="bottom" secondItem="Ofi-ap-SRI" secondAttribute="bottom" id="SVj-F6-gwA"/>
                 <constraint firstItem="V8R-Pb-EFf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="UY7-fT-VgU"/>
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="XHz-bZ-JBb"/>
                 <constraint firstAttribute="trailing" secondItem="sbF-UE-U5w" secondAttribute="trailing" constant="27" id="c0y-lU-YbF"/>
@@ -130,7 +121,6 @@
                 <outlet property="URLtextfield" destination="5UJ-D7-JcX" id="zyI-r9-da5"/>
                 <outlet property="adresslabel" destination="V8R-Pb-EFf" id="9Ku-7E-Z79"/>
                 <outlet property="commentButton" destination="QLf-5C-6Pr" id="eL0-ZB-JaS"/>
-                <outlet property="commentlabel" destination="Ofi-ap-SRI" id="Z7c-td-KNw"/>
                 <outlet property="commenttextfield" destination="cM9-j8-D3s" id="vUz-BM-bt8"/>
                 <outlet property="shopnamelabel" destination="0QF-lj-kZ8" id="e8k-5N-TR4"/>
                 <outlet property="timelabel" destination="0Nj-YX-3o6" id="flg-1m-8WJ"/>

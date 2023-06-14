@@ -160,7 +160,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         if segmentedControl.selectedSegmentIndex != 0{
             cell.commentButton.isHidden = true
-            cell.commentlabel.isHidden = true
+          
+        
             cell.pickerView.isHidden = true
             
             cell.URLtextfield.isHidden = true
@@ -177,7 +178,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.URLArray = URLArray
         cell.commentButton.tag = indexPath.row
         
-        cell.commentlabel.isHidden = true
+    
         if segmentedControl.selectedSegmentIndex == 0{
             let initialRow = choicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -263,7 +264,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         // タップされたセルのインデックスと一致する場合は高さを変更する
         if indexPath.row == selectedCell {
             cellSizeHeight = 600
-            cell.commentlabel.isHidden = false
+           
         }
         
         
@@ -329,7 +330,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.publiccolorArray.remove(at: indexPath.row)
                 }
             }
-            let addlist = UIAction(title: "共有リストに追加", image: UIImage(systemName: "square.on.square.badge.person.crop.fill")) { action in
+            let addlist = UIAction(title: "共有リストに追加", image: UIImage(systemName: "rectangle.stack.badge.person.crop.fill")) { action in
                 self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row ]).updateData(["kyouyu": true]) { error in
                     
                     if let error = error {
@@ -429,7 +430,25 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
         }
     }
-    
+    @IBAction func share(sender: UIButton) {
+
+    let activityItems = ["私のミセドココードは",uid,"だよ"]
+
+        // 初期化処理
+        let activityVC = UIActivityViewController(activityItems: activityItems as [Any], applicationActivities: nil)
+
+        // 使用しないアクティビティタイプ
+        let excludedActivityTypes = [
+            UIActivity.ActivityType.saveToCameraRoll,
+            UIActivity.ActivityType.print
+        ]
+
+        activityVC.excludedActivityTypes = excludedActivityTypes
+
+        // UIActivityViewControllerを表示
+        self.present(activityVC, animated: true, completion: nil)
+      }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toadd" {
             let nextView = segue.destination as! addViewController
