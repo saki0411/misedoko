@@ -14,7 +14,8 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
     
     @IBOutlet weak var searchField: UISearchBar!
     @IBOutlet var collectionview: UICollectionView!
-    
+    @IBOutlet var friendbutton: UIButton!
+    @IBOutlet var kensakulabel: UILabel!
     var documentNames = [String]()
     var result = String()
     
@@ -33,13 +34,15 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
     var word = String()
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         searchField.delegate = self
         collectionview.delegate = self
         collectionview.dataSource = self
-        
+        friendbutton.isEnabled = false
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
@@ -49,13 +52,15 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
-       
-     
+        
+        
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
         // キーボードを閉じる
         view.endEditing(true)
         word = ""
+        kensakulabel.text = ""
         // 入力された値がnilでなければif文のブロック内の処理を実行
         word = searchBar.text ?? ""
         if let word = searchBar.text {
@@ -115,9 +120,9 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
                                     
                                 }
                                 
-                                    print(self.misetitle,"e")
-                                    self.collectionview.register(self.nib, forCellWithReuseIdentifier: "cell")
-                                    self.collectionview.reloadData()
+                                print(self.misetitle,"e")
+                                self.collectionview.register(self.nib, forCellWithReuseIdentifier: "cell")
+                                self.collectionview.reloadData()
                                 
                             }
                         }
@@ -125,7 +130,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
                     }else {
                         // コレクションが存在しないかドキュメントが存在しない場合の処理
                         print("コレクションがないよ")
-                        
+                        self.kensakulabel.text = "検索結果がありません"
                         
                         
                     }
@@ -141,7 +146,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         }
         
     }
-
+    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -159,7 +164,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         
         cell.URLtextfield.isHidden = true
         cell.URLbutton.isHidden = true
-      
+        
         
         
         
@@ -195,7 +200,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
             //ボタン
-          
+            
             let addlist = UIAction(title: "マイリストに追加", image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { action in
                 let collectionRef = self.db.collection("users").document(self.word).collection("public")
                 
@@ -253,25 +258,25 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
                                                     
                                                 }
                                             }
-                                              
-                                                
-                                            }
                                             
-                                                } else {
-                                                    // コードを実行する
-                                                }
-                                            }
+                                            
                                         }
-                                    
-                                
-                                
+                                        
+                                    } else {
+                                        // コードを実行する
+                                    }
+                                }
                             }
+                            
+                            
+                            
+                        }
                         
                     }
                     
                 }
                 
-           
+                
             }
             
             return UIMenu(title: "Menu", children: [addlist])

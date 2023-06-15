@@ -159,7 +159,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4gT-dX-wzU">
-                                <rect key="frame" x="279" y="64" width="111" height="35"/>
+                                <rect key="frame" x="280" y="65" width="111" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="ログアウト"/>
@@ -183,12 +183,12 @@
                                                 <segue destination="cLo-rL-E9N" kind="show" identifier="tocollectionview2" id="2oR-YD-7aL"/>
                                             </connections>
                                         </button>
-                                        <barButtonItem key="rightBarButtonItem" title="あああああ" id="6OY-Ua-jSO">
+                                        <barButtonItem key="rightBarButtonItem" title="あああああ" image="person.2.fill" id="6OY-Ua-jSO">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="LmD-8T-ZZl">
                                                 <rect key="frame" x="288" y="4.6666666666666679" width="86" height="35"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="え"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="person.2.fill" catalog="system"/>
                                                 <connections>
                                                     <segue destination="S9t-ao-a3J" kind="show" identifier="tofriend" id="7m9-Ab-QHc"/>
                                                 </connections>
@@ -213,7 +213,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="101.5267175572519" y="3.5211267605633805"/>
+            <point key="canvasLocation" x="100" y="23"/>
         </scene>
         <!--Colectionview View Controller-->
         <scene sceneID="aQ8-B4-RUR">
@@ -247,18 +247,23 @@
                                 <rect key="frame" x="3" y="787" width="390" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Title" id="L0R-Ff-xSe">
-                                        <barButtonItem key="leftBarButtonItem" title="戻る" id="4EP-IS-ge9">
+                                    <navigationItem id="L0R-Ff-xSe">
+                                        <nil key="title"/>
+                                        <button key="titleView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="RFo-Pi-6Dg">
+                                            <rect key="frame" x="101.66666666666669" y="5" width="156" height="34.333333333333336"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                             <connections>
-                                                <segue destination="BYZ-38-t0r" kind="show" identifier="tomain" id="NLP-b1-tBW"/>
+                                                <segue destination="BYZ-38-t0r" kind="show" identifier="tomain" id="Que-uM-LAF"/>
                                             </connections>
-                                        </barButtonItem>
+                                        </button>
                                         <barButtonItem key="rightBarButtonItem" style="plain" id="kMd-9I-QPe">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="c50-N8-v0l">
-                                                <rect key="frame" x="288" y="5" width="86" height="34.333333333333336"/>
+                                                <rect key="frame" x="263.66666666666669" y="5" width="110.33333333333331" height="34.333333333333336"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="person.2.fill" catalog="system"/>
                                                 <connections>
                                                     <segue destination="S9t-ao-a3J" kind="show" identifier="tofriend" id="rPL-ri-Taz"/>
                                                 </connections>
@@ -317,7 +322,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qkj-1k-7J5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="881.53846153846155" y="-12.085308056872037"/>
+            <point key="canvasLocation" x="892" y="23"/>
         </scene>
         <!--Add View Controller-->
         <scene sceneID="9Yo-gN-u0X">
@@ -391,7 +396,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mGD-1H-0Su" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1693.8461538461538" y="-11.374407582938389"/>
+            <point key="canvasLocation" x="1689" y="23"/>
         </scene>
         <!--Friend View Controller-->
         <scene sceneID="eQk-ES-aBd">
@@ -421,9 +426,8 @@
                                 <items>
                                     <navigationItem id="9Bs-Ep-aYT">
                                         <nil key="title"/>
-                                        <barButtonItem key="leftBarButtonItem" title="戻る" id="pS6-bP-3v3"/>
                                         <button key="titleView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="9M5-7f-em7">
-                                            <rect key="frame" x="117" y="5" width="156" height="34.333333333333336"/>
+                                            <rect key="frame" x="102.33333333333331" y="5" width="156" height="34.333333333333336"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Button"/>
@@ -431,12 +435,12 @@
                                                 <segue destination="BYZ-38-t0r" kind="show" id="E0b-gJ-ka6"/>
                                             </connections>
                                         </button>
-                                        <barButtonItem key="rightBarButtonItem" style="plain" id="h59-mj-h8F">
+                                        <barButtonItem key="rightBarButtonItem" image="person.2.fill" style="plain" id="h59-mj-h8F">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="D4c-B0-BeR">
-                                                <rect key="frame" x="288" y="5" width="86" height="34.333333333333336"/>
+                                                <rect key="frame" x="264.33333333333331" y="5" width="109.66666666666669" height="34.333333333333336"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="person.2.fill" catalog="system"/>
                                             </button>
                                         </barButtonItem>
                                     </navigationItem>
@@ -452,6 +456,13 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
+                                <label key="backgroundView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cTt-Vk-Psv">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="680"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="tYU-Kq-B9f" customClass="CollectionViewCell" customModule="misedoko" customModuleProvider="target">
                                         <rect key="frame" x="1" y="0.0" width="391" height="156"/>
@@ -475,19 +486,24 @@
                     <navigationItem key="navigationItem" id="UVu-ex-8KS"/>
                     <connections>
                         <outlet property="collectionview" destination="c2s-a6-IDa" id="Bx3-UV-PML"/>
+                        <outlet property="friendbutton" destination="D4c-B0-BeR" id="QBB-mG-Amn"/>
+                        <outlet property="kensakulabel" destination="cTt-Vk-Psv" id="EUh-7S-lzj"/>
                         <outlet property="searchField" destination="30H-ox-1dt" id="1Vl-wp-jLJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zbz-ez-02l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="827.69230769230762" y="849.52606635071083"/>
+            <point key="canvasLocation" x="890.76923076923072" y="849.52606635071083"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="rPL-ri-Taz"/>
-        <segue reference="NLP-b1-tBW"/>
+        <segue reference="2oR-YD-7aL"/>
+        <segue reference="7m9-Ab-QHc"/>
+        <segue reference="Que-uM-LAF"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="person.2.fill" width="128" height="128"/>
+        <image name="person.2.fill" catalog="system" width="128" height="81"/>
         <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

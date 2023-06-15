@@ -94,39 +94,40 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
             
         }
-     syutoku()
-      
+        syutoku()
+        
         deletekyouyu()
         
-     
+        
         
     }
     @IBAction func segmentedControl(_ sender: UISegmentedControl) {
-            print(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
+        print(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
         if sender.selectedSegmentIndex == 0{
             syutoku()
             
         }else if sender.selectedSegmentIndex == 1{
-        
+            print(self.publicchoicecount)
+            print(self.publicselectedChoices,publicselectedChoices.count)
             print("えええ")
             DispatchQueue.global().async {
-              
+                
                 DispatchQueue.main.sync {
                     print(self.publicmisetitle)
                     self.collectionView.reloadData()
                 }
                 // 三番目に実行
             }
-           
-                           
             
-        
-                      
-               
+            
+            
+            
+            
+            
         }else{
-         
+            
         }
-        }
+    }
     
     
     
@@ -142,7 +143,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }else{
             return misetitle.count
         }
-       
+        
         
     }
     
@@ -160,17 +161,17 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         if segmentedControl.selectedSegmentIndex != 0{
             cell.commentButton.isHidden = true
-          
-        
+            
+            
             cell.pickerView.isHidden = true
             
             cell.URLtextfield.isHidden = true
             cell.URLbutton.isHidden = true
             cell.zyanruTextField.isUserInteractionEnabled = false
-           
+            
         }
         
-      
+        
         cell.delegate = self
         cell.documentid = documentid
         
@@ -178,37 +179,37 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         cell.URLArray = URLArray
         cell.commentButton.tag = indexPath.row
         
-    
+        
         if segmentedControl.selectedSegmentIndex == 0{
             let initialRow = choicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
             
-         
+            
             print(publicchoicecount,"2")
         }else if segmentedControl.selectedSegmentIndex == 1{
             let initialRow = publicchoicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
         }
-       
-      
+        
+        
         if !commentArray.isEmpty{
             cell.commenttextfield.text = commentArray[indexPath.row]
         }
         if !URLArray.isEmpty{
             cell.URLtextfield.text = URLArray[indexPath.row]
         }
-
+        
         
         
         
         cell.indexPath = indexPath
-      
+        
         if segmentedControl.selectedSegmentIndex == 0{
             
             let color = colorArray[indexPath.row]
-           
+            
             if color == "pink"{
                 cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
                 
@@ -224,9 +225,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             swipeGesture2.direction = .right // スワイプの方向を指定（例: 左方向）
             cell.addGestureRecognizer(swipeGesture2)
         }else{
-           
+            
             let color = publiccolorArray[indexPath.row]
-           
+            
             if color == "pink"{
                 cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.9568627451, green: 0.7019607843, blue: 0.7607843137, alpha: 1)}
                 
@@ -234,20 +235,20 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 cell.backgroundColor = UIColor {_ in return #colorLiteral(red: 0.6784313725, green: 0.7568627451, blue: 0.9176470588, alpha: 1)}
                 
             }
-                
+            
             
         }
-            // let route = routes[indexPath.row]
-            if  segmentedControl.selectedSegmentIndex == 0{
-                cell.shopnamelabel?.text = misetitle[indexPath.row]
-                cell.adresslabel?.text = misesubtitle[indexPath.row]
-            }else if segmentedControl.selectedSegmentIndex == 1{
-                cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
-                cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
-            }
-            
-            
-       
+        // let route = routes[indexPath.row]
+        if  segmentedControl.selectedSegmentIndex == 0{
+            cell.shopnamelabel?.text = misetitle[indexPath.row]
+            cell.adresslabel?.text = misesubtitle[indexPath.row]
+        }else if segmentedControl.selectedSegmentIndex == 1{
+            cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
+            cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
+        }
+        
+        
+        
         
         
         
@@ -264,7 +265,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         // タップされたセルのインデックスと一致する場合は高さを変更する
         if indexPath.row == selectedCell {
             cellSizeHeight = 600
-           
+            
         }
         
         
@@ -315,7 +316,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         
                     }
                 }else if self.segmentedControl.selectedSegmentIndex == 1{
-                 
+                    
                     self.db.collection("users").document(self.uid ?? "").collection("public").document(self.publicdocumentid[indexPath.row]).delete() { err in
                         if let err = err {
                             print("Error removing document: \(err)")
@@ -338,10 +339,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         print("エラーが発生しました: \(error)")
                         
                     } else {
-                     
+                        
                         self.deletekyouyu()
                         
-                       
+                        
                         print("共有リストを更新しました")
                         
                         
@@ -431,24 +432,27 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
     }
     @IBAction func share(sender: UIButton) {
-
-    let activityItems = ["私のミセドココードは",uid,"だよ"]
-
+        let uiddayo = ("私のミセドココードは",uid!,"だよ")
+        print(uiddayo)
+        let uiddayoString = uiddayo.0 + uiddayo.1 + uiddayo.2
+        
+        let activityItems = [uiddayoString]
+        
         // 初期化処理
-        let activityVC = UIActivityViewController(activityItems: activityItems as [Any], applicationActivities: nil)
-
+        let activityVC = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        
         // 使用しないアクティビティタイプ
         let excludedActivityTypes = [
             UIActivity.ActivityType.saveToCameraRoll,
             UIActivity.ActivityType.print
         ]
-
+        
         activityVC.excludedActivityTypes = excludedActivityTypes
-
+        
         // UIActivityViewControllerを表示
         self.present(activityVC, animated: true, completion: nil)
-      }
-
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toadd" {
             let nextView = segue.destination as! addViewController
@@ -470,7 +474,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         collectionView.reloadData()
     }
-   
+    
     func syutoku(){
         selectedChoices = []
         
@@ -552,15 +556,15 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         publicchoicecount = []
         publicselectedChoices = []
         db.collection("users").document(uid ?? "").collection("public").getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        document.reference.delete()
-                    }
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    document.reference.delete()
                 }
             }
-    
+        }
+        
         db.collection("users").document(uid ?? "").collection("shop").whereField("kyouyu", isEqualTo: true)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
@@ -575,11 +579,11 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         
                         let genre = data["genre"] as? String ?? "カフェ"
                         let color = data["color"] as? String ?? "pink"
-                      let kyouyu = data["kyouyu"] as? Bool ?? false
+                        let kyouyu = data["kyouyu"] as? Bool ?? false
                         let timestamp = data["timestamp"]
                         
                         var ref: DocumentReference? = nil
-                    
+                        
                         
                         ref = self.db.collection("users").document(self.uid ?? "").collection("public").addDocument(data: [
                             
@@ -600,21 +604,22 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                                 self.publicdocumentid.append(ref!.documentID)
                                 self.publiccolorArray.append(color)
                                 self.publicselectedChoices.append(genre)
-                                print(self.selectedChoices)
+                                self.publicchoicecount = []
                                 for choice in self.publicselectedChoices {
-                                     self.publicchoicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
-                                 
-                                 
-                                 }
+                                    self.publicchoicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
+                                    
+                                    
+                                }
+                                
                                 print("Document added with ID2: \(ref!.documentID)")
                             }
                         }
                     }
                 }
-             
-              
-        }
-    
+                
+                
+            }
+        
     }
 }
 

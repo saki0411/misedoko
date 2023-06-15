@@ -130,17 +130,17 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                 DispatchQueue.main.async {
                     self.choicecount = []
                     for choice in self.selectedChoices {
-                         self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
+                        self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
                         print(self.zyanru.firstIndex(of: choice) ?? 0)
-                     
-                     
-                     }
+                        
+                        
+                    }
                     
-                 
+                    
                 }
             }
         }
-      
+        
         
         db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["genre": selectedChoice ]) { error in
             
@@ -184,7 +184,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             
             topViewController.collectionView.reloadData()
         }
-
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

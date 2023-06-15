@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil) { task in
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
-           
+            
             
             
         }
@@ -81,33 +81,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
     }
     func applicationDidEnterBackground(_ application: UIApplication) {
-            // アプリがバックグラウンドに入ったら呼ばれる
-            scheduleAppRefresh()
-        }
+        // アプリがバックグラウンドに入ったら呼ばれる
+        scheduleAppRefresh()
+    }
     func scheduleAppRefresh() {
-            // バックグラウンドタスクの予約 (スケジュール) をする
-            let request = BGProcessingTaskRequest(identifier: backgroundTaskIdentifier)
-            // 最も早い実行時刻を設定する (15分後)
-            request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
-            // ネットワーク接続が必要かどうかを設定する (true)
+        // バックグラウンドタスクの予約 (スケジュール) をする
+        let request = BGProcessingTaskRequest(identifier: backgroundTaskIdentifier)
+        // 最も早い実行時刻を設定する (15分後)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
+        // ネットワーク接続が必要かどうかを設定する (true)
         request.requiresNetworkConnectivity = true
-            // タスクを予約する
-            do {
-                try BGTaskScheduler.shared.submit(request)
-            } catch {
-                print("Could not schedule app refresh: \(error)")
-            }
+        // タスクを予約する
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Could not schedule app refresh: \(error)")
         }
+    }
     
     func handleAppRefresh(task: BGAppRefreshTask) {
-           // バックグラウンドタスクを実行する
-           // タイムアウト時に呼ばれる処理を設定する
-           task.expirationHandler = {
-               // タスクをキャンセルする
-               task.setTaskCompleted(success: false)
-           }
-           
-  
+        // バックグラウンドタスクを実行する
+        // タイムアウト時に呼ばれる処理を設定する
+        task.expirationHandler = {
+            // タスクをキャンセルする
+            task.setTaskCompleted(success: false)
+        }
+        
+        
         var annotations: [MKAnnotation] = []
         let collectionRef = self.db.collection(self.uid ?? "hozoncollection")
         
@@ -183,34 +183,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 
                 
             }
-           
+            
             // arrayに情報が入っている場合は、ローカル通知を表示する
             if !self.nearbyAnnotations.isEmpty {
-               
+                
                 let content = UNMutableNotificationContent()
-                      content.title = "お知らせ"
-                      content.body = "近くにあります"
-                      content.sound = UNNotificationSound.default
-
-                     
+                content.title = "お知らせ"
+                content.body = "近くにあります"
+                content.sound = UNNotificationSound.default
+                
+                
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-                      let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-                      UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                 
             }
             
             // バックグラウンドタスクの処理が終了したら、タスクの完了を通知する
-           
-        
-    
-               // タスクが完了したことを通知する
-               task.setTaskCompleted(success: true)
-               // 次のタスクを予約する
-               self.scheduleAppRefresh()
-           }
-       }
+            
+            
+            
+            // タスクが完了したことを通知する
+            task.setTaskCompleted(success: true)
+            // 次のタスクを予約する
+            self.scheduleAppRefresh()
+        }
+    }
     
     
 }
-    
- 
+
+

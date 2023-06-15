@@ -13,7 +13,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-   
+    
     let notificationCenter = UNUserNotificationCenter.current()
     
     
@@ -399,12 +399,12 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             colorArray.append("pink")
             misetitle.append(annotation.title!!)
             misesubtitle.append(annotation.subtitle!!)
-          
+            
             let genzaiti = CLLocation(latitude: self.mapView.userLocation.coordinate.latitude,longitude: self.mapView.userLocation.coordinate.longitude)
             
             
-        
-           
+            
+            
             
             let latitude = geoPoint.latitude
             let longitude = geoPoint.longitude
@@ -441,7 +441,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                         
                         
                         self.documentid.append(document.documentID)
-                    
+                        
                         
                     }
                 }
@@ -646,9 +646,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             choicecount2.append(zyanru.firstIndex(of: choice) ?? 2)
             
         }
-      
+        
         cell.commentButton.isHidden = true
-       
+        
         cell.pickerView.isHidden = true
         
         cell.URLtextfield.isHidden = true
@@ -661,8 +661,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
         
-    
-      
+        
+        
         cell.indexPath = indexPath // インデックスパスを渡す
         
         
@@ -706,9 +706,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBAction func logout(){
         do{
             try Auth.auth().signOut()
-           // self.dismiss(animated: true, completion: nil)
-       self.performSegue(withIdentifier: "torogin", sender: nil)
-
+            // self.dismiss(animated: true, completion: nil)
+            self.performSegue(withIdentifier: "torogin", sender: nil)
+            
             
         }catch let error as NSError {
             print(error)
@@ -717,14 +717,14 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBAction func tebleview(){
         
         let content = UNMutableNotificationContent()
-              content.title = "お知らせ"
-              content.body = "近くにあります"
-              content.sound = UNNotificationSound.default
-
-             
+        content.title = "お知らせ"
+        content.body = "近くにあります"
+        content.sound = UNNotificationSound.default
+        
+        
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-              let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-              UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         
         
     }

@@ -69,6 +69,8 @@
 		72282EBA29F511E500EB8A90 /* misedokoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = misedokoUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		72282ECA29F6494B00EB8A90 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		72282ECC29F6D76500EB8A90 /* mainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainViewController.swift; sourceTree = "<group>"; };
+		722CC13F2A3A8D560005E22B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		722CC1402A3A8D560005E22B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coloranotation.swift; sourceTree = "<group>"; };
 		725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -273,11 +275,11 @@
 			};
 			buildConfigurationList = 72282E8F29F511E300EB8A90 /* Build configuration list for PBXProject "misedoko" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				ja,
 			);
 			mainGroup = 72282E8B29F511E300EB8A90;
 			packageReferences = (
@@ -379,6 +381,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				72282E9E29F511E300EB8A90 /* Base */,
+				722CC13F2A3A8D560005E22B /* ja */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				72282EA329F511E500EB8A90 /* Base */,
+				722CC1402A3A8D560005E22B /* ja */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -398,6 +402,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -458,6 +463,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

@@ -36,7 +36,7 @@ class loginViewController: UIViewController {
             // ログイン済みの場合、メインページに遷移
             navigateToMainPage()
         } else {
-           
+            
         }
     }
     
@@ -44,7 +44,7 @@ class loginViewController: UIViewController {
         performSegue(withIdentifier: "tomain", sender: self)
     }
     
-   
+    
     
     @IBAction func registerButton() {
         let email = signUpMailTextField.text ?? ""
@@ -75,6 +75,6 @@ class loginViewController: UIViewController {
     }
     
     
-   
+    
     
 }
