@@ -18,6 +18,7 @@
 		72282EBB29F511E500EB8A90 /* misedokoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282EBA29F511E500EB8A90 /* misedokoUITestsLaunchTests.swift */; };
 		72282ECB29F6494B00EB8A90 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72282ECA29F6494B00EB8A90 /* MapKit.framework */; };
 		72282ECD29F6D76500EB8A90 /* mainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282ECC29F6D76500EB8A90 /* mainViewController.swift */; };
+		722CC1432A3C2EC50005E22B /* SignInWithAppleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC1422A3C2EC50005E22B /* SignInWithAppleObject.swift */; };
 		725DC50F2A04FF9400AE4BA9 /* coloranotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */; };
 		725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */; };
 		725DC5132A078F1F00AE4BA9 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */; };
@@ -71,6 +72,8 @@
 		72282ECC29F6D76500EB8A90 /* mainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainViewController.swift; sourceTree = "<group>"; };
 		722CC13F2A3A8D560005E22B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		722CC1402A3A8D560005E22B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		722CC1412A3B32CB0005E22B /* misedoko.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = misedoko.entitlements; sourceTree = "<group>"; };
+		722CC1422A3C2EC50005E22B /* SignInWithAppleObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleObject.swift; sourceTree = "<group>"; };
 		725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coloranotation.swift; sourceTree = "<group>"; };
 		725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -139,6 +142,7 @@
 		72282E9629F511E300EB8A90 /* misedoko */ = {
 			isa = PBXGroup;
 			children = (
+				722CC1412A3B32CB0005E22B /* misedoko.entitlements */,
 				72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */,
 				725DC5162A0B739000AE4BA9 /* PlaceCalloutView.xib */,
 				725DC5142A0B738400AE4BA9 /* PlaceCalloutView.swift */,
@@ -156,6 +160,7 @@
 				72E1E35B2A11DD8400C27772 /* colectionviewViewController.swift */,
 				72E1E3612A1518EE00C27772 /* addViewController.swift */,
 				721377952A38863A00921D24 /* friendViewController.swift */,
+				722CC1422A3C2EC50005E22B /* SignInWithAppleObject.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -341,6 +346,7 @@
 				725DC5152A0B738400AE4BA9 /* PlaceCalloutView.swift in Sources */,
 				72282ECD29F6D76500EB8A90 /* mainViewController.swift in Sources */,
 				725DC50F2A04FF9400AE4BA9 /* coloranotation.swift in Sources */,
+				722CC1432A3C2EC50005E22B /* SignInWithAppleObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,6 +525,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = misedoko/misedoko.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TVH687AC7F;
@@ -548,6 +555,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = misedoko/misedoko.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TVH687AC7F;

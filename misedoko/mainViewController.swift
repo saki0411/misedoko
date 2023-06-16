@@ -22,6 +22,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var loginMailLabel: UILabel!
+    @IBOutlet var homeButton: UIButton!
+    
+   
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation?
@@ -83,7 +86,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         // 現在地取得の許可をとってるよ！
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        
+        homeButton.isEnabled = false
         
         //ジャンル保存取り出すよ
         if  savedata.object(forKey: "zyanru") as? [String] != nil{

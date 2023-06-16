@@ -67,14 +67,14 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     @IBOutlet  weak var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-    
+    @IBOutlet var listButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         segmentedControl.selectedSegmentIndex = 0
         
-        
+        listButton.isEnabled = false
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
