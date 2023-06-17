@@ -9,10 +9,14 @@ import UIKit
 import FirebaseAuth
 import CryptoKit
 import AuthenticationServices
+import FirebaseCore
+import GoogleSignIn
+
 
 class loginViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
    
     
+  
     
     // ログイン用のUITextFieldです
     @IBOutlet var loginMailTextField: UITextField!
@@ -193,7 +197,46 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
 
         return hashString
     }
+  
+    
+    private func auth() {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+      
 
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
+          guard error == nil else {
+            // ...
+              return
+          }
+
+          guard let user = result?.user,
+            let idToken = user.idToken?.tokenString
+          else {
+            // ...
+              return
+          }
+
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                         accessToken: user.accessToken.tokenString)
+
+            Auth.auth().signIn(with: credential) { result, error in
+
+              // At this point, our user is signed in
+                self.navigateToMainPage()
+            }
+                
+        }
+        
+    }
+   
+    @IBAction func didTappSignInButton(_ sender: Any) {
+        auth()
+    }
 }
 
 
