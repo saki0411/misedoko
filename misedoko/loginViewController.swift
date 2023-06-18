@@ -14,9 +14,9 @@ import GoogleSignIn
 
 
 class loginViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-   
     
-  
+    
+    
     
     // ログイン用のUITextFieldです
     @IBOutlet var loginMailTextField: UITextField!
@@ -29,22 +29,22 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     private var signInWithAppleObject = SignInWithAppleObject()
     
     // SetUp
-      func setupProviderLoginView() {
-          let authorizationButton = ASAuthorizationAppleIDButton()
-          authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
-          authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY)
-
-
-          buttonView.addSubview(authorizationButton)
-      }
-      
-      // Action
-      @objc    func handleAuthorizationAppleIDButtonPress() {
-         
+    func setupProviderLoginView() {
+        let authorizationButton = ASAuthorizationAppleIDButton()
+        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
+        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY)
         
-              signInWithApple()
-            
-      }
+        
+        buttonView.addSubview(authorizationButton)
+    }
+    
+    // Action
+    @objc    func handleAuthorizationAppleIDButtonPress() {
+        
+        
+        signInWithApple()
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,17 +115,17 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
                 print("Invalid state: A login callback was received, but no login request was sent.")
                 return
             }
-
+            
             guard let appleIDToken = appleIDCredential.identityToken else {
                 print("Unable to fetch identity token")
                 return
             }
-
+            
             guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
                 print("Unable to serialize token string from data")
                 return
             }
-
+            
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             Auth.auth().signIn(with: credential) { result, error in
                 guard error == nil else {
@@ -138,31 +138,31 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
         }
     }
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-          return self.view.window!
-      }
+        return self.view.window!
+    }
     
     private var currentNonce: String?
-
+    
     public func signInWithApple() {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.email, .fullName]
         let nonce = randomNonceString()
         currentNonce = nonce
         request.nonce = sha256(nonce)
-
+        
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.performRequests()
     }
-
+    
     //  https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
     private func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)
         let charset: Array<Character> =
-            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
         var remainingLength = length
-
+        
         while remainingLength > 0 {
             let randoms: [UInt8] = (0 ..< 16).map { _ in
                 var random: UInt8 = 0
@@ -172,68 +172,68 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
                 }
                 return random
             }
-
+            
             randoms.forEach { random in
                 if remainingLength == 0 {
                     return
                 }
-
+                
                 if random < charset.count {
                     result.append(charset[Int(random)])
                     remainingLength -= 1
                 }
             }
         }
-
+        
         return result
     }
-
+    
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
         let hashString = hashedData.compactMap {
             return String(format: "%02x", $0)
         }.joined()
-
+        
         return hashString
     }
-  
+    
     
     private func auth() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-      
-
+        
+        
         // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
-
+        
         // Start the sign in flow!
         GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
-          guard error == nil else {
-            // ...
-              return
-          }
-
-          guard let user = result?.user,
-            let idToken = user.idToken?.tokenString
-          else {
-            // ...
-              return
-          }
-
-          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                         accessToken: user.accessToken.tokenString)
-
+            guard error == nil else {
+                // ...
+                return
+            }
+            
+            guard let user = result?.user,
+                  let idToken = user.idToken?.tokenString
+            else {
+                // ...
+                return
+            }
+            
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken: user.accessToken.tokenString)
+            
             Auth.auth().signIn(with: credential) { result, error in
-
-              // At this point, our user is signed in
+                
+                // At this point, our user is signed in
                 self.navigateToMainPage()
             }
-                
+            
         }
         
     }
-   
+    
     @IBAction func didTappSignInButton(_ sender: Any) {
         auth()
     }
