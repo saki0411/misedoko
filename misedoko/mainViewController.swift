@@ -24,7 +24,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBOutlet var loginMailLabel: UILabel!
     @IBOutlet var homeButton: UIButton!
     
-   
+    
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation?
@@ -105,6 +105,33 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
         
+        let dateComponents = DateComponents(
+            calendar: Calendar.current,
+            timeZone: TimeZone.current,
+            hour: 19,
+            minute: 30,
+            weekday: 2
+        )
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: dateComponents,
+            repeats: true
+        )
+        
+        let content = UNMutableNotificationContent()
+        content.body = "テストメッセージ"
+        content.badge = 1
+        content.sound = .default
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+        let center = UNUserNotificationCenter.current()
+              center.add(request)
+     
+    
+
         
         
         //ログアウト
