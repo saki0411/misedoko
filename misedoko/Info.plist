@@ -4,7 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.hosonuma.sakki.misedoko.backgroundTask</string>
+		<string>com.hosonuma.sakki.misedoko.backgroundTask3</string>
+		<string>com.hosonuma.sakki.misedoko.backgroundTask2</string>
 	</array>
 	<key>CFBundleLocalizations</key>
 	<array>
