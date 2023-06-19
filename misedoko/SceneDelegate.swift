@@ -92,7 +92,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             self.db = Firestore.firestore()
             self.uid = Auth.auth().currentUser?.uid
-            
+            self.nearbyAnnotations = []
             var annotations: [MKAnnotation] = []
             let collectionRef =  self.db.collection("users").document(self.uid ?? "").collection("shop")
             print(self.uid)
@@ -144,23 +144,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 }else{
                                     
                                 }
-                                if !self.nearbyAnnotations.isEmpty {
-                                    
-                                    let content = UNMutableNotificationContent()
-                                    content.title = "お知らせ"
-                                    content.body = "近くにあります"
-                                    content.sound = UNNotificationSound.default
-                                    
-                                    
-                                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-                                    let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-                                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                                    
-                                }else{
-                                    print("ないよ")
-                                }
+                              
                                 
                                 
+                            }
+                            if !self.nearbyAnnotations.isEmpty {
+                                
+                                let content = UNMutableNotificationContent()
+                                var count = String()
+                                count = String(self.nearbyAnnotations.count)
+                                let naiyou = ("近くに" + count + "件あります")
+                                content.title = "お知らせ"
+                                content.body = naiyou
+                                content.sound = UNNotificationSound.default
+                                
+                                
+                                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+                                let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+                                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                                print("通知！")
+                            }else{
+                                print("ないよ")
                             }
                         }
                         
