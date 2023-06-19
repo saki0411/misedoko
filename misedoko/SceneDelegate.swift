@@ -29,65 +29,73 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        print("いいいいいscene")
         BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil) { task in
-            self.handleAppRefresh(task: task as! BGAppRefreshTask)
+            self.handleAppRefresh(task: task as! BGProcessingTask
+                                  
+            )
             
         }
         guard let _ = (scene as? UIWindowScene) else { return }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
+        print("ああああああsceneDidDisconnect")
+        
+    }
+    
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        print("ううううsceneDidBecomeActive")
+    }
+    
+    func sceneWillResignActive(_ scene: UIScene) {
+        print("ええええええsceneWillResignActive")
+    }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        
+        print("おおおおおsceneWillEnterForeground")
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        print("かかかかかかsceneDidEnterBackground")
         // アプリがバックグラウンドに入ったら呼ばれる
         scheduleAppRefresh()
+        
     }
+    func scheduleAppRefresh() {
+        // バックグラウンドタスクの予約 (スケジュール) をする
+        let request = BGProcessingTaskRequest(identifier: backgroundTaskIdentifier)
+        // 最も早い実行時刻を設定する (15分後)
         
-        func sceneDidBecomeActive(_ scene: UIScene) {
-            // Called when the scene has moved from an inactive state to an active state.
-            // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        // ネットワーク接続が必要かどうかを設定する (true)
+        request.requiresNetworkConnectivity = true
+        // タスクを予約する
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("できてないよ: \(error)")
         }
-        
-        func sceneWillResignActive(_ scene: UIScene) {
-            // Called when the scene will move from an active state to an inactive state.
-            // This may occur due to temporary interruptions (ex. an incoming phone call).
+    }
+    
+    func handleAppRefresh(task: BGProcessingTask) {
+        // バックグラウンドタスクを実行する
+        print("よばれてるよ")
+        // タイムアウト時に呼ばれる処理を設定する
+        task.expirationHandler = {
+            // タスクをキャンセルする
+            print("キャンセルされたよ")
+            task.setTaskCompleted(success: false)
         }
-        
-        func sceneWillEnterForeground(_ scene: UIScene) {
-            // Called as the scene transitions from the background to the foreground.
-            // Use this method to undo the changes made on entering the background.
-        }
-        
-        func sceneDidEnterBackground(_ scene: UIScene) {
-          
-           
-        }
-        func scheduleAppRefresh() {
-            // バックグラウンドタスクの予約 (スケジュール) をする
-            let request = BGProcessingTaskRequest(identifier: backgroundTaskIdentifier)
-            // 最も早い実行時刻を設定する (15分後)
-            request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
-            // ネットワーク接続が必要かどうかを設定する (true)
-            request.requiresNetworkConnectivity = true
-            // タスクを予約する
-            do {
-                try BGTaskScheduler.shared.submit(request)
-            } catch {
-                print("Could not schedule app refresh: \(error)")
-            }
-        }
-        
-        func handleAppRefresh(task: BGAppRefreshTask) {
-            // バックグラウンドタスクを実行する
-            // タイムアウト時に呼ばれる処理を設定する
-            task.expirationHandler = {
-                // タスクをキャンセルする
-                task.setTaskCompleted(success: false)
-            }
-            db = Firestore.firestore()
-            uid = Auth.auth().currentUser?.uid
+        DispatchQueue.global().async {
+            
+            
+            self.db = Firestore.firestore()
+            self.uid = Auth.auth().currentUser?.uid
             
             var annotations: [MKAnnotation] = []
-            let collectionRef = self.db.collection(self.uid ?? "hozoncollection")
-            
+            let collectionRef =  self.db.collection("users").document(self.uid ?? "").collection("shop")
+            print(self.uid)
             collectionRef.getDocuments { (snapshot, error) in
                 if let error = error {
                     // エラーが発生した場合の処理
@@ -115,79 +123,72 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 let annotation = MKPointAnnotation()
                                 annotation.coordinate = coordinate
                                 annotations.append(annotation)
-                                
-                                
-                                
-                                
-                                
                                 let locationManager = CLLocationManager()
                                 locationManager.requestWhenInUseAuthorization()
                                 guard let currentLocation = locationManager.location else {
                                     // 現在地が取得できなかったら、タスクを完了する
+                                    
                                     task.setTaskCompleted(success: false)
                                     return
                                 }
-                                
-                                
-                                
                                 // annotationのCLLocationCoordinate2DをCLLocationに変換する
                                 let annotationLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
                                 
                                 // 現在地とannotationの距離を計算する
                                 let distance = currentLocation.distance(from: annotationLocation)
-                                
-                                
-                                
                                 // 距離が1000m以下なら、nearbyAnnotationsに追加する
                                 if distance <= 1000 {
-                                    
-                                    
                                     self.nearbyAnnotations.append(annotation)
+                                    print(self.nearbyAnnotations)
                                     
+                                }else{
+                                    
+                                }
+                                if !self.nearbyAnnotations.isEmpty {
+                                    
+                                    let content = UNMutableNotificationContent()
+                                    content.title = "お知らせ"
+                                    content.body = "近くにあります"
+                                    content.sound = UNNotificationSound.default
+                                    
+                                    
+                                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+                                    let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
+                                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                                    
+                                }else{
+                                    print("ないよ")
                                 }
                                 
                                 
-                                else {
-                                    // コレクションが存在しないかドキュメントが存在しない場合の処理
-                                    print("Collection does not exist or is emptyコレクションがないよ")
-                                    
-                                }
                             }
-                            
-                            
                         }
+                        
+                        
                     }
                     
+                }else {
+                    // コレクションが存在しないかドキュメントが存在しない場合の処理
+                    print("Collection does not exist or is emptyコレクションがないよ")
                     
                 }
                 
-                // arrayに情報が入っている場合は、ローカル通知を表示する
-                if !self.nearbyAnnotations.isEmpty {
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "お知らせ"
-                    content.body = "近くにあります"
-                    content.sound = UNNotificationSound.default
-                    
-                    
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-                    let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                    
-                }
-                
-                // バックグラウンドタスクの処理が終了したら、タスクの完了を通知する
-                
-                
-                
+            }
+            
+            
+            
+            DispatchQueue.main.sync {
                 // タスクが完了したことを通知する
                 task.setTaskCompleted(success: true)
+                print("終わったあ")
                 // 次のタスクを予約する
                 self.scheduleAppRefresh()
             }
         }
-        
-        
-        
+    }
+    
+    
+    
+    
     
 }

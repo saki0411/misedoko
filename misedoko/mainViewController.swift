@@ -108,7 +108,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let dateComponents = DateComponents(
             calendar: Calendar.current,
             timeZone: TimeZone.current,
-            hour: 19,
+            hour: 12,
             minute: 30,
             weekday: 2
         )
