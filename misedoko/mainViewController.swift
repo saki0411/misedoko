@@ -9,9 +9,8 @@ import UserNotifications
 
 
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate{
-    
-    
+class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource {
+
     
     
     let notificationCenter = UNUserNotificationCenter.current()
@@ -19,6 +18,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var hozonmapView: MKMapView!
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var loginMailLabel: UILabel!
@@ -132,7 +132,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
      
     
 
-        
+        tableView.isHidden = true
         
         //ログアウト
         loginMailText = Auth.auth().currentUser?.email ?? "エラー"
@@ -554,6 +554,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     // MARK: - UISearchBarDelegate
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
         self.mapView.removeAnnotations(self.kensakukekkaArray)
         
         self.kensakukekkaArray.removeAll()
@@ -746,17 +747,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     @IBAction func tebleview(){
         
-        let content = UNMutableNotificationContent()
-        content.title = "お知らせ"
-        content.body = "近くにあります"
-        content.sound = UNNotificationSound.default
-        
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
-        let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        
-        
+     
     }
     
     
@@ -812,6 +803,20 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        return cell
+
+    }
+    
+    
+    
     
 }
 
