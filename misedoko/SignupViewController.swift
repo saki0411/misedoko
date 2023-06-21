@@ -13,20 +13,17 @@ import FirebaseCore
 import GoogleSignIn
 
 
-class loginViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+class SignupViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
     
     
     
-    // ログイン用のUITextFieldです
-    @IBOutlet var loginMailTextField: UITextField!
-    @IBOutlet var loginPasswordTextField: UITextField!
+  
     // 新規登録用のUITextFieldです
     @IBOutlet var signUpMailTextField: UITextField!
     @IBOutlet var signUpPassowordTextField: UITextField!
     @IBOutlet var signUpPasswordConfirmationTextField: UITextField!
     @IBOutlet  private weak var buttonView: UIView!
-  
     private var signInWithAppleObject = SignInWithAppleObject()
     
     // SetUp
@@ -36,7 +33,8 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
         authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
         authorizationButton.frame = CGRect(x: 0, y: 0, width: 230, height: 44)
         authorizationButton.cornerRadius = 0
-        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY - 20)
+        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY + 80)
+        
         
         buttonView.addSubview(authorizationButton)
     }
@@ -52,12 +50,11 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        loginMailTextField.text = ""
-        loginPasswordTextField.text = ""
-      
    
-      
+        signUpMailTextField.text = ""
+        signUpPassowordTextField.text = ""
+        signUpPasswordConfirmationTextField.text = ""
+        
         setupProviderLoginView()
         
     }
@@ -94,18 +91,7 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
             }
         }
     }
-    @IBAction func loginButton() {
-        let email = loginMailTextField.text ?? ""
-        let password = loginPasswordTextField.text ?? ""
-        
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if (result?.user) != nil {
-                self.performSegue(withIdentifier: "tomain", sender: nil)
-            } else {
-                print(error!)
-            }
-        }
-    }
+   
     
     
     
@@ -239,7 +225,6 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     @IBAction func didTappSignInButton(_ sender: Any) {
         auth()
     }
-    
 }
 
 

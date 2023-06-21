@@ -82,6 +82,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         searchBar.delegate = self
         collectionView.delegate = self
         collectionView.dataSource  = self
+        tableView.dataSource = self
+        tableView.delegate = self
         
         // 現在地取得の許可をとってるよ！
         locationManager.requestWhenInUseAuthorization()
@@ -554,7 +556,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     // MARK: - UISearchBarDelegate
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+        tableView.isHidden = false
         self.mapView.removeAnnotations(self.kensakukekkaArray)
         
         self.kensakukekkaArray.removeAll()
@@ -805,7 +807,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+      return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

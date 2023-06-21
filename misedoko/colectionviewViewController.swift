@@ -181,6 +181,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         if segmentedControl.selectedSegmentIndex == 0{
+        
             let initialRow = choicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
