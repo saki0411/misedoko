@@ -85,6 +85,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         tableView.dataSource = self
         tableView.delegate = self
         
+        
+     
         // 現在地取得の許可をとってるよ！
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
@@ -549,8 +551,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     
-    
-    
+   
     
     
     
@@ -811,8 +812,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+       
+      
         return cell
 
     }
