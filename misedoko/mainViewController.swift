@@ -9,7 +9,7 @@ import UserNotifications
 
 
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource {
+class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource, MKLocalSearchCompleterDelegate {
 
     
     
@@ -24,7 +24,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBOutlet var loginMailLabel: UILabel!
     @IBOutlet var homeButton: UIButton!
     
-    
+    var completer = MKLocalSearchCompleter()
+    var completions = [MKLocalSearchCompletion]()
+    var taptext = String()
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation?
@@ -68,7 +70,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     let uid = Auth.auth().currentUser?.uid
     
     
-    
+    var tableviewindexpath = Int()
     
     
     override func viewDidLoad() {
@@ -84,7 +86,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         collectionView.dataSource  = self
         tableView.dataSource = self
         tableView.delegate = self
-        
+        completer.delegate = self
         
      
         // 現在地取得の許可をとってるよ！
@@ -557,93 +559,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     // MARK: - UISearchBarDelegate
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        completions = []
         tableView.isHidden = false
-        self.mapView.removeAnnotations(self.kensakukekkaArray)
-        
-        self.kensakukekkaArray.removeAll()
-        
-        searchBar.resignFirstResponder()
-        
-        
-        guard let searchText = searchBar.text, !searchText.isEmpty else {
-            return
-        }
-        
-        let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = searchText
-        
-        // 現在地の緯度経度を取得
-        if let currentLocation = currentLocation {
-            let region = MKCoordinateRegion(center: currentLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 1000)
-            searchRequest.region = region
-        }
-        
-        let localSearch = MKLocalSearch(request: searchRequest)
-        localSearch.start { (response, error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
-            }
-            
-            if let response = response {
-                if response.mapItems.isEmpty {
-                    print("検索結果はありませんでした。")
-                    return
-                }
-                
-                for mapItem in response.mapItems {
-                    
-                    
-                    //こっちは普通のピンの設定
-                    let annotation = coloranotation()
-                    
-                    annotation.coordinate = mapItem.placemark.coordinate
-                    annotation.title = mapItem.name
-                    annotation.subtitle = mapItem.placemark.title
-                    annotation.pinImage = "pink.png"
-                    
-                    
-                    
-                    self.searchResults.append(mapItem)
-                    self.kensakukekkaArray.append(annotation)
-                    
-                    self.collectionView.reloadData()
-                    
-                    
-                    
-                    //hozonarrayを取り出して保存用のピンを指してるよ！
-                    for (index, hozon) in self.hozonArray.enumerated() {
-                        let  annotation1 = coloranotation()
-                        annotation1.coordinate = hozon.coordinate
-                        annotation1.title = self.misetitle[index]
-                        annotation1.subtitle = self.misesubtitle[index]
-                        annotation1.pinImage = "blue.png"
-                        self.mapView.addAnnotation(annotation1)
-                        
-                    }
-                    
-                    //検索結果のピンを指してるよ！
-                    self.mapView.addAnnotations(self.kensakukekkaArray)
-                    
-                    
-                    
-                    
-                    
-                    if let firstMapItem = response.mapItems.first {
-                        let region = MKCoordinateRegion(center: firstMapItem.placemark.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-                        self.mapView.setRegion(region, animated: true)
-                    }
-                }
-            }
-            
-            
-            
-            
-            
-            
-            
-            
-        }
+kensaku()
     }
     
     
@@ -807,19 +725,172 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return 10
-    }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty{
+            tableView.isHidden = true
+            
+        }else{
+            
+       
+          
+           // 入力された文字列を補完検索用のインスタンスに渡す
+           completer.queryFragment = searchText
+        tableView.isHidden = false
+        }
+       }
+       
+       // 補完検索用のインスタンスが候補を更新したときに呼ばれるメソッド
+       func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+           
+           // 候補の配列を取得する
+           completions = completer.results
+           
+           // テーブルビューを更新する
+           tableView.reloadData()
+           
+       }
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+           return 1
+       }
+       
+       // テーブルビューのセル数を返すメソッド
+       func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+           return completions.count
+       }
+       
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
        
-      
+        if completions.first != nil{
+            let title = completions[indexPath.row].title
+            let subtitle = completions[indexPath.row].subtitle
+            
+
+            cell.textLabel?.text = title
+            cell.detailTextLabel?.text = subtitle
+        }
+             
         return cell
 
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableviewindexpath = indexPath.row
+        taptext = completions[indexPath.row].title
+          kensaku()
+
+       
     
+     
+    }
+
+       
+       
+   
+    func kensaku(){
+      
+                self.searchBar.resignFirstResponder()
+                self.mapView.removeAnnotations(self.kensakukekkaArray)
+                
+                self.kensakukekkaArray.removeAll()
+                
+                
+                
+                guard let searchText = self.searchBar.text, !searchText.isEmpty else {
+                    return
+                }
+                
+                let searchRequest = MKLocalSearch.Request()
+                searchRequest.naturalLanguageQuery = taptext
+                
+                // 現在地の緯度経度を取得
+                if let currentLocation = self.currentLocation {
+                    let region = MKCoordinateRegion(center: currentLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 1000)
+                    searchRequest.region = region
+                }
+                
+                let localSearch = MKLocalSearch(request: searchRequest)
+                localSearch.start { (response, error) in
+                    if let error = error {
+                        print("Error: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let response = response {
+                        
+                        if response.mapItems.isEmpty {
+                            print("検索結果はありませんでした。")
+                            return
+                        }
+                        print(response.mapItems)
+                        for mapItem in response.mapItems {
+                            
+                            
+                            //こっちは普通のピンの設定
+                            let annotation = coloranotation()
+                            
+                            annotation.coordinate = mapItem.placemark.coordinate
+                            annotation.title = mapItem.name
+                            annotation.subtitle = mapItem.placemark.title
+                            annotation.pinImage = "pink.png"
+                            
+                            
+                            
+                            self.searchResults.append(mapItem)
+                            self.kensakukekkaArray.append(annotation)
+                            
+                            self.collectionView.reloadData()
+                            
+                            
+                            
+                            //hozonarrayを取り出して保存用のピンを指してるよ！
+                            for (index, hozon) in self.hozonArray.enumerated() {
+                                let  annotation1 = coloranotation()
+                                annotation1.coordinate = hozon.coordinate
+                                annotation1.title = self.misetitle[index]
+                                annotation1.subtitle = self.misesubtitle[index]
+                                annotation1.pinImage = "blue.png"
+                                self.mapView.addAnnotation(annotation1)
+                                
+                            }
+                            
+                            //検索結果のピンを指してるよ！
+                            self.mapView.addAnnotations(self.kensakukekkaArray)
+                            print("999",self.kensakukekkaArray)
+                            
+                            
+                            
+                            
+                            if let firstMapItem = response.mapItems.first {
+                                let region = MKCoordinateRegion(center: firstMapItem.placemark.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                                self.mapView.setRegion(region, animated: true)
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+               
+                    let annotation = self.kensakukekkaArray[0]
+                    
+                    self.mapView.showAnnotations([annotation], animated: true)
+                    self.tableView.isHidden = true
+            print("終わったよ",self.kensakukekkaArray)
+            
+        }
+        
+     
+      
+    }
     
     
 }

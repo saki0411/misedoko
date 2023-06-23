@@ -106,7 +106,8 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if sender.selectedSegmentIndex == 0{
             syutoku()
             
-        }else if sender.selectedSegmentIndex == 1{
+        }else
+        if sender.selectedSegmentIndex == 1{
             print(self.publicchoicecount)
             print(self.publicselectedChoices,publicselectedChoices.count)
             print("えええ")
