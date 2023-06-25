@@ -881,7 +881,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     @IBAction func genzaiti(){
-        
+        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
     }
     
 }
