@@ -165,6 +165,7 @@
                                 </state>
                                 <connections>
                                     <action selector="registerButton" destination="vbp-On-JGC" eventType="touchUpInside" id="JHR-DA-YTN"/>
+                                    <action selector="registerButton" destination="iC3-By-ueo" eventType="touchUpInside" id="Ml1-YE-hPp"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード確認" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EhY-7K-Cui">
@@ -226,6 +227,7 @@
                         <outlet property="signUpMailTextField" destination="d2g-75-zpL" id="k1w-d0-KTt"/>
                         <outlet property="signUpPassowordTextField" destination="d5I-KM-0Fs" id="Nc0-zz-wHc"/>
                         <outlet property="signUpPasswordConfirmationTextField" destination="EhY-7K-Cui" id="W5I-t0-xqA"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="tomain" id="1M9-FI-4GB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lKm-ZL-CaQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -307,7 +309,6 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kev-wu-73K">
                                 <rect key="frame" x="0.0" y="112" width="390" height="740"/>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <searchBar contentMode="redraw" text="" placeholder="お店の名前を入力" translatesAutoresizingMaskIntoConstraints="NO" id="DMT-NG-HDA">
@@ -830,7 +831,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="7m9-Ab-QHc"/>
         <segue reference="2oR-YD-7aL"/>
-        <segue reference="G4a-D2-NxK"/>
+        <segue reference="1M9-FI-4GB"/>
         <segue reference="zqH-rv-CrD"/>
     </inferredMetricsTieBreakers>
     <resources>

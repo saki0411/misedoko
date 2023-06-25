@@ -85,6 +85,7 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
             Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                 if (result?.user) != nil {
                     print("新規登録成功！")
+                    self.navigateToMainPage()
                 } else {
                     print(error!)
                 }

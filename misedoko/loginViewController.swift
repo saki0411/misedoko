@@ -36,7 +36,7 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
         authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
         authorizationButton.frame = CGRect(x: 0, y: 0, width: 230, height: 44)
         authorizationButton.cornerRadius = 0
-        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY - 20)
+        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY + 40)
         
         buttonView.addSubview(authorizationButton)
     }
@@ -88,6 +88,7 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
             Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                 if (result?.user) != nil {
                     print("新規登録成功！")
+                  
                 } else {
                     print(error!)
                 }
