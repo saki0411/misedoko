@@ -25,13 +25,13 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fBN-gZ-SYU">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fBN-gZ-SYU" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="164" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wM5-X6-mhB">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wM5-X6-mhB" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="238" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
@@ -133,13 +133,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d2g-75-zpL">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d2g-75-zpL" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="164" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d5I-KM-0Fs">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d5I-KM-0Fs" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="238" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -168,7 +168,7 @@
                                     <action selector="registerButton" destination="iC3-By-ueo" eventType="touchUpInside" id="Ml1-YE-hPp"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード確認" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EhY-7K-Cui">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="パスワード確認" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EhY-7K-Cui" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="312" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -242,7 +242,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="10Y-rs-RrS">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="10Y-rs-RrS" customClass="CustomTextField" customModule="misedoko" customModuleProvider="target">
                                 <rect key="frame" x="90" y="218" width="210" height="34"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -269,6 +269,14 @@
                                 <state key="normal" title="メールを送信"/>
                                 <connections>
                                     <action selector="forgotPasswordButtonTapped:" destination="84O-eV-2cP" eventType="touchUpInside" id="Fq1-xz-SG7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="close" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xjf-nN-JvT">
+                                <rect key="frame" x="21" y="41" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <connections>
+                                    <segue destination="vbp-On-JGC" kind="show" id="quE-K3-2yP"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -446,12 +454,14 @@
                                     <action selector="logout" destination="BYZ-38-t0r" eventType="touchUpInside" id="FGH-IM-MlG"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YMl-fQ-F64">
-                                <rect key="frame" x="327" y="549" width="62" height="62"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YMl-fQ-F64">
+                                <rect key="frame" x="330" y="555" width="58" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="YMl-fQ-F64" secondAttribute="height" multiplier="1:1" id="CI6-tX-W0o"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="アイコン3"/>
+                                <state key="normal" backgroundImage="アイコン3"/>
                                 <connections>
                                     <action selector="genzaiti" destination="BYZ-38-t0r" eventType="touchUpInside" id="hc1-nN-ygD"/>
                                 </connections>
@@ -466,12 +476,15 @@
                             <constraint firstItem="EB2-I5-AOi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9MA-NM-bZO"/>
                             <constraint firstItem="vPl-sA-A22" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="EVJ-Ma-dhn"/>
                             <constraint firstAttribute="trailing" secondItem="gtM-e0-dBu" secondAttribute="trailing" id="G4A-Jx-UFG"/>
+                            <constraint firstItem="EB2-I5-AOi" firstAttribute="top" secondItem="YMl-fQ-F64" secondAttribute="bottom" id="IuT-Dx-vTP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YMl-fQ-F64" secondAttribute="trailing" constant="2" id="Jzy-GD-I8v"/>
                             <constraint firstAttribute="bottom" secondItem="kev-wu-73K" secondAttribute="bottom" constant="-8" id="K7k-eW-Oay"/>
                             <constraint firstItem="gtM-e0-dBu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Odm-x2-r94"/>
                             <constraint firstItem="4gT-dX-wzU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="32" id="PEl-af-yQL"/>
                             <constraint firstItem="kev-wu-73K" firstAttribute="top" secondItem="DMT-NG-HDA" secondAttribute="bottom" id="QIi-Gl-bYv"/>
                             <constraint firstItem="5co-oV-9ZJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Rph-90-irW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4gT-dX-wzU" secondAttribute="trailing" constant="14" id="T0L-cW-x1i"/>
+                            <constraint firstItem="YMl-fQ-F64" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="330" id="TPe-vc-aUp"/>
                             <constraint firstAttribute="trailing" secondItem="kev-wu-73K" secondAttribute="trailing" id="Va5-gZ-Qlb"/>
                             <constraint firstItem="kev-wu-73K" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="bMS-5Q-qFM"/>
                             <constraint firstAttribute="trailing" secondItem="vPl-sA-A22" secondAttribute="trailing" id="cSy-3Q-BTw"/>

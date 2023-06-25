@@ -881,7 +881,10 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     @IBAction func genzaiti(){
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+       
+        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+        mapView.setRegion(region, animated: true)
+
     }
     
 }

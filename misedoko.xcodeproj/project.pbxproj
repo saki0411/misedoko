@@ -23,6 +23,7 @@
 		723001072A3DA0CB004894AE /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 723001062A3DA0CB004894AE /* GoogleSignInSwift */; };
 		723001092A429E7B004894AE /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723001082A429E7B004894AE /* SignupViewController.swift */; };
 		7230010B2A42CF19004894AE /* passwordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7230010A2A42CF19004894AE /* passwordViewController.swift */; };
+		7230014B2A48096B004894AE /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7230014A2A48096B004894AE /* CustomTextField.swift */; };
 		725DC50F2A04FF9400AE4BA9 /* coloranotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */; };
 		725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */; };
 		725DC5132A078F1F00AE4BA9 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */; };
@@ -80,6 +81,7 @@
 		722CC1422A3C2EC50005E22B /* SignInWithAppleObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleObject.swift; sourceTree = "<group>"; };
 		723001082A429E7B004894AE /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		7230010A2A42CF19004894AE /* passwordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = passwordViewController.swift; sourceTree = "<group>"; };
+		7230014A2A48096B004894AE /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coloranotation.swift; sourceTree = "<group>"; };
 		725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				722CC1422A3C2EC50005E22B /* SignInWithAppleObject.swift */,
 				723001082A429E7B004894AE /* SignupViewController.swift */,
 				7230010A2A42CF19004894AE /* passwordViewController.swift */,
+				7230014A2A48096B004894AE /* CustomTextField.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7230014B2A48096B004894AE /* CustomTextField.swift in Sources */,
 				721377962A38863A00921D24 /* friendViewController.swift in Sources */,
 				72E1E3562A0DE50700C27772 /* loginViewController.swift in Sources */,
 				725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */,
