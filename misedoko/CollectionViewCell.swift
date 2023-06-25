@@ -131,7 +131,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                     self.choicecount = []
                     for choice in self.selectedChoices {
                         self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 0)
-                        print(self.zyanru.firstIndex(of: choice) ?? 0)
+                        
                         
                         
                     }

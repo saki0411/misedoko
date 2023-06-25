@@ -110,11 +110,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if sender.selectedSegmentIndex == 1{
             print(self.publicchoicecount)
             print(self.publicselectedChoices,publicselectedChoices.count)
-            print("えええ")
             DispatchQueue.global().async {
                 
                 DispatchQueue.main.sync {
-                    print(self.publicmisetitle)
+                   
                     self.collectionView.reloadData()
                 }
                 // 三番目に実行
@@ -188,7 +187,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             cell.zyanruTextField.text = zyanru[initialRow]
             
             
-            print(publicchoicecount,"2")
+         
         }else if segmentedControl.selectedSegmentIndex == 1{
             let initialRow = publicchoicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)

@@ -64,7 +64,6 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         // 入力された値がnilでなければif文のブロック内の処理を実行
         word = searchBar.text ?? ""
         if let word = searchBar.text {
-            print(word,"a")
             DispatchQueue.global().async {
                 
                 self.misetitle = []
@@ -112,7 +111,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
                                     self.misetitle.append(title)
                                     self.misesubtitle.append(subtitle)
                                     
-                                    print(self.misetitle)
+                              
                                 }
                                 self.choicecount  = []
                                 for choice in self.selectedChoices {
@@ -120,7 +119,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
                                     
                                 }
                                 
-                                print(self.misetitle,"e")
+                           
                                 self.collectionview.register(self.nib, forCellWithReuseIdentifier: "cell")
                                 self.collectionview.reloadData()
                                 

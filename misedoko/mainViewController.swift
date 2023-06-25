@@ -455,7 +455,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             // 距離が1000m以下なら、nearbyAnnotationsに追加する
             if distance <= 1000 {
-                print("aaaa")
                 self.selectedChoices2.append("カフェ")
                 self.nearbyAnnotations.append(annotation)
                 self.misetitle2.append((annotation.title ?? "") ?? "")
@@ -547,7 +546,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             }
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
-                print("完了",self.selectedChoices2)
+                
             }
         }
     }
@@ -557,7 +556,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-
+    
     
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -755,7 +754,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         if completions.first != nil{
             let title = completions[indexPath.row].title
@@ -852,10 +851,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     
                     //検索結果のピンを指してるよ！
                     self.mapView.addAnnotations(self.kensakukekkaArray)
-                    print("999",self.kensakukekkaArray)
-                    
-                    
-                    
                     
                     if let firstMapItem = response.mapItems.first {
                         let region = MKCoordinateRegion(center: firstMapItem.placemark.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
@@ -877,7 +872,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             self.mapView.showAnnotations([annotation], animated: true)
             self.tableView.isHidden = true
-            print("終わったよ",self.kensakukekkaArray)
+            
             
         }
         
@@ -885,6 +880,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
     }
     
+    @IBAction func genzaiti(){
+        
+    }
     
 }
 

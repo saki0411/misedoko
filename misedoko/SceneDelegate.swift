@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        print("いいいいいscene")
+      
         BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil) { task in
             self.handleAppRefresh(task: task as! BGProcessingTask
                                   
@@ -40,26 +40,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
-        print("ああああああsceneDidDisconnect")
+    
         
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        print("ううううsceneDidBecomeActive")
+      
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
-        print("ええええええsceneWillResignActive")
+        
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
         
-        print("おおおおおsceneWillEnterForeground")
+      
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
-        print("かかかかかかsceneDidEnterBackground")
-        // アプリがバックグラウンドに入ったら呼ばれる
         scheduleAppRefresh()
         
     }
@@ -80,11 +78,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func handleAppRefresh(task: BGProcessingTask) {
         // バックグラウンドタスクを実行する
-        print("よばれてるよ")
+    
         // タイムアウト時に呼ばれる処理を設定する
         task.expirationHandler = {
-            // タスクをキャンセルする
-            print("キャンセルされたよ")
             task.setTaskCompleted(success: false)
         }
         DispatchQueue.global().async {
@@ -95,7 +91,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.nearbyAnnotations = []
             var annotations: [MKAnnotation] = []
             let collectionRef =  self.db.collection("users").document(self.uid ?? "").collection("shop")
-            print(self.uid)
+          
             collectionRef.getDocuments { (snapshot, error) in
                 if let error = error {
                     // エラーが発生した場合の処理
@@ -139,7 +135,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 // 距離が1000m以下なら、nearbyAnnotationsに追加する
                                 if distance <= 1000 {
                                     self.nearbyAnnotations.append(annotation)
-                                    print(self.nearbyAnnotations)
+                                   
                                     
                                 }else{
                                     
@@ -162,7 +158,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
                                 let request = UNNotificationRequest(identifier: "immediately", content: content, trigger:trigger)
                                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                                print("通知！")
+                             
                             }else{
                                 print("ないよ")
                             }
@@ -184,8 +180,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             DispatchQueue.main.sync {
                 // タスクが完了したことを通知する
                 task.setTaskCompleted(success: true)
-                print("終わったあ")
-                // 次のタスクを予約する
+           
                 self.scheduleAppRefresh()
             }
         }
