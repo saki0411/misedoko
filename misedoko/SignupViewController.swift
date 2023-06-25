@@ -18,7 +18,7 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
     
     
     
-  
+    
     // 新規登録用のUITextFieldです
     @IBOutlet var signUpMailTextField: UITextField!
     @IBOutlet var signUpPassowordTextField: UITextField!
@@ -50,7 +50,7 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-   
+        
         signUpMailTextField.text = ""
         signUpPassowordTextField.text = ""
         signUpPasswordConfirmationTextField.text = ""
@@ -91,7 +91,7 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
             }
         }
     }
-   
+    
     
     
     

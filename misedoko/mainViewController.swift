@@ -557,14 +557,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     
     
-    // MARK: - UISearchBarDelegate
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        completions = []
-        tableView.isHidden = false
-        kensaku()
-    }
-    
-    
+
     
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
