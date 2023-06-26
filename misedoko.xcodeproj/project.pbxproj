@@ -24,6 +24,15 @@
 		723001092A429E7B004894AE /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723001082A429E7B004894AE /* SignupViewController.swift */; };
 		7230010B2A42CF19004894AE /* passwordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7230010A2A42CF19004894AE /* passwordViewController.swift */; };
 		7230014B2A48096B004894AE /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7230014A2A48096B004894AE /* CustomTextField.swift */; };
+		723001522A480F8E004894AE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723001512A480F8E004894AE /* WidgetKit.framework */; };
+		723001542A480F8E004894AE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723001532A480F8E004894AE /* SwiftUI.framework */; };
+		723001572A480F8E004894AE /* widgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723001562A480F8E004894AE /* widgetBundle.swift */; };
+		723001592A480F8E004894AE /* widgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723001582A480F8E004894AE /* widgetLiveActivity.swift */; };
+		7230015B2A480F8E004894AE /* widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7230015A2A480F8E004894AE /* widget.swift */; };
+		7230015E2A480F91004894AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7230015D2A480F91004894AE /* Assets.xcassets */; };
+		723001602A480F91004894AE /* widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 7230015C2A480F8E004894AE /* widget.intentdefinition */; };
+		723001612A480F91004894AE /* widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 7230015C2A480F8E004894AE /* widget.intentdefinition */; };
+		723001642A480F91004894AE /* widgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 723001502A480F8E004894AE /* widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		725DC50F2A04FF9400AE4BA9 /* coloranotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */; };
 		725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */; };
 		725DC5132A078F1F00AE4BA9 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */; };
@@ -57,7 +66,28 @@
 			remoteGlobalIDString = 72282E9329F511E300EB8A90;
 			remoteInfo = misedoko;
 		};
+		723001622A480F91004894AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 72282E8C29F511E300EB8A90 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7230014F2A480F8E004894AE;
+			remoteInfo = widgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		723001682A480F91004894AE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				723001642A480F91004894AE /* widgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		721377952A38863A00921D24 /* friendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = friendViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +112,16 @@
 		723001082A429E7B004894AE /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		7230010A2A42CF19004894AE /* passwordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = passwordViewController.swift; sourceTree = "<group>"; };
 		7230014A2A48096B004894AE /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		723001502A480F8E004894AE /* widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = widgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		723001512A480F8E004894AE /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		723001532A480F8E004894AE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		723001562A480F8E004894AE /* widgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widgetBundle.swift; sourceTree = "<group>"; };
+		723001582A480F8E004894AE /* widgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widgetLiveActivity.swift; sourceTree = "<group>"; };
+		7230015A2A480F8E004894AE /* widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widget.swift; sourceTree = "<group>"; };
+		7230015C2A480F8E004894AE /* widget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = widget.intentdefinition; sourceTree = "<group>"; };
+		7230015D2A480F91004894AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7230015F2A480F91004894AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		723001692A48145E004894AE /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		725DC50E2A04FF9400AE4BA9 /* coloranotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coloranotation.swift; sourceTree = "<group>"; };
 		725DC5102A078F1F00AE4BA9 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		725DC5112A078F1F00AE4BA9 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -125,15 +165,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7230014D2A480F8E004894AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				723001542A480F8E004894AE /* SwiftUI.framework in Frameworks */,
+				723001522A480F8E004894AE /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		72282E8B29F511E300EB8A90 = {
 			isa = PBXGroup;
 			children = (
+				723001692A48145E004894AE /* widgetExtension.entitlements */,
 				72282E9629F511E300EB8A90 /* misedoko */,
 				72282EAD29F511E500EB8A90 /* misedokoTests */,
 				72282EB729F511E500EB8A90 /* misedokoUITests */,
+				723001552A480F8E004894AE /* widget */,
 				72282E9529F511E300EB8A90 /* Products */,
 				72282EC929F6494B00EB8A90 /* Frameworks */,
 			);
@@ -145,6 +196,7 @@
 				72282E9429F511E300EB8A90 /* misedoko.app */,
 				72282EAA29F511E500EB8A90 /* misedokoTests.xctest */,
 				72282EB429F511E500EB8A90 /* misedokoUITests.xctest */,
+				723001502A480F8E004894AE /* widgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -199,8 +251,23 @@
 			isa = PBXGroup;
 			children = (
 				72282ECA29F6494B00EB8A90 /* MapKit.framework */,
+				723001512A480F8E004894AE /* WidgetKit.framework */,
+				723001532A480F8E004894AE /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		723001552A480F8E004894AE /* widget */ = {
+			isa = PBXGroup;
+			children = (
+				723001562A480F8E004894AE /* widgetBundle.swift */,
+				723001582A480F8E004894AE /* widgetLiveActivity.swift */,
+				7230015A2A480F8E004894AE /* widget.swift */,
+				7230015C2A480F8E004894AE /* widget.intentdefinition */,
+				7230015D2A480F91004894AE /* Assets.xcassets */,
+				7230015F2A480F91004894AE /* Info.plist */,
+			);
+			path = widget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,10 +280,12 @@
 				72282E9029F511E300EB8A90 /* Sources */,
 				72282E9129F511E300EB8A90 /* Frameworks */,
 				72282E9229F511E300EB8A90 /* Resources */,
+				723001682A480F91004894AE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				723001632A480F91004894AE /* PBXTargetDependency */,
 			);
 			name = misedoko;
 			packageProductDependencies = (
@@ -270,6 +339,23 @@
 			productReference = 72282EB429F511E500EB8A90 /* misedokoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		7230014F2A480F8E004894AE /* widgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 723001652A480F91004894AE /* Build configuration list for PBXNativeTarget "widgetExtension" */;
+			buildPhases = (
+				7230014C2A480F8E004894AE /* Sources */,
+				7230014D2A480F8E004894AE /* Frameworks */,
+				7230014E2A480F8E004894AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = widgetExtension;
+			productName = widgetExtension;
+			productReference = 723001502A480F8E004894AE /* widgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -277,7 +363,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					72282E9329F511E300EB8A90 = {
@@ -290,6 +376,9 @@
 					72282EB329F511E500EB8A90 = {
 						CreatedOnToolsVersion = 14.2;
 						TestTargetID = 72282E9329F511E300EB8A90;
+					};
+					7230014F2A480F8E004894AE = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
 				};
 			};
@@ -313,6 +402,7 @@
 				72282E9329F511E300EB8A90 /* misedoko */,
 				72282EA929F511E500EB8A90 /* misedokoTests */,
 				72282EB329F511E500EB8A90 /* misedokoUITests */,
+				7230014F2A480F8E004894AE /* widgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -345,6 +435,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7230014E2A480F8E004894AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7230015E2A480F91004894AE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -358,6 +456,7 @@
 				725DC5122A078F1F00AE4BA9 /* CollectionViewCell.swift in Sources */,
 				72E1E35C2A11DD8400C27772 /* colectionviewViewController.swift in Sources */,
 				72282E9829F511E300EB8A90 /* AppDelegate.swift in Sources */,
+				723001612A480F91004894AE /* widget.intentdefinition in Sources */,
 				7230010B2A42CF19004894AE /* passwordViewController.swift in Sources */,
 				72E1E3622A1518EE00C27772 /* addViewController.swift in Sources */,
 				723001092A429E7B004894AE /* SignupViewController.swift in Sources */,
@@ -386,6 +485,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7230014C2A480F8E004894AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				723001602A480F91004894AE /* widget.intentdefinition in Sources */,
+				7230015B2A480F8E004894AE /* widget.swift in Sources */,
+				723001592A480F8E004894AE /* widgetLiveActivity.swift in Sources */,
+				723001572A480F8E004894AE /* widgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -398,6 +508,11 @@
 			isa = PBXTargetDependency;
 			target = 72282E9329F511E300EB8A90 /* misedoko */;
 			targetProxy = 72282EB529F511E500EB8A90 /* PBXContainerItemProxy */;
+		};
+		723001632A480F91004894AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7230014F2A480F8E004894AE /* widgetExtension */;
+			targetProxy = 723001622A480F91004894AE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -542,6 +657,7 @@
 		72282EBF29F511E500EB8A90 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = misedoko/misedoko.entitlements;
@@ -575,6 +691,7 @@
 		72282EC029F511E500EB8A90 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = misedoko/misedoko.entitlements;
@@ -677,6 +794,64 @@
 			};
 			name = Release;
 		};
+		723001662A480F91004894AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TVH687AC7F;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hosonuma.sakki.misedoko.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		723001672A480F91004894AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TVH687AC7F;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hosonuma.sakki.misedoko.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -712,6 +887,15 @@
 			buildConfigurations = (
 				72282EC529F511E500EB8A90 /* Debug */,
 				72282EC629F511E500EB8A90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		723001652A480F91004894AE /* Build configuration list for PBXNativeTarget "widgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				723001662A480F91004894AE /* Debug */,
+				723001672A480F91004894AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

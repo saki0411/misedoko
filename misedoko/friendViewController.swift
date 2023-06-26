@@ -52,7 +52,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         layout.minimumLineSpacing = 0.0
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
-        
+        zyanrusyutoku()
         
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -286,7 +286,35 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         
     }
     
+    func zyanrusyutoku(){
+        let collectionRef = db.collection("users").document(uid ?? "").collection("zyanru")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let data = document.data()
+                            let zyanrulist = data["zyanrulist"]
+                            self.zyanru.append(zyanrulist as! String)
+                        }
+                    }
+                }
+            }
+        }
     
+    }
     
     
 }

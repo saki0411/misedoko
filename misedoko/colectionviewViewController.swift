@@ -88,23 +88,29 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         
-        
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
-            zyanru = savedata.object(forKey: "zyanru") as! [String]
-            
-            
-        }
+       
+        zyanrusyutoku()
         syutoku()
         
         deletekyouyu()
-        
+       
+       collectionView.reloadData()
         
         
     }
+   
     @IBAction func segmentedControl(_ sender: UISegmentedControl) {
         print(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
         if sender.selectedSegmentIndex == 0{
-            syutoku()
+            DispatchQueue.global().async {
+                
+                DispatchQueue.main.sync {
+                    self.syutoku()
+                }
+            }
+         print(misetitle)
+            print("取得したよ")
+           
             
         }else
         if sender.selectedSegmentIndex == 1{
@@ -153,12 +159,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
-            zyanru = savedata.object(forKey: "zyanru") as! [String]
-        }else{
-            zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
-            
-        }
+      
         if segmentedControl.selectedSegmentIndex != 0{
             cell.commentButton.isHidden = true
             
@@ -183,6 +184,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if segmentedControl.selectedSegmentIndex == 0{
             
             let initialRow = choicecount[indexPath.row]
+           
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
             
@@ -243,6 +245,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if  segmentedControl.selectedSegmentIndex == 0{
             cell.shopnamelabel?.text = misetitle[indexPath.row]
             cell.adresslabel?.text = misesubtitle[indexPath.row]
+            print(misetitle)
         }else if segmentedControl.selectedSegmentIndex == 1{
             cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
             cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
@@ -478,6 +481,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     
     func syutoku(){
         selectedChoices = []
+        misetitle = []
+        misesubtitle = []
+        colorArray = []
+        documentid = []
+        commentArray = []
+        URLArray = []
         
         
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
@@ -499,13 +508,19 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     } else {
                         for document in querySnapshot!.documents {
                             // 取得したドキュメントごとに実行する
-                            let genre = document.data()["genre"] as? String ?? "カフェ"
-                            let color = document.data()["color"] as? String ?? "pink"
-                            let comment = document.data()["comment"] as? String ?? ""
-                            let URL = document.data()["URL"] as? String ?? ""
+                            let data = document.data()
+                            let genre = data["genre"] as? String ?? "カフェ"
+                            let color = data["color"] as? String ?? "pink"
+                            let comment = data["comment"] as? String ?? ""
+                            let URL = data["URL"] as? String ?? ""
+                            let title = data["title"] as? String ?? "title:Error"
+                            let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            
+                         
                             self.selectedChoices.append(genre)
                             self.colorArray.append(color)
-                            
+                            self.misetitle.append(title)
+                            self.misesubtitle.append(subtitle)
                             self.documentid.append(document.documentID)
                             
                             self.commentArray.append(comment)
@@ -621,6 +636,36 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 
             }
         
+    }
+    
+    func zyanrusyutoku(){
+        let collectionRef = db.collection("users").document(uid ?? "").collection("zyanru")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let data = document.data()
+                            let zyanrulist = data["zyanrulist"]
+                            self.zyanru.append(zyanrulist as! String)
+                        }
+                    }
+                }
+            }
+        }
+    
     }
 }
 

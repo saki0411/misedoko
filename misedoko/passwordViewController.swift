@@ -29,4 +29,7 @@ class passwordViewController: UIViewController {
             }
         }
     }
+    @IBAction func back(){
+        self.performSegue(withIdentifier: "tologin", sender: nil)
+    }
 }

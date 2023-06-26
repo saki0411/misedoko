@@ -9,7 +9,7 @@ import UserNotifications
 
 
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource, MKLocalSearchCompleterDelegate {
+class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource, MKLocalSearchCompleterDelegate,UITabBarDelegate {
     
     
     
@@ -23,6 +23,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var loginMailLabel: UILabel!
     @IBOutlet var homeButton: UIButton!
+    @IBOutlet var tabMenuBar: UITabBar!
     
     var completer = MKLocalSearchCompleter()
     var completions = [MKLocalSearchCompletion]()
@@ -87,17 +88,13 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         tableView.dataSource = self
         tableView.delegate = self
         completer.delegate = self
-        
+       
         
         // 現在地取得の許可をとってるよ！
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        homeButton.isEnabled = false
+  //      homeButton.isEnabled = false
         
-        //ジャンル保存取り出すよ
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
-            zyanru = savedata.object(forKey: "zyanru") as! [String]
-        }
         
         
         
@@ -150,6 +147,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
+        zyanrusyutoku()
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
         collectionRef.getDocuments { (snapshot, error) in
@@ -574,8 +572,8 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
-            zyanru = savedata.object(forKey: "zyanru") as! [String]
+        if  zyanru.first != nil{
+          
         }else{
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
             
@@ -885,6 +883,78 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
         mapView.setRegion(region, animated: true)
 
+    }
+    
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+            switch item.tag{
+            case 0:
+                print("1") // カレンダーアイコンをタップした場合
+                let storyboard: UIStoryboard = self.storyboard!
+                let nextView = storyboard.instantiateViewController(withIdentifier: "list")
+                nextView.modalPresentationStyle = .fullScreen
+                present(nextView, animated: true, completion: nil)
+
+            case 1:
+                print("2") // 設定アイコンをタップした場合
+              
+                
+            case 2:
+                print("3") // 設定アイコンをタップした場合
+                let storyboard: UIStoryboard = self.storyboard!
+                let nextView = storyboard.instantiateViewController(withIdentifier: "friend")
+                nextView.modalPresentationStyle = .fullScreen
+                present(nextView, animated: true, completion: nil)
+                
+            default : return
+                
+            }
+        
+        }
+    func zyanrusyutoku(){
+        //mainする
+        // 全てのドキュメントを取得する
+        db.collection("users").document(uid ?? "").collection("zyanru").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    // 取得したドキュメントごとに実行する
+                    let data = document.data()
+                    let zyanrulist = data["zyanrulist"]as? String ?? ""
+                    self.zyanru.append(zyanrulist)
+                    print(self.zyanru)
+                }
+                
+            }
+        }
+    
+       
+        if zyanru.first == nil{
+            print("naiyo")
+            zyanru.append("カフェ")
+            zyanru.append("レストラン")
+            zyanru.append("食べ放題")
+            zyanru.append("持ち帰り")
+            zyanru.append("レストラン")
+            var ref: DocumentReference? = nil
+            for string in zyanru {
+                ref = db.collection("users").document(uid ?? "").collection("zyanru").addDocument(data: [
+                    "zyanrulist": string
+                ]) { err in
+                    if let err = err {
+                        print("Error writing document: \(err)")
+                    } else {
+                        self.documentid.append(ref!.documentID)
+                        print("Document added with ID: \(ref!.documentID)")
+                    }
+                }
+                
+            }
+          
+            
+           
+        }
+    print(zyanru)
     }
     
 }

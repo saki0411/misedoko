@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
 class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSource, UITextFieldDelegate {
     
@@ -15,6 +17,9 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     var zyanru = [String]()
     var selectedChoice: String?
     var commentArray = [String]()
+    let db = Firestore.firestore()
+    let uid = Auth.auth().currentUser?.uid
+    
     
     var savedata: UserDefaults = UserDefaults.standard
     
@@ -24,9 +29,7 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
         tableView.delegate = self
         tableView.dataSource = self
         textField.delegate = self
-        if  savedata.object(forKey: "zyanru") as? [String] != nil{
-            zyanru = savedata.object(forKey: "zyanru") as! [String]
-        }
+       zyanrusyutoku()
         
     }
     
@@ -65,4 +68,34 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
             nextView.zyanru = zyanru
         }
     }
+    func zyanrusyutoku(){
+        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let data = document.data()
+                            let zyanrulist = data["zyanrulist"]
+                            self.zyanru.append(zyanrulist as! String)
+                        }
+                    }
+                }
+            }
+        }
+    
+    }
+    
 }
