@@ -88,12 +88,12 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         tableView.dataSource = self
         tableView.delegate = self
         completer.delegate = self
-       
+        
         
         // 現在地取得の許可をとってるよ！
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-  //      homeButton.isEnabled = false
+        //      homeButton.isEnabled = false
         
         
         
@@ -147,7 +147,32 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
-        zyanrusyutoku()
+        let dispatchGroup = DispatchGroup()
+        // 直列キュー / attibutes指定なし
+        let dispatchQueue = DispatchQueue(label: "queue")
+        let dispatchSemaphore = DispatchSemaphore(value: 0)
+        
+        dispatchQueue.async(group: dispatchGroup) {
+            [weak self] in
+            dispatchGroup.enter()
+            
+            self!.zyanrukakuninn()
+            dispatchGroup.leave()
+            dispatchSemaphore.signal()
+        
+        
+        dispatchSemaphore.wait()
+        
+    }
+
+    
+        dispatchGroup.notify(queue: .main) {
+            self.zyanrusyutoku()
+           
+               print("All Process Done!")
+           }
+        
+     
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
         collectionRef.getDocuments { (snapshot, error) in
@@ -912,49 +937,58 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
     func zyanrusyutoku(){
         //mainする
+        zyanru = []
+     
+            
+            if self.zyanru.first == nil{
+                print("naiyo")
+                self.zyanru.append("カフェ")
+                self.zyanru.append("レストラン")
+                self.zyanru.append("食べ放題")
+                self.zyanru.append("持ち帰り")
+                self.zyanru.append("レストラン")
+                var ref: DocumentReference? = nil
+                
+                    ref = self.db.collection("users").document(self.uid ?? "").collection("zyanru").addDocument(data: [
+                        "zyanrulist": self.zyanru
+                        
+                    ]) { err in
+                        if let err = err {
+                            print("Error writing document: \(err)")
+                        } else {
+                            self.documentid.append(ref!.documentID)
+                            print("Document added with ID: \(ref!.documentID)")
+                        }
+                    }
+                    
+                
+                
+                
+                
+            
+        }
+    print("これだ！",zyanru)
+    }
+    func zyanrukakuninn(){
         // 全てのドキュメントを取得する
-        db.collection("users").document(uid ?? "").collection("zyanru").getDocuments() { (querySnapshot, err) in
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
                     // 取得したドキュメントごとに実行する
                     let data = document.data()
-                    let zyanrulist = data["zyanrulist"]as? String ?? ""
-                    self.zyanru.append(zyanrulist)
-                    print(self.zyanru)
-                }
-                
-            }
-        }
-    
-       
-        if zyanru.first == nil{
-            print("naiyo")
-            zyanru.append("カフェ")
-            zyanru.append("レストラン")
-            zyanru.append("食べ放題")
-            zyanru.append("持ち帰り")
-            zyanru.append("レストラン")
-            var ref: DocumentReference? = nil
-            for string in zyanru {
-                ref = db.collection("users").document(uid ?? "").collection("zyanru").addDocument(data: [
-                    "zyanrulist": string
-                ]) { err in
-                    if let err = err {
-                        print("Error writing document: \(err)")
-                    } else {
-                        self.documentid.append(ref!.documentID)
-                        print("Document added with ID: \(ref!.documentID)")
+                    let zyanrulist = data["zyanrulist"] as! Array<Any>
+                   print("osiete",zyanrulist)
+                    for string in zyanrulist {
+                        self.zyanru.append(string as! String)
                     }
+                   
+                   
                 }
                 
             }
-          
-            
-           
         }
-    print(zyanru)
     }
     
 }
