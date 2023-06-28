@@ -297,7 +297,6 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             let delete = UIAction(title: "削除", image: UIImage(systemName: "trash.fill")) { action in
                 if self.segmentedControl.selectedSegmentIndex == 0{
                     
-                    
                     guard let itemToDelete = self.hozonArray[indexPath.item] as? MKAnnotation else {
                         return
                     }
@@ -502,6 +501,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         for document in querySnapshot!.documents {
                             // 取得したドキュメントごとに実行する
                             let data = document.data()
+                            let idokeido = data["idokeido"] as? GeoPoint
                             let genre = data["genre"] as? String ?? "カフェ"
                             let color = data["color"] as? String ?? "pink"
                             let comment = data["comment"] as? String ?? ""
@@ -520,7 +520,18 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             
                             self.URLArray.append(URL)
                             
+                            let latitude = idokeido?.latitude
+                            let longitude = idokeido?.longitude
+                            let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate = coordinate
+                            self.hozonArray.append(annotation)
                             
+                            
+                            
+                          
+                            
+                        
                             
                         }
                         self.choicecount  = []

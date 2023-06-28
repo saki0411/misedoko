@@ -197,17 +197,19 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
        
     }
     func getTopViewController() -> UIViewController? {
-        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
-            var topViewController: UIViewController = rootViewController
-            
-            while let presentedViewController = topViewController.presentedViewController {
-                topViewController = presentedViewController
-            }
-          print(topViewController)
-            return topViewController
-        } else {
-            return nil
-        }
+        // UIApplication.shared.keyWindow?.rootViewControllerではなく
+           // UITabBarControllerのselectedViewControllerを使う
+           if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController {
+               var topViewController: UIViewController = tabBarController.selectedViewController!
+               
+               while let presentedViewController = topViewController.presentedViewController {
+                   topViewController = presentedViewController
+               }
+             print(topViewController)
+               return topViewController
+           } else {
+               return nil
+           }
     }
     @IBAction func commenthozon(){
         db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["comment": commenttextfield.text ?? "" ]) { error in

@@ -60,7 +60,7 @@
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain" title="詳細"/>
                         <connections>
-                            <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="CPY-zX-AG7"/>
+                            <action selector="comment" destination="gTV-IL-0wX" eventType="touchUpInside" id="T2O-Ni-cqH"/>
                         </connections>
                     </button>
                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="コメント" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cM9-j8-D3s">
@@ -69,7 +69,7 @@
                         <textInputTraits key="textInputTraits"/>
                     </textField>
                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5UJ-D7-JcX">
-                        <rect key="frame" x="7.9999999999999858" y="224" width="242.66666666666663" height="34"/>
+                        <rect key="frame" x="8" y="224" width="231.66666666666666" height="34"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
@@ -114,7 +114,7 @@
                 <constraint firstItem="0QF-lj-kZ8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qQT-hN-DBV"/>
                 <constraint firstAttribute="trailing" secondItem="0Nj-YX-3o6" secondAttribute="trailing" constant="11" id="qkH-EK-ySl"/>
                 <constraint firstItem="sbF-UE-U5w" firstAttribute="leading" secondItem="0QF-lj-kZ8" secondAttribute="trailing" constant="3" id="vBV-vJ-4H3"/>
-                <constraint firstItem="2P0-5J-9Q5" firstAttribute="leading" secondItem="5UJ-D7-JcX" secondAttribute="trailing" constant="1" id="xB9-wN-YCg"/>
+                <constraint firstItem="2P0-5J-9Q5" firstAttribute="leading" secondItem="5UJ-D7-JcX" secondAttribute="trailing" constant="12" id="xB9-wN-YCg"/>
                 <constraint firstItem="2P0-5J-9Q5" firstAttribute="top" secondItem="3gV-Ts-8YT" secondAttribute="bottom" constant="16" id="xE6-Be-Iqn"/>
                 <constraint firstAttribute="trailing" secondItem="3gV-Ts-8YT" secondAttribute="trailing" constant="20" id="yBc-DA-kgA"/>
                 <constraint firstItem="QLf-5C-6Pr" firstAttribute="leading" secondItem="V8R-Pb-EFf" secondAttribute="trailing" constant="28" id="zgk-FX-kS9"/>
