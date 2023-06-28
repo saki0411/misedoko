@@ -29,8 +29,17 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
         tableView.delegate = self
         tableView.dataSource = self
         textField.delegate = self
-       zyanrusyutoku()
-        
+       
+        DispatchQueue.main.async {
+            self.zyanrukakuninn()
+         
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.tableView.reloadData()
+            print(self.zyanru)
+          
+        }
+       
     }
     
     
@@ -42,7 +51,7 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        
+        print(zyanru)
         cell.textLabel!.text = zyanru[indexPath.row]
         return cell
     }
@@ -57,45 +66,61 @@ class addViewController: UIViewController,UITableViewDelegate,UITableViewDataSou
     @IBAction func hozon(){
         zyanru.append(textField.text ?? "")
         textField.text = ""
-        savedata.set(zyanru, forKey: "zyanru")
+        addzyanru()
         tableView.reloadData()
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "tomain2" {
-            let nextView = segue.destination as! mainViewController
-            nextView.zyanru = zyanru
-        }
-    }
-    func zyanrusyutoku(){
-        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
-        
-        collectionRef.getDocuments { (snapshot, error) in
-            if let error = error {
-                // エラーが発生した場合の処理
-                print("Error fetching documents: \(error)")
-                return
+    
+    
+    func zyanrukakuninn(){
+        zyanru = []
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let zyanrulist = data?["zyanrulist"] as! Array<Any>
+                for string in zyanrulist {
+                    self.zyanru.append(string as! String)
+                    print("これだよ！",self.zyanru)
+                }
+            }else {
+                print("Document does not exist")
             }
             
-            if let snapshot = snapshot, !snapshot.isEmpty {
-                // コレクションにドキュメントが存在する場合の処理
-                print("Collection exists and contains documents")
-                // 全てのドキュメントを取得する
-                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            let zyanrulist = data["zyanrulist"]
-                            self.zyanru.append(zyanrulist as! String)
-                        }
-                    }
-                }
-            }
+            
         }
-    
+        
+        
+        
     }
     
+    
+    
+    func addzyanru(){
+        // ドキュメントを消去する
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").setData([
+            "zyanrulist": self.zyanru
+            
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                
+            }
+        }
+      
+      
+      
+    }
+    
+    @IBAction func buttonPressed(sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

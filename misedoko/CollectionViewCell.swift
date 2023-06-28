@@ -56,14 +56,11 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        zyanrusyutoku()
-     
-        
-        
+    
         commenttextfield.delegate = self
         pickerView.delegate = self
         pickerView.dataSource = self
+        
         
         
         
@@ -100,6 +97,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
         
         selectedChoice = zyanru[row]
         
@@ -190,6 +188,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     }
     
     @IBAction func comment(){
+        print("aa")
         let num: Int = Int("\(commentButton.tag)")!
         if let topViewController: colectionviewViewController = getTopViewController() as? colectionviewViewController {
             topViewController.selectedd(gotselectedcell: num)
@@ -202,7 +201,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             while let presentedViewController = topViewController.presentedViewController {
                 topViewController = presentedViewController
             }
-            
+          
             return topViewController
         } else {
             return nil
@@ -251,35 +250,6 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         guard let url = URL(string: self.URLtextfield.text ?? "https://www.google.com/?hl=ja") else { return }
         UIApplication.shared.open(url)
     }
-    func zyanrusyutoku(){
-        let collectionRef = db.collection("users").document(uid ?? "").collection("zyanru")
-        
-        collectionRef.getDocuments { (snapshot, error) in
-            if let error = error {
-                // エラーが発生した場合の処理
-                print("Error fetching documents: \(error)")
-                return
-            }
-            
-            if let snapshot = snapshot, !snapshot.isEmpty {
-                // コレクションにドキュメントが存在する場合の処理
-                print("Collection exists and contains documents")
-                // 全てのドキュメントを取得する
-                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            let zyanrulist = data["zyanrulist"]
-                            self.zyanru.append(zyanrulist as! String)
-                            
-                        }
-                    }
-                }
-            }
-        }
-    
-    }
+  
     
 }

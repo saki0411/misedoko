@@ -42,7 +42,7 @@ class friendViewController: UIViewController, UISearchBarDelegate, UICollectionV
         searchField.delegate = self
         collectionview.delegate = self
         collectionview.dataSource = self
-        friendbutton.isEnabled = false
+     
         
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()

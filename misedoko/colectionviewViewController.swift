@@ -74,7 +74,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         segmentedControl.selectedSegmentIndex = 0
         
-        listButton.isEnabled = false
+  
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
@@ -87,9 +87,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         
-        
+        DispatchQueue.main.async {
+            self.zyanrusyutoku()
+            print(self.zyanru)
+        }
        
-        zyanrusyutoku()
+        
+        
         syutoku()
         
         deletekyouyu()
@@ -208,6 +212,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         cell.indexPath = indexPath
+        cell.zyanru = zyanru
         
         if segmentedControl.selectedSegmentIndex == 0{
             
@@ -245,7 +250,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if  segmentedControl.selectedSegmentIndex == 0{
             cell.shopnamelabel?.text = misetitle[indexPath.row]
             cell.adresslabel?.text = misesubtitle[indexPath.row]
-            print(misetitle)
+       
         }else if segmentedControl.selectedSegmentIndex == 1{
             cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
             cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
@@ -267,6 +272,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         let cellSizeWidth:CGFloat = 350
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
+   
         if indexPath.row == selectedCell {
             cellSizeHeight = 600
             
@@ -457,20 +463,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         self.present(activityVC, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toadd" {
-            let nextView = segue.destination as! addViewController
-            nextView.zyanru = zyanru
-        }
-        if segue.identifier == "tomain" {
-            let nextView = segue.destination as! mainViewController
-            nextView.zyanru = zyanru
-        }
-        if segue.identifier == "tofriend" {
-            let nextView = segue.destination as! friendViewController
-            nextView.zyanru = zyanru
-        }
-    }
+    
     
     
     func selectedd(gotselectedcell: Int){
@@ -639,34 +632,20 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     
     func zyanrusyutoku(){
-        let collectionRef = db.collection("users").document(uid ?? "").collection("zyanru")
-        
-        collectionRef.getDocuments { (snapshot, error) in
-            if let error = error {
-                // エラーが発生した場合の処理
-                print("Error fetching documents: \(error)")
-                return
-            }
-            
-            if let snapshot = snapshot, !snapshot.isEmpty {
-                // コレクションにドキュメントが存在する場合の処理
-                print("Collection exists and contains documents")
-                // 全てのドキュメントを取得する
-                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            let zyanrulist = data["zyanrulist"]
-                            self.zyanru.append(zyanrulist as! String)
-                        }
-                    }
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let zyanrulist = data?["zyanrulist"] as! Array<Any>
+                for string in zyanrulist {
+                    self.zyanru.append(string as! String)
+                    print("これだよ！",self.zyanru)
                 }
+            }else {
+                print("Document does not exist")
             }
         }
-    
     }
+   
 }
 
 
