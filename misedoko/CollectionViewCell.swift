@@ -192,7 +192,9 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         let num: Int = Int("\(commentButton.tag)")!
         if let topViewController: colectionviewViewController = getTopViewController() as? colectionviewViewController {
             topViewController.selectedd(gotselectedcell: num)
+           
         }
+       
     }
     func getTopViewController() -> UIViewController? {
         if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
@@ -201,7 +203,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             while let presentedViewController = topViewController.presentedViewController {
                 topViewController = presentedViewController
             }
-          
+          print(topViewController)
             return topViewController
         } else {
             return nil

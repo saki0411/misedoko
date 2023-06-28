@@ -277,7 +277,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             cellSizeHeight = 600
             
         }
-        
+        print(cellSizeHeight)
         
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
