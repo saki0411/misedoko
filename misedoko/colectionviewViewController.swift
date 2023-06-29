@@ -272,12 +272,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         let cellSizeWidth:CGFloat = 350
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
-   
-        if indexPath.row == selectedCell {
-            cellSizeHeight = 600
-            
+        if  segmentedControl.selectedSegmentIndex == 0{
+            if indexPath.row == selectedCell {
+                cellSizeHeight = 600
+                
+            }
         }
-        print(cellSizeHeight)
+       
         
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
