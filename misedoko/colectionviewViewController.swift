@@ -120,10 +120,11 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if sender.selectedSegmentIndex == 1{
             print(self.publicchoicecount)
             print(self.publicselectedChoices,publicselectedChoices.count)
+          
             DispatchQueue.global().async {
                 
                 DispatchQueue.main.sync {
-                   
+                    self.collectionView.resetScrollPositionToTop()
                     self.collectionView.reloadData()
                 }
                 // 三番目に実行
@@ -188,7 +189,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if segmentedControl.selectedSegmentIndex == 0{
             
             let initialRow = choicecount[indexPath.row]
-           
+          
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
             
@@ -269,7 +270,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-        let cellSizeWidth:CGFloat = 350
+        let cellSizeWidth:CGFloat = 320
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
         if  segmentedControl.selectedSegmentIndex == 0{
@@ -657,9 +658,14 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             }
         }
     }
+    
    
 }
-
+extension UIScrollView {
+    func resetScrollPositionToTop() {
+        self.contentOffset = CGPoint(x: -contentInset.left, y: -contentInset.top)
+    }
+}
 
 
 

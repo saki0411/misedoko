@@ -307,7 +307,7 @@
             </objects>
             <point key="canvasLocation" x="-1182" y="874"/>
         </scene>
-        <!--Item-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="mainViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
@@ -327,7 +327,7 @@
                                 </connections>
                             </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="EB2-I5-AOi">
-                                <rect key="frame" x="0.0" y="530" width="390" height="174"/>
+                                <rect key="frame" x="0.0" y="557" width="390" height="174"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="EB2-I5-AOi" secondAttribute="height" multiplier="65:29" id="K79-1M-o23"/>
@@ -415,7 +415,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YMl-fQ-F64">
-                                <rect key="frame" x="330" y="472" width="58" height="58"/>
+                                <rect key="frame" x="330" y="499" width="58" height="58"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="YMl-fQ-F64" secondAttribute="height" multiplier="1:1" id="CI6-tX-W0o"/>
                                 </constraints>
@@ -439,7 +439,7 @@
                             <constraint firstAttribute="bottom" secondItem="kev-wu-73K" secondAttribute="bottom" constant="-8" id="K7k-eW-Oay"/>
                             <constraint firstItem="4gT-dX-wzU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="32" id="PEl-af-yQL"/>
                             <constraint firstItem="kev-wu-73K" firstAttribute="top" secondItem="DMT-NG-HDA" secondAttribute="bottom" id="QIi-Gl-bYv"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="EB2-I5-AOi" secondAttribute="bottom" constant="57" id="QaV-2Q-JhZ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="EB2-I5-AOi" secondAttribute="bottom" constant="30" id="QaV-2Q-JhZ"/>
                             <constraint firstItem="5co-oV-9ZJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Rph-90-irW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4gT-dX-wzU" secondAttribute="trailing" constant="14" id="T0L-cW-x1i"/>
                             <constraint firstItem="YMl-fQ-F64" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="330" id="TPe-vc-aUp"/>
@@ -454,7 +454,7 @@
                             <constraint firstItem="4gT-dX-wzU" firstAttribute="leading" secondItem="5co-oV-9ZJ" secondAttribute="trailing" constant="10" id="yGA-GI-BKY"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="house.fill" catalog="system" id="S5U-EW-hqA"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="house.fill" catalog="system" id="S5U-EW-hqA"/>
                     <navigationItem key="navigationItem" id="tgx-Ud-Zcz"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -471,7 +471,7 @@
             </objects>
             <point key="canvasLocation" x="-571" y="65"/>
         </scene>
-        <!--Item-->
+        <!--List-->
         <scene sceneID="aQ8-B4-RUR">
             <objects>
                 <viewController storyboardIdentifier="list" modalPresentationStyle="fullScreen" id="cLo-rL-E9N" customClass="colectionviewViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
@@ -512,21 +512,21 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Haf-Kl-q7c">
                                 <rect key="frame" x="0.0" y="147" width="390" height="614"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PY9-V4-dEP">
-                                    <size key="itemSize" width="391" height="183"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PY9-V4-dEP">
+                                    <size key="itemSize" width="350" height="183"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="ovl-oV-CJ0" customClass="CollectionViewCell" customModule="misedoko" customModuleProvider="target">
-                                        <rect key="frame" x="-0.66666666666666663" y="0.0" width="391" height="183"/>
+                                        <rect key="frame" x="20" y="0.0" width="350" height="183"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1Gk-p1-sAA">
-                                            <rect key="frame" x="0.0" y="0.0" width="391" height="183"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="350" height="183"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="391" height="183"/>
+                                        <size key="customSize" width="350" height="183"/>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
@@ -550,7 +550,7 @@
                             <constraint firstItem="MnE-dJ-ZLs" firstAttribute="trailing" secondItem="DpM-ng-IQG" secondAttribute="trailing" id="p7m-ST-TWq"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="list.bullet.rectangle.portrait.fill" catalog="system" id="tcX-5b-9wr"/>
+                    <tabBarItem key="tabBarItem" title="List" image="list.bullet.rectangle.portrait.fill" catalog="system" id="tcX-5b-9wr"/>
                     <navigationItem key="navigationItem" id="gVB-Nr-hDo"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -570,7 +570,7 @@
                     </items>
                 </tabBar>
             </objects>
-            <point key="canvasLocation" x="596.92307692307691" y="99.526066350710892"/>
+            <point key="canvasLocation" x="886" y="-82"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="acm-gf-rcm">
@@ -583,8 +583,8 @@
                         <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="UGx-Al-pMU"/>
                         <segue destination="cLo-rL-E9N" kind="relationship" relationship="viewControllers" id="Zr8-Ug-y0G"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="UGx-Al-pMU"/>
                         <segue destination="S9t-ao-a3J" kind="relationship" relationship="viewControllers" id="81x-0k-JG1"/>
                     </connections>
                 </tabBarController>
@@ -684,7 +684,7 @@
             </objects>
             <point key="canvasLocation" x="1766" y="100"/>
         </scene>
-        <!--Item-->
+        <!--Friend-->
         <scene sceneID="eQk-ES-aBd">
             <objects>
                 <viewController storyboardIdentifier="friend" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="S9t-ao-a3J" customClass="friendViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
@@ -744,7 +744,7 @@
                             <constraint firstItem="adl-PO-wR6" firstAttribute="bottom" secondItem="c2s-a6-IDa" secondAttribute="bottom" constant="57" id="tg7-l4-F8t"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="person.2.fill" catalog="system" id="e1K-AL-l1U"/>
+                    <tabBarItem key="tabBarItem" title="Friend" image="person.2.fill" catalog="system" id="e1K-AL-l1U"/>
                     <navigationItem key="navigationItem" id="UVu-ex-8KS"/>
                     <connections>
                         <outlet property="collectionview" destination="c2s-a6-IDa" id="Bx3-UV-PML"/>
