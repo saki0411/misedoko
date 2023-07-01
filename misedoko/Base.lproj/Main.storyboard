@@ -572,10 +572,10 @@
             </objects>
             <point key="canvasLocation" x="886" y="-82"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Tab Bar View Controller-->
         <scene sceneID="acm-gf-rcm">
             <objects>
-                <tabBarController id="ZvG-op-2IT" sceneMemberID="viewController">
+                <tabBarController id="ZvG-op-2IT" customClass="TabBarViewController" customModule="misedoko" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="TB2-hA-u5K">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
