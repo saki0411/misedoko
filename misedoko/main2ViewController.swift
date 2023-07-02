@@ -9,7 +9,7 @@ import UserNotifications
 
 
 
-class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource, MKLocalSearchCompleterDelegate,UITabBarDelegate {
+class main2ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UNUserNotificationCenterDelegate,UITableViewDelegate, UITableViewDataSource, MKLocalSearchCompleterDelegate,UITabBarDelegate {
     
     
     
@@ -882,7 +882,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 self.zyanru.append("レストラン")
                 self.zyanru.append("食べ放題")
                 self.zyanru.append("持ち帰り")
-                self.zyanru.append("レストラン")   
+                self.zyanru.append("レストラン")
              self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").setData([
                         "zyanrulist": self.zyanru
                         

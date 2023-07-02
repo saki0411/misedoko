@@ -29,25 +29,7 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
   
     private var signInWithAppleObject = SignInWithAppleObject()
     
-    // SetUp
-    func setupProviderLoginView() {
-        let authorizationButton = ASAuthorizationAppleIDButton(   authorizationButtonType: .default,
-                                                                  authorizationButtonStyle: .whiteOutline)
-        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
-        authorizationButton.frame = CGRect(x: 0, y: 0, width: 230, height: 44)
-        authorizationButton.cornerRadius = 0
-        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY + 40)
-        
-        buttonView.addSubview(authorizationButton)
-    }
-    
-    // Action
-    @objc    func handleAuthorizationAppleIDButtonPress() {
-        
-        
-        signInWithApple()
-        
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +83,9 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
         
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if (result?.user) != nil {
-                self.performSegue(withIdentifier: "tomain", sender: nil)
+                let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "tabbar") as! UITabBarController
+                nextVC.modalPresentationStyle = .fullScreen
+                self.present(nextVC, animated: true, completion: nil)
             } else {
                 print(error!)
             }
@@ -240,7 +224,25 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     @IBAction func didTappSignInButton(_ sender: Any) {
         auth()
     }
+    // SetUp
+    func setupProviderLoginView() {
+        let authorizationButton = ASAuthorizationAppleIDButton(   authorizationButtonType: .default,
+                                                                  authorizationButtonStyle: .whiteOutline)
+        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
+        authorizationButton.frame = CGRect(x: 0, y: 0, width: 230, height: 44)
+        authorizationButton.cornerRadius = 0
+        authorizationButton.center = CGPoint(x: buttonView.bounds.midX, y: buttonView.bounds.midY + 40)
+        
+        buttonView.addSubview(authorizationButton)
+    }
     
+    // Action
+    @objc    func handleAuthorizationAppleIDButtonPress() {
+        
+        
+        signInWithApple()
+        
+    }
 }
 
 

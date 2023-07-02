@@ -39,6 +39,7 @@
 		725DC5152A0B738400AE4BA9 /* PlaceCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725DC5142A0B738400AE4BA9 /* PlaceCalloutView.swift */; };
 		725DC5172A0B739000AE4BA9 /* PlaceCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 725DC5162A0B739000AE4BA9 /* PlaceCalloutView.xib */; };
 		729BEAD22A504B890021C99C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD12A504B890021C99C /* TabBarViewController.swift */; };
+		729BEAD42A51036B0021C99C /* main2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD32A51036B0021C99C /* main2ViewController.swift */; };
 		72E1E3452A0DE18100C27772 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */; };
 		72E1E3482A0DE27E00C27772 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3472A0DE27E00C27772 /* FirebaseAuth */; };
 		72E1E34A2A0DE27E00C27772 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3492A0DE27E00C27772 /* FirebaseAuthCombine-Community */; };
@@ -129,6 +130,7 @@
 		725DC5142A0B738400AE4BA9 /* PlaceCalloutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCalloutView.swift; sourceTree = "<group>"; };
 		725DC5162A0B739000AE4BA9 /* PlaceCalloutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceCalloutView.xib; sourceTree = "<group>"; };
 		729BEAD12A504B890021C99C /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		729BEAD32A51036B0021C99C /* main2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main2ViewController.swift; sourceTree = "<group>"; };
 		72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		72E1E3552A0DE50700C27772 /* loginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginViewController.swift; sourceTree = "<group>"; };
 		72E1E35B2A11DD8400C27772 /* colectionviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colectionviewViewController.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				7230010A2A42CF19004894AE /* passwordViewController.swift */,
 				7230014A2A48096B004894AE /* CustomTextField.swift */,
 				729BEAD12A504B890021C99C /* TabBarViewController.swift */,
+				729BEAD32A51036B0021C99C /* main2ViewController.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -454,6 +457,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				729BEAD22A504B890021C99C /* TabBarViewController.swift in Sources */,
+				729BEAD42A51036B0021C99C /* main2ViewController.swift in Sources */,
 				7230014B2A48096B004894AE /* CustomTextField.swift in Sources */,
 				721377962A38863A00921D24 /* friendViewController.swift in Sources */,
 				72E1E3562A0DE50700C27772 /* loginViewController.swift in Sources */,
