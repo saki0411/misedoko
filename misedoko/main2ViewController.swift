@@ -107,33 +107,33 @@ class main2ViewController: UIViewController, MKMapViewDelegate, CLLocationManage
         layout.headerReferenceSize = CGSize(width:0,height:0)
         
         
-        
-        let dateComponents = DateComponents(
-            calendar: Calendar.current,
-            timeZone: TimeZone.current,
-            hour: 12,
-            minute: 30,
-            weekday: 2
-        )
-        let trigger = UNCalendarNotificationTrigger(
-            dateMatching: dateComponents,
-            repeats: true
-        )
-        
-        let content = UNMutableNotificationContent()
-        content.body = "テストメッセージ"
-        content.badge = 1
-        content.sound = .default
-        
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: trigger
-        )
-        let center = UNUserNotificationCenter.current()
-        center.add(request)
-        
-        
+//
+//        let dateComponents = DateComponents(
+//            calendar: Calendar.current,
+//            timeZone: TimeZone.current,
+//            hour: 12,
+//            minute: 30,
+//            weekday: 2
+//        )
+//        let trigger = UNCalendarNotificationTrigger(
+//            dateMatching: dateComponents,
+//            repeats: true
+//        )
+//
+//        let content = UNMutableNotificationContent()
+//        content.body = "テストメッセージ"
+//        content.badge = 1
+//        content.sound = .default
+//
+//        let request = UNNotificationRequest(
+//            identifier: UUID().uuidString,
+//            content: content,
+//            trigger: trigger
+//        )
+//        let center = UNUserNotificationCenter.current()
+//        center.add(request)
+//
+//
         
         tableView.isHidden = true
         

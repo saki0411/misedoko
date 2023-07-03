@@ -56,7 +56,9 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     }
     
     func navigateToMainPage() {
-        performSegue(withIdentifier: "tomain", sender: self)
+        let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "tabbar") as! UITabBarController
+        nextVC.modalPresentationStyle = .fullScreen
+        self.present(nextVC, animated: true, completion: nil)
     }
     
     

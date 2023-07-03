@@ -65,6 +65,11 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var documentid = [String]()
     var publicdocumentid = [String]()
     
+    var sharemisetitle = [String]()
+    var sharemisesubtitle = [String]()
+    var sharechoicecount = [Int]()
+    
+    
     @IBOutlet  weak var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet var listButton: UIButton!
@@ -118,9 +123,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             
         }else
         if sender.selectedSegmentIndex == 1{
-            print(self.publicchoicecount)
-            print(self.publicselectedChoices,publicselectedChoices.count)
-          
+      
             DispatchQueue.global().async {
                 
                 DispatchQueue.main.sync {
@@ -130,12 +133,16 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 // 三番目に実行
             }
             
-            
-            
-            
-            
-            
-        }else{
+        }else
+        if sender.selectedSegmentIndex == 2 {
+            DispatchQueue.global().async {
+                
+                DispatchQueue.main.sync {
+                    self.collectionView.resetScrollPositionToTop()
+                    self.collectionView.reloadData()
+                }
+                // 三番目に実行
+            }
             
         }
     }
@@ -152,7 +159,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }else if segmentedControl.selectedSegmentIndex == 1{
             return publicmisetitle.count
         }else{
-            return misetitle.count
+            return sharemisetitle.count
         }
         
         
@@ -197,6 +204,10 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
          
         }else if segmentedControl.selectedSegmentIndex == 1{
             let initialRow = publicchoicecount[indexPath.row]
+            cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
+            cell.zyanruTextField.text = zyanru[initialRow]
+        }else if segmentedControl.selectedSegmentIndex == 2{
+            let initialRow = sharechoicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
         }
@@ -255,15 +266,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }else if segmentedControl.selectedSegmentIndex == 1{
             cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
             cell.adresslabel?.text = publicmisesubtitle[indexPath.row]
+        }else if segmentedControl.selectedSegmentIndex == 2{
+            cell.shopnamelabel?.text = sharemisetitle[indexPath.row]
+            cell.adresslabel?.text = sharemisesubtitle[indexPath.row]
         }
         
-        
-        
-        
-        
-        
-        
-        return cell
+   return cell
     }
     
     
