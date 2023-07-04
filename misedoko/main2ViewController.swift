@@ -121,7 +121,7 @@ class main2ViewController: UIViewController, MKMapViewDelegate, CLLocationManage
 //        )
 //
 //        let content = UNMutableNotificationContent()
-//        content.body = "テストメッセージ"
+//        co vntent.body = "テストメッセージ"
 //        content.badge = 1
 //        content.sound = .default
 //
