@@ -103,6 +103,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
         
         zyanruTextField.text = selectedChoice
         
+        
         db.collection("users").document(uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -140,18 +141,17 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
                 print("エラーが発生しました: \(error)")
                 
             } else {
-                if let topViewController: colectionviewViewController = self.getTopViewController() as? colectionviewViewController {
-                    topViewController.deletekyouyu()
-                }
-                print("ジャンルを更新しました")
+              
+        
+        print("ジャンルを更新しました")
+        
+        
+        
+        
+    }
                 
                 
-                
-                
-                
-                
-                
-            }
+            
             
         }
         
@@ -170,11 +170,21 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     @objc func donePicker() {
         zyanruTextField.endEditing(true)
-        if let topViewController: colectionviewViewController = self.getTopViewController() as? colectionviewViewController {
-            topViewController.choicecount = self.choicecount
-            
-            topViewController.collectionView.reloadData()
-        }
+        guard let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let topViewController = tabBarController.viewControllers?[0] as? colectionviewViewController else {
+                            // nilであればエラーメッセージを出力する
+                            print("tabBarController or topViewController is nil")
+                            
+                            return
+                            
+                        }
+                        
+                        // nilでなければ、元の処理を続ける
+                        topViewController.deletekyouyu()
+                        topViewController.choicecount = self.choicecount
+        print(self.choicecount)
+                        topViewController.collectionView.reloadData()
+                        print(topViewController,"B")
+      
         
     }
     
@@ -190,27 +200,26 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     @IBAction func comment(){
         print("aa")
         let num: Int = Int("\(commentButton.tag)")!
-        if let topViewController: colectionviewViewController = getTopViewController() as? colectionviewViewController {
+        if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let topViewController = tabBarController.viewControllers?[0] as? colectionviewViewController {
             topViewController.selectedd(gotselectedcell: num)
            
         }
        
     }
-    func getTopViewController() -> UIViewController? {
-        // UIApplication.shared.keyWindow?.rootViewControllerではなく
-           // UITabBarControllerのselectedViewControllerを使う
-           if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController {
-               var topViewController: UIViewController = tabBarController.selectedViewController!
-               
-               while let presentedViewController = topViewController.presentedViewController {
-                   topViewController = presentedViewController
-               }
-             print(topViewController)
-               return topViewController
-           } else {
-               return nil
-           }
-    }
+//    func getTopViewController() -> UIViewController? {
+//
+//           if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController {
+//               var topViewController: UIViewController = tabBarController.selectedViewController!
+//
+//               while let presentedViewController = topViewController.presentedViewController {
+//                   topViewController = presentedViewController
+//               }
+//             print(topViewController,"C")
+//               return topViewController
+//           } else {
+//               return nil
+//           }
+//    }
     @IBAction func commenthozon(){
         db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath?.row ?? 0]).updateData(["comment": commenttextfield.text ?? "" ]) { error in
             
@@ -221,7 +230,6 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
             } else {
                 
                 print("コメントを更新しました")
-                
                 
                 
                 

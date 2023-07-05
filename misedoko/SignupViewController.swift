@@ -11,6 +11,8 @@ import CryptoKit
 import AuthenticationServices
 import FirebaseCore
 import GoogleSignIn
+import FirebaseFirestore
+
 
 
 class SignupViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -22,9 +24,14 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
     // 新規登録用のUITextFieldです
     @IBOutlet var signUpMailTextField: UITextField!
     @IBOutlet var signUpPassowordTextField: UITextField!
+    @IBOutlet var signUpnameTextField: UITextField!
     @IBOutlet var signUpPasswordConfirmationTextField: UITextField!
     @IBOutlet  private weak var buttonView: UIView!
     private var signInWithAppleObject = SignInWithAppleObject()
+    
+    let db = Firestore.firestore()
+    let uid = Auth.auth().currentUser?.uid
+    
     
     // SetUp
     func setupProviderLoginView() {
@@ -54,7 +61,7 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
         signUpMailTextField.text = ""
         signUpPassowordTextField.text = ""
         signUpPasswordConfirmationTextField.text = ""
-        
+        signUpnameTextField.text = ""
         setupProviderLoginView()
         
     }
@@ -82,12 +89,14 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
         let email = signUpMailTextField.text ?? ""
         let password = signUpPassowordTextField.text ?? ""
         let passwordConfirmation = signUpPasswordConfirmationTextField.text ?? ""
-        
+        let name = signUpnameTextField.text ?? ""
         if (password == passwordConfirmation) {
             Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                 if (result?.user) != nil {
+                    self.saveUserData(email: email, name: name)
                     print("新規登録成功！")
                     self.navigateToMainPage()
+                    
                 } else {
                     print(error!)
                 }
@@ -96,7 +105,15 @@ class SignupViewController: UIViewController, ASAuthorizationControllerDelegate,
     }
     
     
-    
+    func saveUserData(email: String?, name: String?) {
+        let db = Firestore.firestore()
+        let uid = Auth.auth().currentUser?.uid
+        db.collection("users").document(uid ?? "").collection("personal").document("info").setData([
+            "uid": uid ?? "uid:Error",
+            "email": email ?? "email:Error",
+            "name": name ?? "name:Error",
+        ])
+    }
     
     //appleログイン
     func authorizationController(controller: ASAuthorizationController,didCompleteWithAuthorization authorization: ASAuthorization ) {

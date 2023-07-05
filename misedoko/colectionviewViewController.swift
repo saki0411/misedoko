@@ -68,6 +68,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var sharemisetitle = [String]()
     var sharemisesubtitle = [String]()
     var sharechoicecount = [Int]()
+    var shareselectedChoices = [String]()
+    var sharecolorArray = [String]()
+    var sharecommentArray = [String]()
+    var shareURLArray = [String]()
+    var sharedocumentid = [String]()
+    
     
     
     @IBOutlet  weak var collectionView: UICollectionView!
@@ -194,7 +200,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         if segmentedControl.selectedSegmentIndex == 0{
-            
+        
             let initialRow = choicecount[indexPath.row]
           
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -281,8 +287,12 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         let cellSizeWidth:CGFloat = 320
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
+    
         if  segmentedControl.selectedSegmentIndex == 0{
-            if indexPath.row == selectedCell {
+            print(selectedCell)
+            print(indexPath.row)
+            if indexPath.row == selectedCell  {
+                print("BB")
                 cellSizeHeight = 600
                 
             }
@@ -665,6 +675,104 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 print("Document does not exist")
             }
         }
+    }
+    
+    func sharesyutoku(){
+        shareselectedChoices = []
+        sharemisetitle = []
+        sharemisesubtitle = []
+        sharecolorArray = []
+        sharedocumentid = []
+        sharecommentArray = []
+        shareURLArray = []
+        
+        
+        let collectionRef = db.collection("groups").document().collection("shop")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let data = document.data()
+                            let idokeido = data["idokeido"] as? GeoPoint
+                            let genre = data["genre"] as? String ?? "カフェ"
+                            let color = data["color"] as? String ?? "pink"
+                            let comment = data["comment"] as? String ?? ""
+                            let URL = data["URL"] as? String ?? ""
+                            let title = data["title"] as? String ?? "title:Error"
+                            let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            
+                         
+                            self.selectedChoices.append(genre)
+                            self.colorArray.append(color)
+                            self.misetitle.append(title)
+                            self.misesubtitle.append(subtitle)
+                            self.documentid.append(document.documentID)
+                            
+                            self.commentArray.append(comment)
+                            
+                            self.URLArray.append(URL)
+                            
+                            let latitude = idokeido?.latitude
+                            let longitude = idokeido?.longitude
+                            let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate = coordinate
+                            self.hozonArray.append(annotation)
+                            
+                            
+                            
+                          
+                            
+                        
+                            
+                        }
+                        self.choicecount  = []
+                        for choice in self.selectedChoices {
+                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                            
+                        }
+                        
+                        
+                        
+                        
+                        self.collectionView.delegate = self
+                        self.collectionView.dataSource  = self
+                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                        self.collectionView.reloadData()
+                        
+                    }
+                    
+                    
+                }
+            }else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.delegate = self
+                self.collectionView.dataSource  = self
+                
+                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
+            }
+            
+        }
+        
     }
     
    

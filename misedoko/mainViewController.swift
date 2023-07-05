@@ -53,7 +53,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var misetitle2 = [String]()
     var misesubtitle2 = [String]()
     
-    
+    var name = String()
     var commentArray = [String]()
     
     var choicecount = [Int]()
@@ -73,7 +73,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     var tableviewindexpath = Int()
     
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -137,29 +137,30 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         tableView.isHidden = true
         
-        //ログアウト
-        loginMailText = Auth.auth().currentUser?.email ?? "エラー"
-        loginMailText += "さんでログイン中"
-        loginMailLabel.text = loginMailText
-        
+    
         //データベースに保存
         
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
     
-        self.zyanrukakuninn()
-            
+      zyanrukakuninn()
+        getname()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             
                   self.zyanrusyutoku()
+           
+            //ログアウト
+          
+            
                  
                      print("All Process Done!")
                  
               
         }
-    
+        
       
+        
      
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
@@ -282,8 +283,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                             self.mapView.addAnnotation(annotation1)
                                             
                                         }
-                                        
-                                        
+                                       
                                         
                                         
                                         print("全部終わったよ")
@@ -661,7 +661,11 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBAction func logout(){
         do{
             try Auth.auth().signOut()
-          self.dismiss(animated: true, completion: nil)
+         
+                let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "login")
+                nextVC.modalPresentationStyle = .fullScreen
+                self.present(nextVC, animated: true, completion: nil)
+            
      
             
             
@@ -669,12 +673,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             print(error)
         }
     }
-    @IBAction func tebleview(){
-        
-        
-    }
-    
-    
+
     
     
     
@@ -923,6 +922,27 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                 
             
         
+    }
+    func getname(){
+        print(uid as Any)
+        let docRef = db.collection("users").document(uid ?? "").collection("personal").document("info")
+        docRef.getDocument { (document, error) in
+           if let document = document, document.exists {
+             let data = document.data()
+             let name2 = data?["name"] as? String ?? "Name:Error"
+               self.name = name2
+               print("Success! Name:\(self.name)")
+               print(self.name)
+               self.loginMailText = self.name
+               self.loginMailText += "さんでログイン中"
+               self.loginMailLabel.text = self.loginMailText
+           } else {
+             print("Document does not exist")
+           }
+         
+                  
+               
+             }
     }
     
 }

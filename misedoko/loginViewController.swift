@@ -29,7 +29,7 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
   
     private var signInWithAppleObject = SignInWithAppleObject()
     
-
+    var myTabBarController: UITabBarController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +58,8 @@ class loginViewController: UIViewController, ASAuthorizationControllerDelegate, 
     func navigateToMainPage() {
         let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "tabbar") as! UITabBarController
         nextVC.modalPresentationStyle = .fullScreen
+     
+      
         self.present(nextVC, animated: true, completion: nil)
     }
     
