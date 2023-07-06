@@ -8,14 +8,16 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseDynamicLinks
+import Firebase
 
-class addteamViewController: UIViewController, UISearchBarDelegate, UICollectionViewDelegate,UICollectionViewDataSource {
-    
-    
-    @IBOutlet weak var searchField: UISearchBar!
-    @IBOutlet var collectionview: UICollectionView!
+class addteamViewController: UIViewController, UISearchBarDelegate {
+ 
+  
 
     @IBOutlet var kensakulabel: UILabel!
+    @IBOutlet var teamlabel: UILabel!
+    @IBOutlet var teamnamelabel: UILabel!
     var documentNames = [String]()
     var result = String()
     
@@ -36,285 +38,263 @@ class addteamViewController: UIViewController, UISearchBarDelegate, UICollection
     
     
     
+    // ユーザーのメールアドレスと名前を保持する変数
+        var userEmail = ""
+        var userName = ""
+    var name = ""
+        
+        // チームのIDと名前を保持する変数
+        var teamId = ""
+        var teamName = ""
+    
+        
+        // チームのメンバーとお店のリストを保持する変数
+        var teamMembers = [String]()
+        var teamShops = [String]()
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        getteam()
+   getname()
         
-        searchField.delegate = self
-        collectionview.delegate = self
-        collectionview.dataSource = self
-     
-        
-        //collectionview長押しのやつ
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
-        layout.sectionInset = UIEdgeInsets.zero
-        layout.minimumInteritemSpacing = 0.0
-        layout.minimumLineSpacing = 0.0
-        layout.headerReferenceSize = CGSize(width:0,height:0)
-        
-        zyanrusyutoku()
-        
+   
     }
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-        // キーボードを閉じる
-        view.endEditing(true)
-        word = ""
-        kensakulabel.text = ""
-        // 入力された値がnilでなければif文のブロック内の処理を実行
-        word = searchBar.text ?? ""
-        if let word = searchBar.text {
-            DispatchQueue.global().async {
-                
-                self.misetitle = []
-                self.misesubtitle = []
-                
-                let collectionRef = self.db.collection("users").document(word).collection("public")
-                
-                collectionRef.getDocuments { (snapshot, error) in
-                    if let error = error {
-                        // エラーが発生した場合の処理
-                        print("Error fetching documents: \(error)")
-                        return
-                    }
-                    
-                    if let snapshot = snapshot, !snapshot.isEmpty {
-                        // コレクションにドキュメントが存在する場合の処理
-                        print("Collection exists and contains documents")
-                        // 全てのドキュメントを取得する
-                        collectionRef.getDocuments() { (querySnapshot, err) in
-                            if let err = err {
-                                print("Error getting documents: \(err)")
-                            } else {
-                                for document in querySnapshot!.documents {
-                                    // 取得したドキュメントごとに実行する
-                                    let data = document.data()
-                                    let idokeido = data["idokeido"] as? GeoPoint
-                                    let title = data["title"] as? String ?? "title:Error"
-                                    let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                                    
-                                    let genre = data["genre"] as? String ?? "カフェ"
-                                    let color = data["color"] as? String ?? "pink"
-                                    let comment = data["comment"] as? String ?? ""
-                                    
-                                    
-                                    
-                                    self.commentArray.append(comment)
-                                    
-                                    
-                                    self.selectedChoices.append(genre)
-                                    self.documentid.append(document.documentID)
-                                    
-                                    
-                                    self.colorArray.append(color)
-                                    
-                                    self.misetitle.append(title)
-                                    self.misesubtitle.append(subtitle)
-                                    
-                              
-                                }
-                                self.choicecount  = []
-                                for choice in self.selectedChoices {
-                                    self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
-                                    
-                                }
-                                
-                           
-                                self.collectionview.register(self.nib, forCellWithReuseIdentifier: "cell")
-                                self.collectionview.reloadData()
-                                
-                            }
-                        }
-                        
-                    }else {
-                        // コレクションが存在しないかドキュメントが存在しない場合の処理
-                        print("コレクションがないよ")
-                        self.kensakulabel.text = "検索結果がありません"
-                        
-                        
-                    }
-                    
-                    
-                    
-                    
-                    
-                }
-                
+    func getname(){
+        let docRef = db.collection("users").document(uid ?? "").collection("personal").document("info")
+        docRef.getDocument { (document, error) in
+           if let document = document, document.exists {
+             let data = document.data()
+             let name2 = data?["name"] as? String ?? "Name:Error"
+               self.name = name2
+               print("Success! Name:\(self.name)")
+ 
+           } else {
+             print("Document does not exist")
+           }
+    
+             }
+    }
+   
+    
+  
+    @IBAction func createTeam(_ sender: Any){
+            // チーム名を入力するアラートを表示する
+            let alert = UIAlertController(title: "チーム作成", message: "チーム名を入力してください", preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.placeholder = "チーム名"
             }
-            
-        }
-        
-    }
-    
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        misetitle.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        cell.commentButton.isHidden = true
-        
-        cell.pickerView.isHidden = true
-        
-        cell.URLtextfield.isHidden = true
-        cell.URLbutton.isHidden = true
-        
-        
-        
-        
-        cell.zyanruTextField.isUserInteractionEnabled = false
-        
-        
-        let initialRow = choicecount[indexPath.row]
-        cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
-        cell.zyanruTextField.text = zyanru[initialRow]
-        
-        cell.shopnamelabel?.text = misetitle[indexPath.row]
-        cell.adresslabel?.text = misesubtitle[indexPath.row]
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellSizeWidth:CGFloat = 350
-        let cellSizeHeight:CGFloat = 280
-        
-        
-        // widthとheightのサイズを返す
-        return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
-        
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 15.0 // 行間
-    }
-    
-    
-    //長押しのやつ
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
-            //ボタン
-            
-            let addlist = UIAction(title: "マイリストに追加", image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { action in
-                let collectionRef = self.db.collection("users").document(self.word).collection("public")
-                
-                collectionRef.getDocuments { (snapshot, error) in
-                    if let error = error {
-                        // エラーが発生した場合の処理
-                        print("Error fetching documents: \(error)")
-                        return
-                    }
-                    
-                    if let snapshot = snapshot, !snapshot.isEmpty {
-                        // コレクションにドキュメントが存在する場合の処理
-                        print("Collection exists and contains documents")
-                        // 全てのドキュメントを取得する
-                        collectionRef.getDocuments() { (querySnapshot, err) in
-                            if let err = err {
-                                print("Error getting documents: \(err)")
-                            } else {
-                                for document in querySnapshot!.documents {
-                                    
-                                    if document.documentID == self.documentid[indexPath.row]{
-                                        // 取得したドキュメントごとに実行する
-                                        let data = document.data()
-                                        let idokeido = data["idokeido"] as? GeoPoint
-                                        let title = data["title"] as? String ?? "title:Error"
-                                        let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
-                                        
-                                        let genre = data["genre"] as? String ?? "カフェ"
-                                        let color = data["color"] as? String ?? "pink"
-                                        
-                                        self.db.collection("users").document(self.uid ?? "").collection("shop").whereField("title", isEqualTo: title).getDocuments { (querySnapshot, error) in
-                                            if let error = error {
-                                                print(error.localizedDescription)
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "作成", style: .default) { action in
+                // 入力されたチーム名を取得する
+                if let teamName = alert.textFields?.first?.text, !teamName.isEmpty {
+                    // Firestoreにチーム情報を保存する
+                    let db = Firestore.firestore()
+                    db.collection("teams").addDocument(data:[
+                        "name": teamName,
+                        "members": [self.name],
+                        "uids": self.uid as Any,
+                        "shops": []
+                    ]) { error in
+                        if let e = error {
+                            // エラーがあればアラートを表示する
+                            let alert = UIAlertController(title: "作成失敗", message: e.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                            self.present(alert, animated:true, completion:nil)
+                        } else {
+                            // エラーがなければFirestoreからチーム情報を取得する
+                            db.collection("teams").whereField("name", isEqualTo: teamName).getDocuments { querySnapshot, error in
+                                if let e = error {
+                                    // エラーがあればアラートを表示する
+                                    let alert = UIAlertController(title: "取得失敗", message: e.localizedDescription, preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                                    self.present(alert, animated:true, completion:nil)
+                                } else {
+                                    // エラーがなければチームIDと名前を取得する
+                                    if let documents = querySnapshot?.documents, let document = documents.first {
+                                        self.teamId = document.documentID
+                                        self.teamName = teamName
+                                        // ユーザー情報にチームIDを追加する
+                                        db.collection("users").document(self.uid ?? "").collection("personal").document("info").updateData([
+                                            "teams": FieldValue.arrayUnion([self.teamId])
+                                        ]) { error in
+                                            if let e = error {
+                                                // エラーがあればアラートを表示する
+                                                let alert = UIAlertController(title: "更新失敗", message: e.localizedDescription, preferredStyle: .alert)
+                                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                                                self.present(alert, animated:true, completion:nil)
                                             } else {
-                                                if querySnapshot!.isEmpty {
-                                                    print("No matching documents")
-                                                    var ref: DocumentReference? = nil
-                                                    ref = self.db.collection("users").document(self.uid ?? "").collection("shop").addDocument(data: [
-                                                        
-                                                        "idokeido": idokeido!,
-                                                        "title":   title,
-                                                        "subtitle":subtitle,
-                                                        "timestamp": FieldValue.serverTimestamp(),
-                                                        "genre": genre,
-                                                        "kyouyu": false,
-                                                        "color": "pink"
-                                                    ]) { err in
-                                                        if let err = err {
-                                                            print("Error writing document: \(err)")
-                                                        } else {
-                                                            self.documentid.append(ref!.documentID)
-                                                            print("Document added with ID: \(ref!.documentID)")
-                                                        }
-                                                    }
-                                                    
-                                                }
+                                                // エラーがなければナビゲーションバーのタイトルを変更する
+                                                self.title = "\(self.userName)さん (\(self.teamName))"
+                                                // チームメンバーとお店のリストを更新する
+                                                self.updateTeamInfo()
                                             }
-                                            
-                                            
                                         }
-                                        
-                                    } else {
-                                        // コードを実行する
                                     }
                                 }
                             }
-                            
-                            
-                            
+                        }
+                    }
+                }
+            })
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        @IBAction func joinTeam() {
+            // チームIDを入力するアラートを表示する
+            let alert = UIAlertController(title: "チーム参加", message: "チームIDを入力してください", preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.placeholder = "チームID"
+            }
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "参加", style: .default) { action in
+                // 入力されたチームIDを取得する
+                if let teamId = alert.textFields?.first?.text, !teamId.isEmpty {
+                    // Firestoreからチーム情報を取得する
+                    let db = Firestore.firestore()
+                    db.collection("teams").document(teamId).getDocument { document, error in
+                        if let e = error {
+                            // エラーがあればアラートを表示する
+                            let alert = UIAlertController(title: "参加が失敗", message: e.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                            self.present(alert, animated:true, completion:nil)
+                        } else {
+                            // エラーがなければチーム名を取得する
+                            if let document = document, document.exists {
+                                if let data = document.data(), let teamName = data["name"] as? String {
+                                    self.teamId = teamId
+                                    self.teamName = teamName
+                                    // チーム情報にユーザーのメールアドレスを追加する
+                                    db.collection("teams").document(teamId).updateData([
+                                        "members": FieldValue.arrayUnion([self.name]),
+                                        "uids": FieldValue.arrayUnion([self.uid ?? ""])
+                                    ]) { error in
+                                        if let e = error {
+                                            // エラーがあればアラートを表示する
+                                            let alert = UIAlertController(title: "参加失敗", message: e.localizedDescription, preferredStyle: .alert)
+                                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                                            self.present(alert, animated:true, completion:nil)
+                                        } else {
+                                            // エラーがなければユーザー情報にチームIDを追加する
+                                            db.collection("users").document(self.uid ?? "").collection("personal").document("info").updateData([
+                                                "teams": teamId
+                                            ]) { error in
+                                                if let e = error {
+                                                    // エラーがあればアラートを表示する
+                                                    let alert = UIAlertController(title: "参加失敗", message: e.localizedDescription, preferredStyle: .alert)
+                                                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                                                    self.present(alert, animated:true, completion:nil)
+                                                } else {
+                                                    // エラーがなければナビゲーションバーのタイトルを変更する
+                                                    self.navigationItem.title = "\(self.userName)さん (\(self.teamName))"
+                                                    // チームメンバーとお店のリストを更新する
+                                                    self.updateTeamInfo()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                // ドキュメントが存在しなければアラートを表示する
+                                let alert = UIAlertController(title: "参加失敗", message: "チームIDが正しくありません", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                                self.present(alert, animated:true, completion:nil)
+                            }
+                        }
+                    }
+                }
+            })
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        func updateTeamInfo() {
+            // Firestoreからチームメンバーとお店のリストを取得する
+            let db = Firestore.firestore()
+            db.collection("teams").document(teamId).getDocument { document, error in
+                if let document = document, document.exists {
+                    if let data = document.data(), let members = data["members"] as? [String], let shops = data["shops"] as? [String] {
+                        // チームメンバーとお店のリストを更新する
+                        self.teamMembers = members
+                        self.teamlabel.text = self.teamName
+                        for teamMember in self.teamMembers {
+                            self.teamnamelabel.text! += teamMember
                         }
                         
+                        self.teamShops = shops
+//                        // テーブルビューをリロードする
+//                        self.tableView.reloadData()
                     }
-                    
+                } else {
+                    print("Document does not exist")
                 }
-                
-                
             }
-            
-            return UIMenu(title: "Menu", children: [addlist])
-            
-            
         }
-        )
-        
-    }
-    
-    func zyanrusyutoku(){
-        let collectionRef = db.collection("users").document(uid ?? "").collection("zyanru")
-        
-        collectionRef.getDocuments { (snapshot, error) in
-            if let error = error {
-                // エラーが発生した場合の処理
-                print("Error fetching documents: \(error)")
-                return
+    func createDynamicLink() {
+           // Dynamic Linksのコンポーネントを作成する
+           guard let link = URL(string: "https://\(FirebaseApp.app()?.options.projectID ?? "").page.link/\(teamId)") else { return }
+           let dynamicLinksDomainURIPrefix = "https://\(FirebaseApp.app()?.options.projectID ?? "").page.link"
+           let linkBuilder = DynamicLinkComponents(link: link, domainURIPrefix: dynamicLinksDomainURIPrefix)
+           linkBuilder?.iOSParameters = DynamicLinkIOSParameters(bundleID: Bundle.main.bundleIdentifier ?? "")
+           linkBuilder?.iOSParameters?.appStoreID = "1234567890" // App Store IDを入力する
+           
+           // Dynamic LinksのURLを生成する
+           linkBuilder?.shorten { url, warnings, error in
+               if let error = error {
+                   // エラーがあればアラートを表示する
+                   let alert = UIAlertController(title: "生成失敗", message: error.localizedDescription, preferredStyle: .alert)
+                   alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+                   self.present(alert, animated:true, completion:nil)
+               } else {
+                   // エラーがなければ共有機能を呼び出す
+                   if let url = url {
+                       let items = [url]
+                       let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+                       self.present(activityVC, animated: true, completion: nil)
+                   }
+               }
+           }
+       }
+    func getteam(){
+        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let team = data?["teams"] as? String ?? "team:Error"
+                print(data?["teams"] as Any)
+                self.teamId = team
+                print(self.teamId)
+            } else {
+                print("Document does not exist")
             }
+        }
+        if !teamId.isEmpty{
             
-            if let snapshot = snapshot, !snapshot.isEmpty {
-                // コレクションにドキュメントが存在する場合の処理
-                print("Collection exists and contains documents")
-                // 全てのドキュメントを取得する
-                self.db.collection("users").document(self.uid ?? "").collection("zyanru").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            let zyanrulist = data["zyanrulist"]
-                            self.zyanru.append(zyanrulist as! String)
+            // あるドキュメントをリッスンする
+            db.collection("teams").document(teamId)
+                .addSnapshotListener { documentSnapshot, error in
+                    guard let document = documentSnapshot else {
+                        print("Error fetching document: \(error!)")
+                        return
+                    }
+                    guard let data = document.data() else {
+                        print("Document data was empty.")
+                        return
+                    }
+                    if let data = document.data(), let members = data["members"] as? [String], let shops = data["shops"] as? [String] {
+                        // チームメンバーとお店のリストを更新する
+                        self.teamMembers = members
+                        self.teamlabel.text = self.teamName
+                        for teamMember in self.teamMembers {
+                            self.teamnamelabel.text! += teamMember
                         }
+                        
+                        self.teamShops = shops
                     }
                 }
-            }
+            
         }
-    
+        }
     }
+
     
-    
-}
+

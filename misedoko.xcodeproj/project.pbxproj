@@ -41,6 +41,8 @@
 		729BEAD22A504B890021C99C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD12A504B890021C99C /* TabBarViewController.swift */; };
 		729BEAD42A51036B0021C99C /* main2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD32A51036B0021C99C /* main2ViewController.swift */; };
 		729BEAD62A5514CE0021C99C /* addteamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD52A5514CE0021C99C /* addteamViewController.swift */; };
+		729BEAD92A5646720021C99C /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 729BEAD82A5646720021C99C /* IQKeyboardManagerSwift */; };
+		729BEADC2A5649540021C99C /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 729BEADB2A5649540021C99C /* FirebaseDynamicLinks */; };
 		72E1E3452A0DE18100C27772 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */; };
 		72E1E3482A0DE27E00C27772 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3472A0DE27E00C27772 /* FirebaseAuth */; };
 		72E1E34A2A0DE27E00C27772 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3492A0DE27E00C27772 /* FirebaseAuthCombine-Community */; };
@@ -153,7 +155,9 @@
 				72E1E3522A0DE27E00C27772 /* FirebaseStorage in Frameworks */,
 				72E1E3482A0DE27E00C27772 /* FirebaseAuth in Frameworks */,
 				72E1E3502A0DE27E00C27772 /* FirebaseFirestoreSwift in Frameworks */,
+				729BEAD92A5646720021C99C /* IQKeyboardManagerSwift in Frameworks */,
 				723001052A3DA0CB004894AE /* GoogleSignIn in Frameworks */,
+				729BEADC2A5649540021C99C /* FirebaseDynamicLinks in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +311,8 @@
 				72E1E3532A0DE27E00C27772 /* FirebaseStorageCombine-Community */,
 				723001042A3DA0CB004894AE /* GoogleSignIn */,
 				723001062A3DA0CB004894AE /* GoogleSignInSwift */,
+				729BEAD82A5646720021C99C /* IQKeyboardManagerSwift */,
+				729BEADB2A5649540021C99C /* FirebaseDynamicLinks */,
 			);
 			productName = misedoko;
 			productReference = 72282E9429F511E300EB8A90 /* misedoko.app */;
@@ -372,6 +378,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
@@ -403,6 +412,7 @@
 			packageReferences = (
 				72E1E3462A0DE27E00C27772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				723001032A3DA0CB004894AE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				729BEAD72A5646710021C99C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = 72282E9529F511E300EB8A90 /* Products */;
 			projectDirPath = "";
@@ -923,6 +933,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		729BEAD72A5646710021C99C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		72E1E3462A0DE27E00C27772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -943,6 +961,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 723001032A3DA0CB004894AE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		729BEAD82A5646720021C99C /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 729BEAD72A5646710021C99C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		729BEADB2A5649540021C99C /* FirebaseDynamicLinks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72E1E3462A0DE27E00C27772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDynamicLinks;
 		};
 		72E1E3472A0DE27E00C27772 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

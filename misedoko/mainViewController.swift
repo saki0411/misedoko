@@ -924,7 +924,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
     }
     func getname(){
-        print(uid as Any)
         let docRef = db.collection("users").document(uid ?? "").collection("personal").document("info")
         docRef.getDocument { (document, error) in
            if let document = document, document.exists {
@@ -939,9 +938,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
            } else {
              print("Document does not exist")
            }
-         
-                  
-               
+    
              }
     }
     
