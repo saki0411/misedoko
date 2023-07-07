@@ -268,7 +268,6 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         if  segmentedControl.selectedSegmentIndex == 0{
             cell.shopnamelabel?.text = misetitle[indexPath.row]
             cell.adresslabel?.text = misesubtitle[indexPath.row]
-       
         }else if segmentedControl.selectedSegmentIndex == 1{
             cell.shopnamelabel?.text = publicmisetitle[indexPath.row]
             cell.adresslabel?.text = publicmisesubtitle[indexPath.row]

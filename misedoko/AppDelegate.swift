@@ -105,6 +105,7 @@ func application(_ application: UIApplication, continue userActivity: NSUserActi
 func handleDynamicLink(_ url: URL) -> Bool {
     guard let dynamicLink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url) else { return false }
     handleDynamicLink(dynamicLink)
+    
     return true
 }
 
@@ -120,6 +121,7 @@ func handleDynamicLink(_ dynamicLink: DynamicLink) {
     if let teamId = dynamicLink.url?.lastPathComponent {
         // チームIDをUserDefaultsに保存する
         UserDefaults.standard.set(teamId, forKey: "teamId")
+        print(teamId,"te-muID")
     }
 }
 

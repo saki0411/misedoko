@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseDynamicLinks
 import Firebase
-
+import MapKit
 class addteamViewController: UIViewController, UISearchBarDelegate {
  
   
@@ -34,7 +34,8 @@ class addteamViewController: UIViewController, UISearchBarDelegate {
     let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
     
     var word = String()
-    
+    var URLArray = [String]()
+    var hozonArray = [MKAnnotation]()
     
     
     
@@ -140,7 +141,10 @@ class addteamViewController: UIViewController, UISearchBarDelegate {
             })
             self.present(alert, animated: true, completion: nil)
         }
-        
+    @IBAction func kyouyu(_ sender: Any) {
+  
+    }
+    
         @IBAction func joinTeam() {
             // チームIDを入力するアラートを表示する
             let alert = UIAlertController(title: "チーム参加", message: "チームIDを入力してください", preferredStyle: .alert)
@@ -230,31 +234,32 @@ class addteamViewController: UIViewController, UISearchBarDelegate {
                 }
             }
         }
-    func createDynamicLink() {
-           // Dynamic Linksのコンポーネントを作成する
-           guard let link = URL(string: "https://\(FirebaseApp.app()?.options.projectID ?? "").page.link/\(teamId)") else { return }
-           let dynamicLinksDomainURIPrefix = "https://\(FirebaseApp.app()?.options.projectID ?? "").page.link"
-           let linkBuilder = DynamicLinkComponents(link: link, domainURIPrefix: dynamicLinksDomainURIPrefix)
-           linkBuilder?.iOSParameters = DynamicLinkIOSParameters(bundleID: Bundle.main.bundleIdentifier ?? "")
-           linkBuilder?.iOSParameters?.appStoreID = "1234567890" // App Store IDを入力する
-           
-           // Dynamic LinksのURLを生成する
-           linkBuilder?.shorten { url, warnings, error in
-               if let error = error {
-                   // エラーがあればアラートを表示する
-                   let alert = UIAlertController(title: "生成失敗", message: error.localizedDescription, preferredStyle: .alert)
-                   alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
-                   self.present(alert, animated:true, completion:nil)
-               } else {
-                   // エラーがなければ共有機能を呼び出す
-                   if let url = url {
-                       let items = [url]
-                       let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
-                       self.present(activityVC, animated: true, completion: nil)
-                   }
-               }
-           }
-       }
+//    func createDynamicLink() {
+//        print(teamId,"これだ！！！")
+//           // Dynamic Linksのコンポーネントを作成する
+//           guard let link = URL(string: "https://misedoko.page.link.\(teamId)") else { return }
+//           let dynamicLinksDomainURIPrefix = "https://misedoko.page.link"
+//           let linkBuilder = DynamicLinkComponents(link: link, domainURIPrefix: dynamicLinksDomainURIPrefix)
+//           linkBuilder?.iOSParameters = DynamicLinkIOSParameters(bundleID: Bundle.main.bundleIdentifier ?? "")
+//           linkBuilder?.iOSParameters?.appStoreID = "1234567890" // App Store IDを入力する
+//
+//           // Dynamic LinksのURLを生成する
+//           linkBuilder?.shorten { url, warnings, error in
+//               if let error = error {
+//                   // エラーがあればアラートを表示する
+//                   let alert = UIAlertController(title: "生成失敗", message: error.localizedDescription, preferredStyle: .alert)
+//                   alert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+//                   self.present(alert, animated:true, completion:nil)
+//               } else {
+//                   // エラーがなければ共有機能を呼び出す
+//                   if let url = url {
+//                       let items = [url]
+//                       let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+//                       self.present(activityVC, animated: true, completion: nil)
+//                   }
+//               }
+//           }
+//       }
     func getteam(){
         db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
             if let document = document, document.exists {
@@ -267,33 +272,150 @@ class addteamViewController: UIViewController, UISearchBarDelegate {
                 print("Document does not exist")
             }
         }
-        if !teamId.isEmpty{
+        print("あ",teamId)
+        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let team = data?["teams"] as? String ?? "team:Error"
+                print(data?["teams"] as Any)
+                self.teamId = team
+                print(self.teamId)
+            } else {
+                print("Document does not exist")
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if !self.teamId.isEmpty{
+                
+                // あるドキュメントをリッスンする
+                self.db.collection("teams").document(self.teamId)
+                    .addSnapshotListener { documentSnapshot, error in
+                        guard let document = documentSnapshot else {
+                            print("Error fetching document: \(error!)")
+                            return
+                        }
+                       
+                        let data = document.data()
+                        let members = data?["members"] as? [String]
+                        let shops = data?["shops"] as? [String]
+                        let teamneme = data?["name"]
+                           
+                        print(members as Any)
+                            // チームメンバーとお店のリストを更新する
+                            self.teamMembers = []
+                        self.teamMembers = members ?? []
+                            self.teamName = ""
+                            self.teamName = teamneme as! String
+                           
+                            self.teamlabel.text = self.teamName
+                            for teamMember in self.teamMembers {
+                                self.teamnamelabel.text! += teamMember
+                            }
+                            
+                        self.teamShops = shops ?? []
+                        }
+                    
+                
+            }
+        }
+        }
+    func syutoku(){
+        selectedChoices = []
+        misetitle = []
+        misesubtitle = []
+        colorArray = []
+        documentid = []
+        commentArray = []
+        URLArray = []
+        
+        
+        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
             
-            // あるドキュメントをリッスンする
-            db.collection("teams").document(teamId)
-                .addSnapshotListener { documentSnapshot, error in
-                    guard let document = documentSnapshot else {
-                        print("Error fetching document: \(error!)")
-                        return
-                    }
-                    guard let data = document.data() else {
-                        print("Document data was empty.")
-                        return
-                    }
-                    if let data = document.data(), let members = data["members"] as? [String], let shops = data["shops"] as? [String] {
-                        // チームメンバーとお店のリストを更新する
-                        self.teamMembers = members
-                        self.teamlabel.text = self.teamName
-                        for teamMember in self.teamMembers {
-                            self.teamnamelabel.text! += teamMember
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let data = document.data()
+                            let idokeido = data["idokeido"] as? GeoPoint
+                            let genre = data["genre"] as? String ?? "カフェ"
+                            let color = data["color"] as? String ?? "pink"
+                            let comment = data["comment"] as? String ?? ""
+                            let URL = data["URL"] as? String ?? ""
+                            let title = data["title"] as? String ?? "title:Error"
+                            let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            
+                         
+                            self.selectedChoices.append(genre)
+                            self.colorArray.append(color)
+                            self.misetitle.append(title)
+                            self.misesubtitle.append(subtitle)
+                            self.documentid.append(document.documentID)
+                            
+                            self.commentArray.append(comment)
+                            
+                            self.URLArray.append(URL)
+                            
+                            let latitude = idokeido?.latitude
+                            let longitude = idokeido?.longitude
+                            let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate = coordinate
+                            self.hozonArray.append(annotation)
+                            
+                            
+                            
+                          
+                            
+                        
+                            
+                        }
+                        self.choicecount  = []
+                        for choice in self.selectedChoices {
+                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                            
                         }
                         
-                        self.teamShops = shops
+                        
+                        
+                        
+                        self.collectionView.delegate = self
+                        self.collectionView.dataSource  = self
+                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                        self.collectionView.reloadData()
+                        
                     }
+                    
+                    
                 }
+            }else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.delegate = self
+                self.collectionView.dataSource  = self
+                
+                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
+            }
             
         }
-        }
+        
+    }
     }
 
     
