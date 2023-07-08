@@ -557,7 +557,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                     } else {
                         
                         print("ジャンルを更新しました")
-                        self.deletekyouyu()
+                      
                         self.collectionView.reloadData()
                         
                         
@@ -593,7 +593,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                         print("エラーが発生しました: \(error)")
                         
                     } else {
-                        self.deletekyouyu()
+                      
                         print("ジャンルを更新しました")
                         self.collectionView.reloadData()
                         
