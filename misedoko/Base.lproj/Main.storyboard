@@ -856,6 +856,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="0Dj-aq-I6o"/>
                     <connections>
+                        <outlet property="collectionView" destination="JwS-vB-fhO" id="OtQ-Oh-geo"/>
                         <outlet property="teamlabel" destination="XJ1-3L-KPS" id="8Fb-KR-h7a"/>
                         <outlet property="teamnamelabel" destination="xkj-cu-X9Q" id="bzV-om-g7G"/>
                     </connections>

@@ -12,10 +12,7 @@ import FirebaseDynamicLinks
 import Firebase
 import MapKit
 class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionViewDelegate,UICollectionViewDataSource,
-                             UICollectionViewDelegateFlowLayout, CustomCellDelegate {
-    func showAlert(message: String) {
-        <#code#>
-    }
+                             UICollectionViewDelegateFlowLayout {
     
     
     
@@ -24,7 +21,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     @IBOutlet var kensakulabel: UILabel!
     @IBOutlet var teamlabel: UILabel!
     @IBOutlet var teamnamelabel: UILabel!
-    @IBOutlet var colectionView: UICollectionView!
+    @IBOutlet var collectionView: UICollectionView!
     var documentNames = [String]()
     var result = String()
     
@@ -44,7 +41,8 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     var URLArray = [String]()
     var hozonArray = [MKAnnotation]()
     
-    
+    var genres = [String]()
+    var selectedCell: Int  = -1
     
     // ユーザーのメールアドレスと名前を保持する変数
     var userEmail = ""
@@ -64,8 +62,8 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        colectionView.dataSource = self
-        colectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.delegate = self
         getteam()
         getname()
         
@@ -338,7 +336,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
         URLArray = []
         
         
-        let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
+        let collectionRef = db.collection("teams").document(teamId).collection("shops")
         
         collectionRef.getDocuments { (snapshot, error) in
             if let error = error {
@@ -351,7 +349,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                 // コレクションにドキュメントが存在する場合の処理
                 print("Collection exists and contains documents")
                 // 全てのドキュメントを取得する
-                self.db.collection("users").document(self.uid ?? "").collection("shop").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                self.db.collection("teams").document(self.teamId).collection("shops").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
                     } else {
@@ -446,10 +444,9 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
         
         
         
-        cell.delegate = self
         cell.documentid = documentid
         
-        cell.genres = genres
+        //   cell.genres = genres
         cell.URLArray = URLArray
         cell.commentButton.tag = indexPath.row
         
@@ -524,89 +521,89 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
             print("BB")
             cellSizeHeight = 600
         }
-            
-            // widthとheightのサイズを返す
-            return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
-            
-            
+        
+        // widthとheightのサイズを返す
+        return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
+        
+        
         
     }
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-            return 15.0 // 行間
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 15.0 // 行間
+    }
+    
+    @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        
+        guard let cell = gesture.view as? UICollectionViewCell else {
+            return
         }
         
-        @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        
+        if gesture.state == .ended {
             
-            guard let cell = gesture.view as? UICollectionViewCell else {
-                return
-            }
-            
-            guard let indexPath = collectionView.indexPath(for: cell) else {
-                return
-            }
-            
-            if gesture.state == .ended {
+            colorArray[indexPath.row] = "blue"
+            db.collection("teams").document(teamId).collection("shops").document(documentid[indexPath.row]).updateData(["color": "blue" ]) { error in
                 
-                colorArray[indexPath.row] = "blue"
-                db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath.row ]).updateData(["color": "blue" ]) { error in
+                if let error = error {
                     
-                    if let error = error {
-                        
-                        print("エラーが発生しました: \(error)")
-                        
-                    } else {
-                        
-                        print("ジャンルを更新しました")
-                      
-                        self.collectionView.reloadData()
-                        
-                        
-                    }
+                    print("エラーが発生しました: \(error)")
+                    
+                } else {
+                    
+                    print("ジャンルを更新しました")
+                    
+                    self.collectionView.reloadData()
+                    
                     
                 }
                 
-                
-                
-                
-                
-                
-            }
-        }
-        
-        
-        @objc func handleSwipeGesture2(_ gesture: UISwipeGestureRecognizer) {
-            
-            guard let cell = gesture.view as? UICollectionViewCell else {
-                return
             }
             
-            guard let indexPath = collectionView.indexPath(for: cell) else {
-                return
-            }
             
-            if gesture.state == .ended {
-                colorArray[indexPath.row] = "pink"
-                db.collection("users").document(uid ?? "").collection("shop").document(documentid[indexPath.row ]).updateData(["color": "pink" ]) { error in
-                    
-                    if let error = error {
-                        
-                        print("エラーが発生しました: \(error)")
-                        
-                    } else {
-                      
-                        print("ジャンルを更新しました")
-                        self.collectionView.reloadData()
-                        
-                        
-                    }
-                    
-                }
-                
-                
-                
-            }
+            
+            
+            
+            
         }
     }
     
     
-    
+    @objc func handleSwipeGesture2(_ gesture: UISwipeGestureRecognizer) {
+        
+        guard let cell = gesture.view as? UICollectionViewCell else {
+            return
+        }
+        
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        
+        if gesture.state == .ended {
+            colorArray[indexPath.row] = "pink"
+            db.collection("teams").document(teamId).collection("shops").document(documentid[indexPath.row ]).updateData(["color": "pink" ]) { error in
+                
+                if let error = error {
+                    
+                    print("エラーが発生しました: \(error)")
+                    
+                } else {
+                    
+                    print("ジャンルを更新しました")
+                    self.collectionView.reloadData()
+                    
+                    
+                }
+                
+            }
+            
+            
+            
+        }
+    }
+}
+
+
+

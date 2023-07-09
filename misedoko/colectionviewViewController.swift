@@ -74,7 +74,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
     var shareURLArray = [String]()
     var sharedocumentid = [String]()
     
-    
+    var teamId = String()
     
     @IBOutlet  weak var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -85,7 +85,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         segmentedControl.selectedSegmentIndex = 0
         
-  
+        
         //collectionview長押しのやつ
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.bounds.size.width / 4, height: view.bounds.size.width / 4)
@@ -96,24 +96,24 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         
-        
+        getteam()
         
         DispatchQueue.main.async {
             self.zyanrusyutoku()
             print(self.zyanru)
         }
-       
+        
         
         
         syutoku()
         
         deletekyouyu()
-       
-       collectionView.reloadData()
+        
+        collectionView.reloadData()
         
         
     }
-   
+    
     @IBAction func segmentedControl(_ sender: UISegmentedControl) {
         print(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
         if sender.selectedSegmentIndex == 0{
@@ -123,13 +123,13 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.syutoku()
                 }
             }
-         print(misetitle)
+            print(misetitle)
             print("取得したよ")
-           
+            
             
         }else
         if sender.selectedSegmentIndex == 1{
-      
+            
             DispatchQueue.global().async {
                 
                 DispatchQueue.main.sync {
@@ -177,7 +177,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
-      
+        
         if segmentedControl.selectedSegmentIndex != 0{
             cell.commentButton.isHidden = true
             
@@ -200,14 +200,14 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
         
         if segmentedControl.selectedSegmentIndex == 0{
-        
+            
             let initialRow = choicecount[indexPath.row]
-          
+            
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
             cell.zyanruTextField.text = zyanru[initialRow]
             
             
-         
+            
         }else if segmentedControl.selectedSegmentIndex == 1{
             let initialRow = publicchoicecount[indexPath.row]
             cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
@@ -276,7 +276,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
             cell.adresslabel?.text = sharemisesubtitle[indexPath.row]
         }
         
-   return cell
+        return cell
     }
     
     
@@ -286,7 +286,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         let cellSizeWidth:CGFloat = 320
         var cellSizeHeight:CGFloat = 300
         // タップされたセルのインデックスと一致する場合は高さを変更する
-    
+        
         if  segmentedControl.selectedSegmentIndex == 0{
             print(selectedCell)
             print(indexPath.row)
@@ -296,7 +296,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                 
             }
         }
-       
+        
         
         // widthとheightのサイズを返す
         return CGSize(width: cellSizeWidth, height: cellSizeHeight/2)
@@ -377,6 +377,41 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                         
                     }
                 }
+            }
+            let addteamlist = UIAction(title: "チームに追加", image: UIImage(systemName: "rectangle.stack.badge.person.crop.fill")) { action in
+                
+                self.db.collection("users").document(self.uid ?? "").collection("shop").document(self.documentid[indexPath.row]).getDocument() { (document, error) in
+                  
+                        if let document = document, document.exists {
+                            // 取得したドキュメントごとに実行するs
+                            let data = document.data()
+                            let idokeido = data?["idokeido"] as? GeoPoint
+                            let genre = data?["genre"] as? String ?? "カフェ"
+                            let color = data?["color"] as? String ?? "pink"
+                            let comment = data?["comment"] as? String ?? ""
+                            let URL = data?["URL"] as? String ?? ""
+                            let title = data?["title"] as? String ?? "title:Error"
+                            let subtitle = data?["subtitle"] as? String ?? "subtitle:Error"
+                        
+                            self.db.collection("teams").document(self.teamId).collection("shops").addDocument(data: [
+                                
+                                "idokeido": idokeido,
+                                "title":   title,
+                                "subtitle":subtitle,
+                                "timestamp": FieldValue.serverTimestamp(),
+                                "genre":genre,
+                                "color": "pink"
+                            ]) { err in
+                                if let err = err {
+                                    print("Error writing document: \(err)")
+                                }
+                            }
+                            
+                        
+                    }
+                }
+                
+        
             }
             
             return UIMenu(title: "Menu", children: [addlist, delete])
@@ -528,7 +563,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             let title = data["title"] as? String ?? "title:Error"
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
                             
-                         
+                            
                             self.selectedChoices.append(genre)
                             self.colorArray.append(color)
                             self.misetitle.append(title)
@@ -548,9 +583,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             
                             
                             
-                          
                             
-                        
+                            
+                            
                             
                         }
                         self.choicecount  = []
@@ -714,7 +749,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             let title = data["title"] as? String ?? "title:Error"
                             let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
                             
-                         
+                            
                             self.selectedChoices.append(genre)
                             self.colorArray.append(color)
                             self.misetitle.append(title)
@@ -734,9 +769,9 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
                             
                             
                             
-                          
                             
-                        
+                            
+                            
                             
                         }
                         self.choicecount  = []
@@ -773,8 +808,36 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         
     }
+    func getteam(){
+        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let team = data?["teams"] as? String ?? "team:Error"
+                print(data?["teams"] as Any)
+                self.teamId = team
+                print(self.teamId)
+            } else {
+                print("Document does not exist")
+            }
+        }
+        print("あ",teamId)
+        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let team = data?["teams"] as? String ?? "team:Error"
+                print(data?["teams"] as Any)
+                self.teamId = team
+                print(self.teamId)
+            } else {
+                print("Document does not exist")
+            }
+        }
+        
+        
+    }
     
-   
+    
+    
 }
 extension UIScrollView {
     func resetScrollPositionToTop() {
