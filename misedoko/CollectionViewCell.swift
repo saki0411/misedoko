@@ -170,7 +170,7 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     
     @objc func donePicker() {
             zyanruTextField.endEditing(true)
-        if let topViewController: UIViewController = topViewController(controller: colectionviewViewController) {
+        if let topViewController: colectionviewViewController = gettopViewController(controller: topViewController2()) as? colectionviewViewController{
             // nilでなければ、元の処理を続ける
             topViewController.deletekyouyu()
             topViewController.choicecount = self.choicecount
@@ -197,16 +197,25 @@ print(self.choicecount)
     @IBAction func comment(){
         print("aa")
         let num: Int = Int("\(commentButton.tag)")!
-        if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let topViewController = tabBarController.viewControllers?[0] as? colectionviewViewController {
+        if let topViewController: colectionviewViewController = gettopViewController(controller: topViewController2()) as? colectionviewViewController{
             topViewController.selectedd(gotselectedcell: num)
            
         }
        
     }
-    func topViewController(controller: UIViewController?) -> UIViewController? {
+    
+    func topViewController2() -> UIViewController? {
+            var vc = UIApplication.shared.keyWindow?.rootViewController
+            while vc?.presentedViewController != nil {
+                vc = vc?.presentedViewController
+            }
+            return vc
+        }
+
+    func gettopViewController(controller: UIViewController?) -> UIViewController? {
             if let tabController = controller as? UITabBarController {
                 if let selected = tabController.selectedViewController {
-                    return topViewController(controller: selected)
+                    return gettopViewController(controller: selected)
                 }
             }
 
