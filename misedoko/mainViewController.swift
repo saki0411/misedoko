@@ -161,7 +161,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             //ログアウト
             
         
-            print("kore!")
+         
             
             print("All Process Done!")
             
@@ -170,7 +170,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
        getteam()
       
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             self.teamsyutoku()
         }
         
@@ -963,17 +963,18 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     func getteam(){
         print(uid)
-        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+        db.collection("users").document(uid ?? "").collection("personal").document("info").getDocument { (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
                 let team = data?["teams"] as? String ?? "team:Error"
                 print(data?["teams"] as Any)
                 self.teamId = team
-                print(self.teamId,"aaaaa")
+                print("aaaaa")
                 self.teamsyutoku()
             } else {
                 print("Document does not exist")
             }
+            print("ほほほ")
         }
         
       
