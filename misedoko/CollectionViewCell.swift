@@ -169,24 +169,25 @@ class CollectionViewCell: UICollectionViewCell,UIPickerViewDelegate, UIPickerVie
     }
     
     @objc func donePicker() {
-        zyanruTextField.endEditing(true)
-        guard let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let topViewController = tabBarController.viewControllers?[0] as? colectionviewViewController else {
-                            // nilであればエラーメッセージを出力する
-                            print("tabBarController or topViewController is nil")
+            zyanruTextField.endEditing(true)
+            
+            guard let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let topViewController = tabBarController.viewControllers?[1] as? colectionviewViewController else {
+                                // nilであればエラーメッセージを出力する
+                                print("tabBarController or topViewController is nil")
+                                
+                                return
+                                
+                            }
                             
-                            return
-                            
-                        }
-                        
-                        // nilでなければ、元の処理を続ける
-                        topViewController.deletekyouyu()
-                        topViewController.choicecount = self.choicecount
-        print(self.choicecount)
-                        topViewController.collectionView.reloadData()
-                        print(topViewController,"B")
-      
-        
-    }
+                            // nilでなければ、元の処理を続ける
+                            topViewController.deletekyouyu()
+                            topViewController.choicecount = self.choicecount
+            print(self.choicecount)
+                            topViewController.collectionView.reloadData()
+                            print(topViewController,"B")
+          
+            
+        }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         zyanruTextField.endEditing(true)

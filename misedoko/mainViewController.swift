@@ -73,7 +73,15 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     
     var tableviewindexpath = Int()
     
-   
+    
+    var teamId = String()
+    var teammisetitle = [String]()
+    var teammisesubtitle = [String]()
+    var teamselectedChoices = [String]()
+    var teamcolorArray = [String]()
+    var teamdocumentid = [String]()
+    var teamhozonArray = [MKAnnotation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -137,31 +145,35 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         tableView.isHidden = true
         
-    
+        
         //データベースに保存
         
         let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
         
         var annotations: [MKAnnotation] = []
-    
-      zyanrukakuninn()
+        
+        zyanrukakuninn()
         getname()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             
-                  self.zyanrusyutoku()
-           
-            //ログアウト
-          
+            self.zyanrusyutoku()
             
-                 
-                     print("All Process Done!")
-                 
-              
+            //ログアウト
+            
+        
+            print("kore!")
+            
+            print("All Process Done!")
+            
+            
         }
         
+       getteam()
       
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            self.teamsyutoku()
+        }
         
-     
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
         collectionRef.getDocuments { (snapshot, error) in
@@ -283,14 +295,22 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                             self.mapView.addAnnotation(annotation1)
                                             
                                         }
-                                       
-                                        
+                                        for (index, teamhozon) in self.teamhozonArray.enumerated(){
+                                            let annotation2 = coloranotation()
+                                            annotation2.coordinate = teamhozon.coordinate
+                                            annotation2.title = self.teammisetitle[index]
+                                            annotation2.subtitle = self.teammisesubtitle[index]
+                                            annotation2.pinImage = "yellow.png"
+                                            self.mapView.addAnnotation(annotation2)
+                                        }
+                                    
                                         
                                         print("全部終わったよ")
                                         
+                                     
+                                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                                            self.collectionView.reloadData()
                                         
-                                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                                        self.collectionView.reloadData()
                                     }
                                     
                                 }
@@ -586,7 +606,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
         if  zyanru.first != nil{
-          
+            
         }else{
             zyanru = ["カフェ","レストラン","食べ放題","持ち帰り","チェーン店"]
             
@@ -661,19 +681,19 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     @IBAction func logout(){
         do{
             try Auth.auth().signOut()
-         
-                let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "login")
-                nextVC.modalPresentationStyle = .fullScreen
-                self.present(nextVC, animated: true, completion: nil)
             
-     
+            let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "login")
+            nextVC.modalPresentationStyle = .fullScreen
+            self.present(nextVC, animated: true, completion: nil)
+            
+            
             
             
         }catch let error as NSError {
             print(error)
         }
     }
-
+    
     
     
     
@@ -840,66 +860,66 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     @IBAction func genzaiti(){
-       
+        
         let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
         mapView.setRegion(region, animated: true)
-
+        
     }
     
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-            switch item.tag{
-            case 0:
-                print("1") // カレンダーアイコンをタップした場合
-                let storyboard: UIStoryboard = self.storyboard!
-                let nextView = storyboard.instantiateViewController(withIdentifier: "list")
-                nextView.modalPresentationStyle = .fullScreen
-                present(nextView, animated: true, completion: nil)
-
-            case 1:
-                print("2") // 設定アイコンをタップした場合
-              
-                
-            case 2:
-                print("3") // 設定アイコンをタップした場合
-                let storyboard: UIStoryboard = self.storyboard!
-                let nextView = storyboard.instantiateViewController(withIdentifier: "friend")
-                nextView.modalPresentationStyle = .fullScreen
-                present(nextView, animated: true, completion: nil)
-                
-            default : return
-                
-            }
+        switch item.tag{
+        case 0:
+            print("1") // カレンダーアイコンをタップした場合
+            let storyboard: UIStoryboard = self.storyboard!
+            let nextView = storyboard.instantiateViewController(withIdentifier: "list")
+            nextView.modalPresentationStyle = .fullScreen
+            present(nextView, animated: true, completion: nil)
+            
+        case 1:
+            print("2") // 設定アイコンをタップした場合
+            
+            
+        case 2:
+            print("3") // 設定アイコンをタップした場合
+            let storyboard: UIStoryboard = self.storyboard!
+            let nextView = storyboard.instantiateViewController(withIdentifier: "friend")
+            nextView.modalPresentationStyle = .fullScreen
+            present(nextView, animated: true, completion: nil)
+            
+        default : return
+            
+        }
         
-        }
+    }
     func zyanrusyutoku(){
-       
-     
-            
-            if self.zyanru.first == nil{
-                print("naiyo")
-                self.zyanru.append("カフェ")
-                self.zyanru.append("レストラン")
-                self.zyanru.append("食べ放題")
-                self.zyanru.append("持ち帰り")
-                self.zyanru.append("レストラン")   
-             self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").setData([
-                        "zyanrulist": self.zyanru
-                        
-                    ]) { err in
-                        if let err = err {
-                            print("Error writing document: \(err)")
-                        } else {
-                          
-                        }
-                    }
+        
+        
+        
+        if self.zyanru.first == nil{
+            print("naiyo")
+            self.zyanru.append("カフェ")
+            self.zyanru.append("レストラン")
+            self.zyanru.append("食べ放題")
+            self.zyanru.append("持ち帰り")
+            self.zyanru.append("レストラン")
+            self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").setData([
+                "zyanrulist": self.zyanru
+                
+            ]) { err in
+                if let err = err {
+                    print("Error writing document: \(err)")
+                } else {
                     
-                
-                
-                
-                
+                }
+            }
+            
+            
+            
+            
+            
             
         }
-    print("これだ！",zyanru)
+        print("これだ！",zyanru)
     }
     
     
@@ -913,39 +933,147 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                     self.zyanru.append(string as! String)
                     print("これだよ！",self.zyanru)
                 }
-                 }else {
-                   print("Document does not exist")
-                 }
-         
-                   
-                }
-                
+            }else {
+                print("Document does not exist")
+            }
             
+            
+        }
+        
+        
         
     }
     func getname(){
         let docRef = db.collection("users").document(uid ?? "").collection("personal").document("info")
         docRef.getDocument { (document, error) in
-           if let document = document, document.exists {
-             let data = document.data()
-             let name2 = data?["name"] as? String ?? "Name:Error"
-               self.name = name2
-               print("Success! Name:\(self.name)")
-               print(self.name)
-               self.loginMailText = self.name
-               self.loginMailText += "さんでログイン中"
-               self.loginMailLabel.text = self.loginMailText
-           } else {
-             print("Document does not exist")
-           }
-    
-             }
+            if let document = document, document.exists {
+                let data = document.data()
+                let name2 = data?["name"] as? String ?? "Name:Error"
+                self.name = name2
+                print("Success! Name:\(self.name)")
+                print(self.name)
+                self.loginMailText = self.name
+                self.loginMailText += "さんでログイン中"
+                self.loginMailLabel.text = self.loginMailText
+            } else {
+                print("Document does not exist")
+            }
+            
+        }
+    }
+    func getteam(){
+        print(uid)
+        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let team = data?["teams"] as? String ?? "team:Error"
+                print(data?["teams"] as Any)
+                self.teamId = team
+                print(self.teamId,"aaaaa")
+                self.teamsyutoku()
+            } else {
+                print("Document does not exist")
+            }
+        }
+        
+      
     }
     
+    
+    func teamsyutoku(){
+        teamselectedChoices = []
+        teammisetitle = []
+        teammisesubtitle = []
+        teamcolorArray = []
+        teamdocumentid = []
+        teamhozonArray = []
+        
+        print(teamId,"uuu")
+        
+        let collectionRef = db.collection("teams").document(teamId).collection("shops")
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                // エラーが発生した場合の処理
+                print("Error fetching documents: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                // コレクションにドキュメントが存在する場合の処理
+                print("Collection exists and contains documents")
+                // 全てのドキュメントを取得する
+                self.db.collection("teams").document(self.teamId).collection("shops").order(by: "timestamp").getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            // 取得したドキュメントごとに実行する
+                            let data = document.data()
+                            let idokeido = data["idokeido"] as? GeoPoint
+                            let genre = data["genre"] as? String ?? "カフェ"
+                            let color = data["color"] as? String ?? "pink"
+                            let comment = data["comment"] as? String ?? ""
+                            let URL = data["URL"] as? String ?? ""
+                            let title = data["title"] as? String ?? "title:Error"
+                            let subtitle = data["subtitle"] as? String ?? "subtitle:Error"
+                            
+                            
+                            self.teamselectedChoices.append(genre)
+                            self.teamcolorArray.append(color)
+                            self.teammisetitle.append(title)
+                            self.teammisesubtitle.append(subtitle)
+                            self.teamdocumentid.append(document.documentID)
+                            
+                            
+                            
+                            let latitude = idokeido?.latitude
+                            let longitude = idokeido?.longitude
+                            let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate = coordinate
+                            self.teamhozonArray.append(annotation)
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        }
+                        self.choicecount  = []
+                        for choice in self.selectedChoices {
+                            self.choicecount.append(self.zyanru.firstIndex(of: choice) ?? 2)
+                            
+                        }
+                        
+                        
+                        
+                        
+                        let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                        self.collectionView.reloadData()
+                        
+                    }
+                    
+                    
+                }
+            }else {
+                // コレクションが存在しないかドキュメントが存在しない場合の処理
+                print("Collection does not exist or is emptyコレクションがないよ")
+                self.collectionView.delegate = self
+                self.collectionView.dataSource  = self
+                
+                let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
+                
+                self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                self.collectionView.reloadData()
+            }
+            
+        }
+        
+    }
 }
-
-
-
-
-
+    
+    
 

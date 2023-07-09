@@ -414,7 +414,7 @@ class colectionviewViewController: UIViewController,UICollectionViewDelegate,UIC
         
             }
             
-            return UIMenu(title: "Menu", children: [addlist, delete])
+            return UIMenu(title: "Menu", children: [addlist, delete, addteamlist])
             
             
         }

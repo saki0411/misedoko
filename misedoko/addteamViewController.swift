@@ -36,7 +36,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     let uid = Auth.auth().currentUser?.uid
     let db = Firestore.firestore()
     let nib = UINib(nibName: "CollectionViewCell", bundle: .main)
-    
+    var first = false
     var word = String()
     var URLArray = [String]()
     var hozonArray = [MKAnnotation]()
@@ -58,16 +58,29 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     var teamMembers = [String]()
     var teamShops = [String]()
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+        if first == true{
+            collectionView.reloadData()
+        }
+      
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        first = true
         collectionView.dataSource = self
         collectionView.delegate = self
         getteam()
         getname()
-        
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.getgenre()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.syutoku()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.collectionView.reloadData()
+        }
     }
     func getname(){
         let docRef = db.collection("users").document(uid ?? "").collection("personal").document("info")
@@ -102,8 +115,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                 db.collection("teams").addDocument(data:[
                     "name": teamName,
                     "members": [self.name],
-                    "uids": self.uid as Any,
-                    "shops": []
+                    "uids": self.uid as Any
                 ]) { error in
                     if let e = error {
                         // エラーがあればアラートを表示する
@@ -279,20 +291,36 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                 print("Document does not exist")
             }
         }
-        print("あ",teamId)
-        db.collection("users").document(self.uid ?? "").collection("personal").document("info").getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                let team = data?["teams"] as? String ?? "team:Error"
-                print(data?["teams"] as Any)
-                self.teamId = team
-                print(self.teamId)
-            } else {
-                print("Document does not exist")
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+       
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            print(self.teamId,"aa")
             if !self.teamId.isEmpty{
+                self.db.collection("teams").document(self.teamId)
+                    .getDocument { documentSnapshot, error in
+                        guard let document = documentSnapshot else {
+                            print("Error fetching document: \(error!)")
+                            return
+                        }
+                        
+                        let data = document.data()
+                        let members = data?["members"] as? [String]
+                        let shops = data?["shops"] as? [String]
+                        let teamneme = data?["name"]
+                        
+                        print(members as Any)
+                        // チームメンバーとお店のリストを更新する
+                        self.teamMembers = []
+                        self.teamMembers = members ?? []
+                        self.teamName = ""
+                        self.teamName = teamneme as! String
+                        
+                        self.teamlabel.text = self.teamName
+                        for teamMember in self.teamMembers {
+                            self.teamnamelabel.text! += teamMember
+                        }
+                        
+                        self.teamShops = shops ?? []
+                    }
                 
                 // あるドキュメントをリッスンする
                 self.db.collection("teams").document(self.teamId)
@@ -454,6 +482,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
         
         
         let initialRow = choicecount[indexPath.row]
+        print(choicecount,"これだ！")
         
         cell.pickerView.selectRow(initialRow, inComponent: 0, animated: false)
         cell.zyanruTextField.text = zyanru[initialRow]
@@ -603,6 +632,21 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
             
         }
     }
+    func getgenre(){
+        self.db.collection("users").document(self.uid ?? "").collection("zyanru").document("list").getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let zyanrulist = data?["zyanrulist"] as! Array<Any>
+                for string in zyanrulist {
+                    self.zyanru.append(string as! String)
+                    print("これだよ！",self.zyanru)
+                }
+            }else {
+                print("Document does not exist")
+            }
+        }
+    }
+    
 }
 
 
