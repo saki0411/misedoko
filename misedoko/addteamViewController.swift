@@ -59,7 +59,10 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     var teamShops = [String]()
     
     override func viewWillAppear(_ animated: Bool) {
+        print(first)
         if first == true{
+            print(first)
+            syutoku()
             collectionView.reloadData()
         }
       
@@ -67,7 +70,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        first = true
+       
         collectionView.dataSource = self
         collectionView.delegate = self
         getteam()
@@ -79,6 +82,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
             self.syutoku()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.first = true
             self.collectionView.reloadData()
         }
     }
@@ -319,7 +323,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                             self.teamnamelabel.text! += teamMember
                         }
                         
-                        self.teamShops = shops ?? []
+                      
                     }
                 
                 // あるドキュメントをリッスンする
@@ -347,7 +351,7 @@ class addteamViewController: UIViewController, UISearchBarDelegate,UICollectionV
                             self.teamnamelabel.text! += teamMember
                         }
                         
-                        self.teamShops = shops ?? []
+                        
                     }
                 
                 

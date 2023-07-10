@@ -160,19 +160,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             
             //ログアウト
             
-        
-         
+            
+            
             
             print("All Process Done!")
             
             
         }
         
-       getteam()
-      
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            self.teamsyutoku()
-        }
+        getteam()
+        
         
         let collectionRef = db.collection("users").document(uid ?? "").collection("shop")
         
@@ -303,13 +300,16 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                                             annotation2.pinImage = "yellow.png"
                                             self.mapView.addAnnotation(annotation2)
                                         }
-                                    
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                            self.teamsyutoku()
+                                        }
                                         
                                         print("全部終わったよ")
                                         
-                                     
-                                            self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
-                                            self.collectionView.reloadData()
+                                        
+                                        self.collectionView.register(nib, forCellWithReuseIdentifier: "cell")
+                                        self.collectionView.reloadData()
                                         
                                     }
                                     
@@ -333,7 +333,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
                             }
                             
                             
-                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                self.teamsyutoku()
+                            }
                             
                             print("全部終わったよ")
                             
@@ -977,7 +979,7 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             print("ほほほ")
         }
         
-      
+        
     }
     
     
@@ -1075,6 +1077,6 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
     }
 }
-    
-    
+
+
 
