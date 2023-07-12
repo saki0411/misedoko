@@ -65,9 +65,9 @@ class mainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var colorArray = [String]()
     
     var loginMailText = ""
+    var geoPoints =  [GeoPoint]()
     //firestoreのやつ
     let db = Firestore.firestore()
-    var geoPoints =  [GeoPoint]()
     let uid = Auth.auth().currentUser?.uid
     
     

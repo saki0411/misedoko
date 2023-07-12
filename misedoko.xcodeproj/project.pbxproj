@@ -43,6 +43,7 @@
 		729BEAD62A5514CE0021C99C /* addteamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEAD52A5514CE0021C99C /* addteamViewController.swift */; };
 		729BEAD92A5646720021C99C /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 729BEAD82A5646720021C99C /* IQKeyboardManagerSwift */; };
 		729BEADC2A5649540021C99C /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 729BEADB2A5649540021C99C /* FirebaseDynamicLinks */; };
+		729BEAE02A5E6FAC0021C99C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BEADF2A5E6FAC0021C99C /* SettingViewController.swift */; };
 		72E1E3452A0DE18100C27772 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */; };
 		72E1E3482A0DE27E00C27772 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3472A0DE27E00C27772 /* FirebaseAuth */; };
 		72E1E34A2A0DE27E00C27772 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 72E1E3492A0DE27E00C27772 /* FirebaseAuthCombine-Community */; };
@@ -135,6 +136,7 @@
 		729BEAD12A504B890021C99C /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		729BEAD32A51036B0021C99C /* main2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main2ViewController.swift; sourceTree = "<group>"; };
 		729BEAD52A5514CE0021C99C /* addteamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addteamViewController.swift; sourceTree = "<group>"; };
+		729BEADF2A5E6FAC0021C99C /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		72E1E3442A0DE18100C27772 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		72E1E3552A0DE50700C27772 /* loginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginViewController.swift; sourceTree = "<group>"; };
 		72E1E35B2A11DD8400C27772 /* colectionviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colectionviewViewController.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				729BEAD12A504B890021C99C /* TabBarViewController.swift */,
 				729BEAD32A51036B0021C99C /* main2ViewController.swift */,
 				729BEAD52A5514CE0021C99C /* addteamViewController.swift */,
+				729BEADF2A5E6FAC0021C99C /* SettingViewController.swift */,
 			);
 			path = misedoko;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 				72282E9A29F511E300EB8A90 /* SceneDelegate.swift in Sources */,
 				725DC5152A0B738400AE4BA9 /* PlaceCalloutView.swift in Sources */,
 				72282ECD29F6D76500EB8A90 /* mainViewController.swift in Sources */,
+				729BEAE02A5E6FAC0021C99C /* SettingViewController.swift in Sources */,
 				725DC50F2A04FF9400AE4BA9 /* coloranotation.swift in Sources */,
 				722CC1432A3C2EC50005E22B /* SignInWithAppleObject.swift in Sources */,
 			);
